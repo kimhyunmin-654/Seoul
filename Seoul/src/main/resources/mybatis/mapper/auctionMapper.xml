@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.AuctionMapper">
+	
+	<!-- 상품판매를 경매로 등록 -->
+	<insert id="insertAuction" parameterType="com.sp.app.model.Auction">
+		INSERT INTO auction	(auction_id, product_id, start_price, current_price, end_time, status)
+		VALUES (auction_seq.NEXTVAL, #{product_id}, #{start_price}, #{start_price}, #{end_time}, #{status})		
+	</insert>
+	
+	<!-- 경매정보 수정 -->
+	<update id="updateAuction" parameterType="com.sp.app.model.Auction">
+		UPDATE auction SET start_price = #{start_price}, current_price = #{current_price}, end_time = #{end_time}, status = #{status} 
+	</update>
+	
+	<!-- 경매 입찰신청 -->
+	<insert id="insertBid" parameterType="com.sp.app.model.Bid">
+        INSERT INTO bid (bid_id, auction_id, member_id, bid_amount, created_at)
+        VALUES (bid_seq.NEXTVAL, #{auction_id}, #{member_id}, #{bid_amount}, SYSDATE)
+    </insert>
+
+	<!-- 경매상품 리스트 -->
+	<select id="listAuctionProduct" parameterType="map" resultType="com.sp.app.model.Auction">
+		SELECT p.product_id, c.category_name, r.region_name, product_name, a.current_price, 
+			 a.status, p.thumbnail, a.auction_id, a.end_time, ( SELECT COUNT(*) FROM bid b WHERE b.auction_id = a.auction_id) AS bidCount
+		FROM auction a
+		JOIN product p ON p.product_id = a.product_id
+		JOIN product_category c ON p.category_id = c.category_id
+		JOIN region r ON p.region_id = r.region_id		
+		<where>
+			AND p.type = 'auction'	
+			<include refid="where-list"/>
+		</where>
+			ORDER BY a.end_time ASC
+			OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 경매 상세 정보 -->
+	<select id="findAuctionById" parameterType="long" resultType="com.sp.app.model.Auction">
+		    SELECT
+		        p.product_id, p.content, p.product_name, p.hitCount, p.likeCount,
+		        p.member_id, nickname, a.auction_id, a.current_price, a.end_time, a.status
+		    FROM
+		        product p
+		    JOIN
+		        auction a ON p.product_id = a.product_id
+		    JOIN
+		        member m ON p.member_id = m.member_id      	    
+		    WHERE
+		        a.auction_id = #{auction_id}
+		     
+	</select>
+	
+	<!-- 경매 입찰 내역 리스트 -->
+	
+	<select id="findBidsByAuctionId" parameterType="long" resultType="com.sp.app.model.Bid">
+			SELECT bid_id, member_id bidder_id, nickname bidder_nickName, bid_amount, created_at 
+			FROM bid b
+			JOIN member m ON b.member_id = m.member_id
+			WHERE auction_id = #{auction_id}
+			ORDER BY created_at DESC
+	</select>
+	
+
+	<!-- where 절 반복 모음 -->
+	<sql id="where-list">
+        
+		<!-- 1. 지역 필터 -->
+        <if test="region_id != null and region_id != ''">
+            AND p.region_id = #{region_id}
+        </if>
+        
+        <!-- 2. 카테고리 필터 -->
+        <if test="category_id != null and category_id != ''">
+            AND p.category_id = #{category_id}
+        </if>
+        
+        <!-- 3. 검색 필터 -->
+        <if test="kwd != null and kwd != '' ">
+			AND INSTR(p.product_name, #{kwd}) &gt; 0
+		</if>
+	</sql>
+
+</mapper>
+	
