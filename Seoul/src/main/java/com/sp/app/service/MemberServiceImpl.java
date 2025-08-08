@@ -2,6 +2,7 @@ package com.sp.app.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +54,52 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void insertMember(Member dto, String uploadPath) throws Exception {
-		if(! dto.getSelectFile().isEmpty()) {
+		try {
+			if(! dto.getSelectFile().isEmpty()) {
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setProfile_photo(saveFilename);
+			}
 			
+			Long seq = mapper.memberSeq();
+			dto.setMember_id(seq);
+			mapper.insertMember(dto);
+			
+		} catch (Exception e) {
+			log.info("insertMember : ", e);
+		}
+				
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public void insertMember2(Member dto, String uploadPath) throws Exception {
+		try {
+			if(! dto.getSelectFile().isEmpty()) {
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setProfile_photo(saveFilename);
+			}
+			
+			Long seq = mapper.memberSeq();
+			dto.setMember_id(seq);
+			mapper.insertMember2(dto);
+			
+		} catch (Exception e) {
+			log.info("insertMember : ", e);
+		}
+				
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public void insertSnsMember(Member dto) throws Exception {
+		try {
+			Long seq = mapper.memberSeq();
+			dto.setMember_id(seq);
+			
+			mapper.insertSnsMember(dto);
+		} catch (Exception e) {
+			log.info("insertSnsMember : ", e);
+			throw e;
 		}
 	}
 
@@ -70,14 +115,45 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Member findById(Long member_id) {
-
-		return null;
+		Member dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findById(member_id));
+			
+		} catch (NullPointerException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			log.info("findById : ", e);
+		}
+		
+		return dto;
 	}
 
 	@Override
 	public Member findById(String login_id) {
-
-		return null;
+		Member dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByLoginId(login_id));
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findById", e);
+		}
+		
+		return dto;
+	}
+	
+	public Member findByNickName(String nickName) {
+		Member dto = null;
+		
+		try {
+			dto = Objects.requireNonNull(mapper.findByNickName(nickName));
+		} catch (NullPointerException e) {
+		} catch (Exception e) {
+			log.info("findByNickName", e);
+		}
+		
+		return dto;
 	}
 
 	@Override

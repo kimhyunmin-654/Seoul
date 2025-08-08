@@ -15,9 +15,9 @@ public interface MemberMapper {
 	public void updateLastLogin(Long member_id) throws SQLException;
 
 	public Long memberSeq();	
-	public void insertMember1(Member dto) throws SQLException;
+	public void insertMember(Member dto) throws SQLException;
 	public void insertMember2(Member dto) throws SQLException;
-	public void insertMember12(Member dto) throws SQLException;
+	public void insertSnsMember(Member dto) throws SQLException;
 	
 	public void updateMemberEnabled(Map<String, Object> map) throws SQLException;
 	public void updateMemberLevel(Map<String, Object> map) throws SQLException;
@@ -27,6 +27,7 @@ public interface MemberMapper {
 
 	public Member findById(Long member_id);
 	public Member findByLoginId(String login_id);
+	public Member findByNickName(String nickName);
 		
 	public List<Member> listFindMember(Map<String, Object> map);
 }

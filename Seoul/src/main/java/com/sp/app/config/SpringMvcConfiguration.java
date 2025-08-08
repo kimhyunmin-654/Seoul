@@ -20,13 +20,17 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/member/login");
 		excludePaths.add("/member/logout");
 		excludePaths.add("/member/account");
+		excludePaths.add("/member/account2");
+		excludePaths.add("/member/account3");
 		excludePaths.add("/member/userIdCheck");
+		excludePaths.add("/member/userNickNameCheck");
 		excludePaths.add("/member/complete");
 		excludePaths.add("/member/pwdFind");
 		excludePaths.add("/guest/main");
 		excludePaths.add("/guest/list");
 		excludePaths.add("/uploads/photo/**");
 		excludePaths.add("/oauth/kakao/callback");
+		excludePaths.add("/.well-known/**");
 		
 		registry.addInterceptor(new LoginCheckInterceptor()).excludePathPatterns(excludePaths);
 	}
