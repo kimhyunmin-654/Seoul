@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.MemberMapper">
+	<select id="loginMember" parameterType="map" resultType="com.sp.app.model.Member">
+		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
+			userLevel, created_at, update_at, profile_photo, enabled, last_login
+		FROM member 
+		WHERE login_id = #{login_id} AND password = #{password}  AND enabled != 0
+	</select>
+	
+	
+	<select id="loginSnsMember" parameterType="map" resultType="com.sp.app.model.Member">
+		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
+			userLevel, created_at, update_at, profile_photo, enabled, last_login
+		FROM member 
+		WHERE sns_provider = #{sns_provider} AND sns_id = #{sns_id}
+	</select>
+	 
+	
+	<update id="updateLastLogin" parameterType="Long">
+		UPDATE member1 SET last_login = SYSDATE, failure_cnt = 0
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<select id="memberSeq" resultType="Long">
+		SELECT member_seq.NEXTVAL
+		FROM dual
+	</select>
+	
+	<insert id="insertMember" parameterType="com.sp.app.model.Member">
+		INSERT INTO member(member_id, login_id, email, password, name, nickname, sns_provider, sns_id,
+					userLevel, created_at, update_at, profile_photo, enabled, failure_cnt)
+		VALUES(#{member_id}, #{login_id, jdbcType=VARCHAR},  #{email}, #{password}, #{name, jdbcType=VARCHAR}, #{nickname}, 
+			#{sns_provider, jdbcType=VARCHAR}, #{sns_id, jdbcType=VARCHAR}, 1, SYSDATE, SYSDATE, #{profile_photo, jdbcType=VARCHAR}, 1, 0)
+	
+	</insert>
+	
+	<insert id="insertSnsMember" parameterType="com.sp.app.model.Member">
+		INSERT INTO member(member_id, email, password, name, nickname, sns_provider, sns_id,
+					userLevel, created_at, update_at, profile_photo, enabled)
+		VALUES(#{member_id}, #{email}, #{password, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{nickname}, 
+			#{sns_provider}, #{sns_id}, 1, SYSDATE, SYSDATE, #{profile_photo}, 1)
+	</insert>	
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Member">
+		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
+			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
+		WHERE member_id = #{member_id}
+	</select>
+	
+	<select id="findByLoginId" parameterType="Long" resultType="com.sp.app.model.Member">
+		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
+			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
+		WHERE login_id = #{login_id}
+	</select>	
+	
+	<update id="updateMemberEnabled" parameterType="map">
+		UPDATE member SET enabled = #{enabled}
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<update id="updateMemberLevel" parameterType="map">
+		UPDATE member SET userLevel = #{userLevel}
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<update id="updateMember" parameterType="com.sp.model.Member">
+		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},email = #{email}, password = #{password},
+			name = #{name, jdbcType=VARCHAR}, nickname = ${nickname},
+			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR}, 
+			update_at = SYSDATE, profile_photo = #{profile_photo, jdbcType=VARCHAR}
+		WHERE member_id = #{member_id}  			
+	</update>
+	
+	<update id="deleteProfilePhoto" parameterType="map">
+		UPDATE member SET profile_photo = ''
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<select id="lisetFindMember" parameterType="map" resultType="com.sp.app.model.Member">
+		SELECT member_id, NVL(login_id, sns_id) login_id, email, name, nickname
+		FROM member
+		<where>
+			member_id != #{member_id}
+			AND
+			<if test="kwd != null and kwd != '' ">
+				<choose>
+					<when test="schType == 'login_id'">
+						( INSTR(login_id, #{kwd}) &gt;= 1 OR INSTR(sns_id, #{kwd}) &gt;= 1 )
+					</when>
+					<otherwise>
+						INSTR(${schType}, #{kwd}) &gt;= 1
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</select>
+
+</mapper>
