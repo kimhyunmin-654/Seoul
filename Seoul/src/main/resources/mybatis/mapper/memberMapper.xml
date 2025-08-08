@@ -81,7 +81,15 @@
 		WHERE member_id = #{member_id}
 	</update>
 	
-	<update id="updateMember" parameterType="com.sp.app.model.Member">
+	
+	<update id="updateMember1" parameterType="com.sp.app.model.Member"> 
+		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},
+			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR},
+			password = #{password}, update_at = SYSDATE
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<update id="updateMember2" parameterType="com.sp.app.model.Member">
 		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},email = #{email}, password = #{password},
 			name = #{name, jdbcType=VARCHAR}, nickname = ${nickname},
 			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR}, 

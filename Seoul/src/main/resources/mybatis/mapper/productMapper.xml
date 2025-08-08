@@ -9,13 +9,14 @@
 		VALUES (product_seq.NEXTVAL, #{member_id}, #{category_id}, #{region_id}, #{product_name}, #{content}, #{price}, #{type}, '판매중', 0, 0, SYSDATE, #{thumbnail})	
 	</insert>
 	
-	<!-- 추가 이미지 등록 -->
+	  
+	<!-- 추가 이미지 등록 
 	<insert id="insertProductFile" parameterType="com.sp.app.model.ProductImage">
 		INSERT INTO product_image (image_id, product_id, filename, filesize, image_order )
 		VALUES (productimage_seq.NEXTVAL, #{product_id}, #{filename}, #{filesize}, #{image_order})	
 	</insert>
+	-->
 	
-
 	<!-- 중고상품 수정 -->
 	<update id="updateProduct" parameterType="com.sp.app.model.Product">
 		UPDATE product SET category_id = #{category_id}, region_id = #{region_id}, product_name = #{product_name}, content = #{content}, price = #{price}, type = #{type}, status = #{status}, reg_date = SYSDATE, thumbnail = #{thumbnail} 
@@ -121,19 +122,21 @@
 		FETCH FIRST 1 ROWS ONLY
 	</select>
 	
-	<!-- 상세 페이지 추가 이미지 -->
+	<!-- 상세 페이지 추가 이미지 
 	<select id="listProductImages" parameterType="Long" resultType="com.sp.app.model.ProductImage">
 		SELECT image_id, product_id, filename, image_order 
 		FROM product_image
 		WHERE product_id = #{product_id}
 	</select>
+	-->
 	
-	<!-- 카테고리 목록 -->
+	<!-- 카테고리 목록 
 	<select id="listCategory" resultType="com.sp.app.model.Category">
 		SELECT category_id, categoryName
 		FROM product_category
 		ORDER BY displayNo
 	</select>
+	-->
 	
 
 </mapper>

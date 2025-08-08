@@ -67,6 +67,7 @@ public class MemberController {
 				.member_id(dto.getMember_id())
 				.login_id(dto.getLogin_id())
 				.name(dto.getName())
+				.nickname(dto.getNickname())
 				.email(dto.getEmail())
 				.userLevel(dto.getUserLevel())
 				.avatar(dto.getProfile_photo())
@@ -230,5 +231,49 @@ public class MemberController {
 	@GetMapping("noAuthorized")
 	public String noAuthorized(Model model) {
 		return "member/noAuthorized";
+	}
+	
+	
+	@GetMapping("pwdFind")
+	public String pwdFindForm(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		if(info != null) {
+			return "redirect:/";
+		}
+		
+		return "member/pwdFind";
+	}
+	
+	
+	@PostMapping("pwdFind")
+	public String pwdFindSubmit(@RequestParam(name = "login_id") String login_id,
+			RedirectAttributes reAttr,
+			Model model) throws Exception {
+		
+		try {
+			Member dto = service.findById(login_id);
+			if(dto == null || dto.getEmail() == null || dto.getUserLevel() == 0 || dto.getEnabled() == 0) {
+				model.addAttribute("message", "등록된 아이디가 아닙니다.");
+				
+				return "member/pwdFind";
+			}
+			
+			service.generatePwd(dto);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("회원님의 이메일로 임시패스워드를 전송했습니다.<br>");
+			sb.append("로그인 후 패스워드를 변경하시기 바랍니다.<br>");
+			
+			reAttr.addFlashAttribute("title", "패스워드 찾기");
+			reAttr.addFlashAttribute("message", sb.toString());
+			
+			return "redirect:/member/complete";
+			
+		} catch (Exception e) {
+			model.addAttribute("message", "이메일 전송이 실패했습니다.");
+		}
+		
+		return "member/pwdFind";
 	}
 }
