@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.MemberMapper">
+	<select id="noticeSeq" resultType="Long">
+		SELECT notice_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertNotice" parameterType="com.sp.app.admin.model.NoticeManage">
+		INSERT INTO notice(num, member_id, subject, content, notice, hit_count, showNotice, reg_date, modify_date)
+		VALUES (#{num}, #{member_id}, #{subject}, #{content}, #{notice}, 0, #{showNotice}, SYSDATE, SYSDATE)
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				<![CDATA[
+					(
+						INSTR(subject, #{kwd}) > 0
+						OR INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+					)
+				]]>
+			</when>
+			<when test="schType == 'reg_date' ">
+				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD') #{kwd}) &gt; 0
+					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<when test="schType == 'content' ">
+				<![CDATA[
+					INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+				]]>
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 공지글 리스트 -->
+	<select id="listNoticeTop" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT n.num, notice, n.member_id, name, subject, hit_count,
+			TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date,
+			TO_CHAR(n.modify_date, 'YYYY-MM-DD') modify_date,
+			NVL(fileCount, 0) fileCount
+		FROM notice n
+		JOIN member m ON n.member_id = m.member_id
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) fileCount FROM notice_File
+			GROUP BY num
+		) f ON n.num = f.num
+		WHERE notice = 1 AND showNotice = 1
+		ORDER BY modify_date DESC	
+	</select>
+	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM notice n
+		JOIN member m ON n.member_id = m.member_id
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 리스트 -->
+	<select id="listNotice" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT n.num, notice, n.member_id, name, subject, hit_count,
+			reg_date, showNotice, n.modify_date, NVL(fileCount, 0) fileCount
+		FROM notice n
+		JOIN member m ON n.member_id = m.member_id
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) fileCount
+			FROM notice_File
+			GROUP BY num
+		) f.ON n.num = f.num
+		<where>
+			<if test="showNotice != null">
+				showNotice = #{showNotice}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY modify_date DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 글보기 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT n.num, n.member_id, m1.name,
+			NVL(m1.login_id, m1.sns_id) login_id,
+			n.subject, n.content, n.reg_date, n.hit_count, n.notice, n.showNotice, n.modify_date
+		FROM notice n
+		JOIN member m1 ON n.member_id = m1.member_id
+		WHERE n.num = #{num}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE notice SET hit_count = hit_count + 1
+		WHERE num = #{num}
+	</update>
+	
+	<!-- 이전글 -->
+	<select id="finByPrev" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT num, subject
+		FROM notice n
+		JOIN member m ON n.member_id = m.member_id
+		<where>
+			<if test="showNotice != null">
+				showNotice = #{showNotice}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (modify_date &gt; TO_DATE(#{modify_date}, 'YYYY-MM-DD HH24:MI:SS'))
+		</where>
+		ORDER BY modify_date ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 다음글 -->
+		<select id="finByNext" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT num, subject
+		FROM notice n
+		JOIN member m ON n.member_id = m.member_id
+		<where>
+			<if test="showNotice != null">
+				showNotice = #{showNotice}
+			</if>
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (modify_date &gt; TO_DATE(#{modify_date}, 'YYYY-MM-DD HH24:MI:SS'))
+		</where>
+		ORDER BY modify_date DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 수정 -->
+	<update id="updateNotice" parameterType="com.sp.app.admin.model.NoticeManage">
+		UPDATE notice SET subject = #{subject}, content = #{content},
+			notice = #{notice}, showNotice = #{showNotice}, modify_date = SYSDATE
+		WHERE num = #{num}	
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteNotice" parameterType="Long">
+		DELETE FROM notice
+		WHERE num = #{num}
+	</delete>
+	
+	<!-- 파일 -->
+	<insert id="insertNoticeFile" parameterType="com.sp.app.admin.model.NoticeManage">
+		INSERT INTO noticeFile(fileNum, num, save_filename, original_filename, filesize)
+		VALUES (noticeFile_seq.NEXTVALM #{num}, #{save_filename}, #{original_filename}, #{filesize})
+	</insert>
+	
+	<select id="listNoticeFile" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT fileNum, num, save_filename, original_filename, filesize
+		FROM notice_File
+		WHERE num = #{num}
+	</select>
+	
+	<select id="findByFileId" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
+		SELECT fileNum, num, save_filename, original_filename, filesize
+		FROM notice_File
+		WHERE fileNum = #{fileNum}
+	</select>
+	
+	<delete id="deleteNoticeFile" parameterType="map">
+		DELETE FROM notice_File
+		WHERE ${field} = #{num}
+	</delete>
+	
+</mapper>
