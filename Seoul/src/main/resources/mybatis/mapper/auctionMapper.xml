@@ -6,7 +6,7 @@
 	<!-- 상품판매를 경매로 등록 -->
 	<insert id="insertAuction" parameterType="com.sp.app.model.Auction">
 		INSERT INTO auction	(auction_id, product_id, start_price, current_price, end_time, status)
-		VALUES (auction_seq.NEXTVAL, #{product_id}, #{start_price}, #{start_price}, #{end_time}, #{status})		
+		VALUES (auction_seq.NEXTVAL, #{product_id}, #{start_price}, #{start_price}, TO_DATE(#{end_time}, 'YYYY-MM-DD"T"HH24:MI'), #{status})		
 	</insert>
 	
 	<!-- 경매정보 수정 -->

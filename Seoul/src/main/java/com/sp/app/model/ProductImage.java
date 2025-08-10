@@ -12,6 +12,6 @@ public class ProductImage {
 	private long image_id;
 	private long product_id;
 	private String filename;
-	private String filesize;
+	private long filesize;
 	private int image_order;
 }
