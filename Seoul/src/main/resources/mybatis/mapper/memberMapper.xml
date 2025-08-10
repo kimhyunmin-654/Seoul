@@ -36,6 +36,13 @@
 	
 	</insert>
 	
+	<insert id="insertMember2" parameterType="com.sp.app.model.Member">
+      INSERT INTO member(member_id, login_id, email, password, name, nickname, sns_provider, sns_id,
+               userLevel, created_at, update_at, profile_photo, enabled, failure_cnt)
+      VALUES(#{member_id}, #{login_id, jdbcType=VARCHAR},  #{email}, #{password}, #{name, jdbcType=VARCHAR}, #{nickname}, 
+         #{sns_provider, jdbcType=VARCHAR}, #{sns_id, jdbcType=VARCHAR}, 5, SYSDATE, SYSDATE, #{profile_photo, jdbcType=VARCHAR}, 1, 0)
+   </insert>
+	
 	<insert id="insertSnsMember" parameterType="com.sp.app.model.Member">
 		INSERT INTO member(member_id, email, password, name, nickname, sns_provider, sns_id,
 					userLevel, created_at, update_at, profile_photo, enabled)
@@ -46,14 +53,23 @@
 	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Member">
 		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
 			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
+		FROM member
 		WHERE member_id = #{member_id}
 	</select>
 	
-	<select id="findByLoginId" parameterType="Long" resultType="com.sp.app.model.Member">
+	<select id="findByLoginId" parameterType="String" resultType="com.sp.app.model.Member">
 		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
 			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
+		FROM member
 		WHERE login_id = #{login_id}
-	</select>	
+	</select>
+
+	<select id="findByNickName" parameterType="String" resultType="com.sp.app.model.Member">
+		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
+			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
+		FROM member
+		WHERE nickname = #{nickname}
+	</select>		
 	
 	<update id="updateMemberEnabled" parameterType="map">
 		UPDATE member SET enabled = #{enabled}
@@ -65,7 +81,15 @@
 		WHERE member_id = #{member_id}
 	</update>
 	
-	<update id="updateMember" parameterType="com.sp.app.model.Member">
+	
+	<update id="updateMember1" parameterType="com.sp.app.model.Member"> 
+		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},
+			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR},
+			password = #{password}, update_at = SYSDATE
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<update id="updateMember2" parameterType="com.sp.app.model.Member">
 		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},email = #{email}, password = #{password},
 			name = #{name, jdbcType=VARCHAR}, nickname = ${nickname},
 			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR}, 

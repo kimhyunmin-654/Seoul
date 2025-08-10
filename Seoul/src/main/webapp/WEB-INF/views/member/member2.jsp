@@ -15,7 +15,7 @@
 <main>
 	<div class="page-title">
 		<div class="container align-items-center" data-aos="fade-up">
-			<h1>일반회원가입</h1>
+			<h1>셀러회원가입</h1>
 			<div class="page-title-underline-accent"></div>
 		</div>
 	</div>
@@ -262,7 +262,7 @@ function memberOk() {
     }
     
 
-    f.action = '${pageContext.request.contextPath}/member/account2';
+    f.action = '${pageContext.request.contextPath}/member/account3';
     f.submit();
 }
 

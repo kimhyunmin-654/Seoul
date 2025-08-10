@@ -10,12 +10,15 @@ public interface MemberService {
 	public Member loginSnsMember(Map<String, Object> map);
 	
 	public void insertMember(Member dto, String uploadPath) throws Exception;
+	public void insertMember2(Member dto, String uploadPath) throws Exception;
+	public void insertSnsMember(Member dto) throws Exception;
 	
 	public void updateLastLogin(Long member_id) throws Exception;
 	public void updateMember(Member dto, String uploadPath) throws Exception;
 	
 	public Member findById(Long member_id);
 	public Member findById(String login_id);
+	public Member findByNickName(String nickName);
 	
 	public void deleteMember(Map<String, Object> map, String uploadPath) throws Exception;
 	public void deleteProfilePhoto(Map<String, Object> map, String uploadPath) throws Exception;
