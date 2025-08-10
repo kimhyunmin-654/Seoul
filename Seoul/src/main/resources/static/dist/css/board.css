@@ -4,11 +4,13 @@
 # Board
 ----------------------------------*/
 .board-section {
-  border: 1px solid #e4e4f4;
+  border: 1px solid var(--accent-color);
   border-radius: 0.25rem;
   box-shadow: 0 5px 10px 0 rgba(230, 230, 243, 0.88);
-
   background-color: #ffffff;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .board-section a {

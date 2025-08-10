@@ -25,9 +25,8 @@ select.form-select,
   color: var(--default-color);
   padding: .385rem .75rem;
   box-shadow: none;
-  border: 1px solid;
-  border-radius: 0;
-  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  border: 1px solid var(--accent-color);
+  border-radius: 30px;
   background-color: color-mix(in srgb, var(--background-color), transparent 50%);
 }
 
@@ -132,10 +131,11 @@ input.form-check-input:active {
 .btn-default {
   font-size: 1rem;
   color: var(--default-color);
-  background-color: color-mix(in srgb, var(--background-color), transparent 50%);
+  background-color: var(--background-color);
   border: 1px solid;
   border-color: color-mix(in srgb, var(--default-color), transparent 80%);
   padding: .385rem .75rem;
+  border-radius: 4px !important;
   transition: 0.4s;
   vertical-align: middle;
   cursor: pointer;  
@@ -143,30 +143,33 @@ input.form-check-input:active {
 
 .btn-default:hover,
 .btn-default:focus {
-  outline: none;	
-  background-color: color-mix(in srgb, var(--background-color), transparent 50%);
+  outline: none;
   border-color: var(--accent-color);
 }
 
 .btn-accent {
-  font-size: 1rem;	
+  background-color: var(--accent-color);
   color: var(--contrast-color);
-  background: var(--accent-color);
-  border: 1px solid;
-  border-color: var(--accent-color);
-  padding: .385rem .75rem;
-  transition: 0.4s;
-  vertical-align: middle;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  border-radius: 4px !important;
+  transition: background-color 0.2s ease;
 }
 
 .btn-accent:hover {
-  background: color-mix(in srgb, var(--accent-color) 90%, black 15%);
+  background-color: var(--highlight-color);
+  color: var(--accent-color);
 }
+
 .btn-accent:focus {
   outline: none;
-  background: color-mix(in srgb, var(--accent-color) 90%, black 15%);
-  border-color: var(--accent-color);
+  background-color: var(--highlight-color);
+  color: var(--accent-color);
+  border: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 70%);
 }
 
 .btn-light {

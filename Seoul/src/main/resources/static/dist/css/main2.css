@@ -1,32 +1,41 @@
+/* Import One Mobile Title webfont from Noonnu CDN */
+
+@font-face {
+    font-family: 'ONE-Mobile-Title';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-Title.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /*----------------------------------
 # Variables
 ----------------------------------*/
 :root {
     --scroll-margin-top: 2.5rem;
 
-    --header-heading-color: #3e465b;
+    --header-heading-color: #012970;
     --header-background-color: #ffffff;
-  
+
     --vertical-nav-top-height: 4.3rem;
     --vertical-nav-top-menu-margin: 1.5rem;
     --vertical-nav-footer-height: 4rem;
-  
+
     --vertical-nav-width: 15.875rem;
     --vertical-nav-sm-width: 3.5rem;
     --vertical-nav-height: 3.674rem;
-    
-    --vertical-nav-color: #333333;
-    --vertical-nav-bg-color: #ffffff;
+
+    --vertical-nav-color: #110D42;
+    --vertical-nav-bg-color: #FFFFFF;
     --vertical-nav-bg-accent-color: #fafafa;
     --vertical-nav-border-color: #cbd0dd;
-    --vertical-nav-accent-color: #106eea;
-    --vertical-nav-bg-hover-color: #fafafa;
+    --vertical-nav-accent-color: #FFCC00;
+    --vertical-nav-bg-hover-color: #F5F0E2;
     --nav-mobile-bg-color: #ffffff;
-    
-    --default-title-color: #3e465b;
+
+    --default-title-color: #012970;
     --default-main-color: #333333;
-    
-    --main-bg-color: #f5f9ff;
+
+    --main-bg-color: #ffffff;
     --title-bg-color: #ffffff;
     --session-bg-color: #ffffff;
 }
@@ -44,11 +53,12 @@
 }
 
 .header-top .header-title {
-    font-size: 1.515rem;
+	font-family: "One Mobile Title", NanumGothic, 나눔고딕, "Malgun Gothic", "맑은 고딕", 돋움, sans-serif;
+    font-size: 2rem;
     margin: 0;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--header-heading-color);	
+    color: var(--header-heading-color);
 }
 
 .header-top .header-right .header-account-links {
@@ -126,12 +136,11 @@
 ----------------------------------*/
 .main-container {
     /* margin-top: var(--vertical-nav-top-height); */
-    padding: var(--vertical-nav-top-height) 0 0;
+    padding: 140px 0 0;
 }
 
 .right-panel {
   padding: 1.875em;
-  background: var(--main-bg-color);
   min-height: calc(100vh - var(--vertical-nav-top-height));
 }
 
@@ -139,7 +148,8 @@
 # Navigation Menu
 ----------------------------------*/
 .vertical-nav {
-	position: absolute;
+    position: fixed;
+    top: calc(140px + 20px);
 }
 
 .vertical-nav,
@@ -170,13 +180,13 @@
 .vertical-nav .sub-menu-link {
     cursor: pointer;
 }
-    
+
 .vertical-nav .menu-link:hover,
 .vertical-nav .menu-linka:focus,
 .vertical-nav .menu-linka:active {
     background-color: var(--vertical-nav-bg-hover-color);
 }
-    
+
 .vertical-nav .has-sub-menu ul .sub-menu-link:hover,
 .vertical-nav .has-sub-menu ul .sub-menu-link:focus,
 .vertical-nav .has-sub-menu ul .sub-menu-link:active {
@@ -193,19 +203,19 @@
 	.vertical-nav ~ .right-panel {
         margin-left: var(--vertical-nav-sm-width);
 	}
-	
+
 	.vertical-nav.nav-expand-lg ~ .right-panel {
 	    margin-left: var(--vertical-nav-width);
 	}
-	
+
 	.header-top .header-center-item {
 		padding: 0;
     	z-index: 9997;
 	}
-	
+
     .vertical-nav {
         left: 0;
-        top: var(--vertical-nav-top-height);
+        /* top is now handled above in the base .vertical-nav rule */
         bottom: 0;
         width: var(--vertical-nav-sm-width);
         background-color: var(--vertical-nav-bg-color);
@@ -218,21 +228,21 @@
         margin: 0;
         list-style: none;
     }
-    
+
     .vertical-nav .nav-menu {
         position: absolute;
-        top: 0;    
+        top: 0;
         bottom: var(--vertical-nav-footer-height);
         width: 100%;
         overflow-y: auto;
     }
-    
+
     .vertical-nav .nav-menu > li {
         position: relative;
         min-height: var(--vertical-nav-height);
         align-content: center;
     }
-    
+
 	.vertical-nav .menu-label {
 		display: none;
 	}
@@ -240,11 +250,11 @@
     .vertical-nav.nav-expand-lg {
         width: var(--vertical-nav-width);
     }
-    
+
      .vertical-nav.nav-expand-sm .nav-menu {
          overflow: visible;
      }
-    
+
     .vertical-nav.nav-expand-lg .menu-label,
     .vertical-nav .nav-menu-footer[aria-expanded=true] .collapsed-menu .menu-label {
     	display: block;
@@ -286,7 +296,7 @@
         box-shadow: 0 5px 10px 0 rgba(240, 240, 250, 0.3);
         border-bottom: 1px solid rgba(200, 200, 200, 0.3);
     }
-    
+
     .vertical-nav.nav-expand-sm .has-sub-menu .menu-label {
     	position: absolute;
     	z-index: 9999;
@@ -300,7 +310,7 @@
     	background: var(--vertical-nav-bg-accent-color);
         font-weight: 600;
     }
-        
+
     .vertical-nav.nav-expand-sm .has-sub-menu[aria-expanded=true] .menu-label {
     	display: block;
     	border: 1px solid var(--vertical-nav-border-color);
@@ -308,7 +318,7 @@
     	border-bottom: none;
     	/* box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1); */
     }
-    
+
     .vertical-nav .has-sub-menu ul.dropdown-active {
         display: block;
         transition: all 0.4s ease;
@@ -328,7 +338,7 @@
     	border-left: none;
     	/* box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1); */
     }
-    
+
     .vertical-nav.nav-expand-sm .has-sub-menu > .sub-menu-link {
         padding: 10px 13px;
     }
@@ -352,7 +362,7 @@
     .vertical-nav.nav-expand-lg .has-sub-menu[aria-expanded=true] > .menu-link:after {
         transform: rotate(-135deg) translateY(-50%);
     }
-    
+
     .nav-menu-footer {
         display: flex;
         position: fixed;
@@ -366,7 +376,7 @@
         border-color: var(--vertical-nav-border-color) !important;
         padding: 13px 15px;
     }
-	
+
 	.nav-menu-footer .collapsed-menu {
         cursor: pointer;
 	}
@@ -389,20 +399,20 @@
         color: var(--nav-color);
         font-size: 28px;
         line-height: 0;
-        margin-right: 10px;        
+        margin-right: 10px;
         cursor: pointer;
         transition: color 0.3s;
 	}
-	
+
 	.vertical-nav {
 		padding: 0;
         z-index: 9997;
     }
-    
+
     .vertical-nav .nav-menu-footer {
         display: none;
     }
-    
+
     .vertical-nav ul {
         display: none;
         list-style: none;
@@ -417,7 +427,7 @@
         box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
         transition: 0.3s;
     }
-    
+
     .vertical-nav .menu-link,
     .vertical-nav .sub-menu-link,
     .vertical-nav .menu-link:focus,
@@ -453,7 +463,7 @@
     .vertical-nav .has-sub-menu[aria-expanded=true] > .menu-link:after {
         transform: rotate(-135deg) translateY(-50%);
     }
-        
+
     .vertical-nav .active,
     .vertical-nav .menu-link:hover,
     .vertical-nav .active:focus {
@@ -470,8 +480,8 @@
         border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
         box-shadow: none;
         transition: all 0.5s ease-in-out;
-    }    
-    
+    }
+
     .vertical-nav .has-sub-menu ul.dropdown-active {
         display: block;
         background-color: rgba(33, 37, 41, 0.03);
@@ -480,7 +490,7 @@
     .mobile-nav-active {
         overflow: hidden;
     }
-    
+
     .mobile-nav-active .mobile-nav-toggle {
         color: #ffffff;
         position: absolute;
@@ -502,24 +512,24 @@
     .mobile-nav-active .vertical-nav > ul {
         display: block;
     }
-    
+
     .mobile-nav-active .mobile-menu-closed {
     	display: block;
     }
-    
+
     .mobile-nav-active .mobile-menu-closed .menu-closed-icon {
     	position: absolute;
 	    color: #ffffff;
         font-size: 35px;
         right: 0;
-        margin-right: 13px;        
+        margin-right: 13px;
         cursor: pointer;
         z-index: 9999;
         transition: color 0.3s;
     }
     .mobile-nav-active .mobile-menu-closed .menu-closed-icon:hover {
     	font-weight: 700;
-    }    
+    }
 }
 
 /*----------------------------------
@@ -531,12 +541,30 @@
 	margin-bottom: 1.875rem;
 }
 .page-title h2 {
-	color: var(--default-title-color);
+	color: var(--accent-color);
 	font-size: 1.25rem;
-    font-family: NanumGothic, 나눔고딕, "Malgun Gothic", "맑은 고딕", 돋움, sans-serif;
+    font-family: "One Mobile Title", NanumGothic, 나눔고딕, "Malgun Gothic", "맑은 고딕", 돋움, sans-serif;
     font-weight: 600;
 	padding: 0;
 	margin: 0;
+}
+
+.page-small-title {
+    color: #666666;
+    font-size: 0.8rem;
+    font-family: "Noto Sans KR", NanumGothic, 나눔고딕, "Malgun Gothic", "맑은 고딕", 돋움, sans-serif;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+}
+
+.page-small-title-header {
+    color: #666666;
+    font-size: 1rem;
+    font-family: "Noto Sans KR", NanumGothic, 나눔고딕, "Malgun Gothic", "맑은 고딕", 돋움, sans-serif;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
 }
 
 section, .section {
@@ -547,4 +575,78 @@ section, .section {
 
 .section-body {
     padding: 1rem !important;
+}
+
+/* left */
+.accordion-button.no-bg {
+	background-color: transparent !important;
+	box-shadow: none !important;
+}
+.accordion-button.no-bg:focus {
+	background-color: transparent !important;
+	box-shadow: none !important;
+}
+.accordion-button.no-bg:not(.collapsed) {
+	background-color: transparent !important;
+	box-shadow: none !important;
+}
+.toggle-icon {
+	font-weight: bold;
+	font-size: 1.25rem;
+	user-select: none;
+}
+.accordion-button::after {
+	display: none !important;
+	background-image: none !important;
+	content: none !important;
+}
+.accordion-item {
+	border: none !important;
+	border-bottom: none !important;
+}
+.accordion-button {
+	background-color: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+.accordion-button:hover,
+.accordion-button:focus,
+.accordion-button:active {
+	background-color: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+/* header */
+.top-bar {
+    background-color: #131046;
+    height: 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+}
+
+.header-top {
+    margin-top: 20px;
+	background-color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-bottom: 1px solid #ddd;
+    height: 140px;
+}
+
+.header-title,
+.admin-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.header-title small,
+.admin-title small {
+    font-size: 1rem;
+    color: #555;
+    margin-left: 5px;
 }
