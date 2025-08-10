@@ -94,7 +94,7 @@
 		VALUES ( memberStatus_seq.NEXTVAL, #{member_id}, #{status_code}, #{memo}, #{register_id}, SYSDATE)
 	</insert>
 	
-	<select id="listMemberStauts" parameterType="Integer" resultType="com.sp.app.model.MemberManage">
+	<select id="listMemberStauts" parameterType="Integer" resultType="com.sp.app.admin.model.MemberManage">
 		SELECT status_id, member_id, status_code, memo, register_id, name registerName, reg_date
 		FROM member_status
 		WHERE member_id = #{member_id}
