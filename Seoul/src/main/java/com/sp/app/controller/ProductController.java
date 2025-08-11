@@ -3,6 +3,7 @@ package com.sp.app.controller;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
+import com.sp.app.model.Category;
 import com.sp.app.model.Product;
+import com.sp.app.model.ProductImage;
+import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.ProductService;
@@ -37,12 +41,18 @@ public class ProductController {
 	private final PaginateUtil paginateUtil;
 	
 	@GetMapping("write")
-	public String insertForm(HttpSession session) {
+	public String insertForm(HttpSession session, Model model) {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		if(info == null) {
 			return "redirect:/member/login";
 		}
+		
+		List<Category> categoryList = productService.listCategories();
+		List<Region> regionList = productService.listRegion();
+		
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("regionList", regionList);
 		
 		return "product/write";
 	}
@@ -112,6 +122,31 @@ public class ProductController {
 		}
 		
 		return null;
+	}
+	
+	@GetMapping("detail")
+	public String detailRequest(@RequestParam("productId") long productId,
+			HttpSession session, Model model) throws Exception {
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Product dto = Objects.requireNonNull(productService.findById(productId));
+			
+			// 찜 여부(미완성)
+			
+			List<ProductImage> listFile = productService.listProductImage(productId);
+			
+			model.addAttribute("dto", dto);
+			model.addAttribute("listFile", listFile);
+			
+			return "product/detail";
+			
+		} catch (Exception e) {
+			log.info("detail : ", e);
+		}
+		
+		return "redirect:/product/list";
 	}
 	
 	
