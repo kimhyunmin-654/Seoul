@@ -11,12 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class HomeController {
-
 	
 	@GetMapping("/")
 	public String handleHome(Model model) {
 	
-		
-		return "main/home";
+		return "main/index";
+		// return "main/home";
 	}
 }
