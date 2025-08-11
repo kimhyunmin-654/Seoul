@@ -276,4 +276,20 @@ public class MemberController {
 		
 		return "member/pwdFind";
 	}
+	
+	@GetMapping("mypage")
+	public String mypage(HttpSession session, Model model) {
+	   
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) {
+	        return "redirect:/member/login";
+	    }
+	    if (info.getUserLevel() == 9) {
+	        return "redirect:/admin/mypage";
+	    }
+
+
+	    model.addAttribute("loginUser", info);
+	    return "member/mypage";
+	}
 }

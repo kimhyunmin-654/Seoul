@@ -172,27 +172,37 @@
             </a>
           </c:when>
 
-          <c:otherwise>
-            <div class="dropdown">
-              <c:choose>
-                <c:when test="${not empty sessionScope.member.avatar}">
-                  <img src="${pageContext.request.contextPath}/uploads/member/${sessionScope.member.avatar}"
-                       onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/avatar.png';"
-                       class="avatar-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                </c:when>
-                <c:otherwise>
-                  <img src="${pageContext.request.contextPath}/dist/images/avatar.png"
-                       class="avatar-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                </c:otherwise>
-              </c:choose>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/mypage">마이페이지</a></li>
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/cart">장바구니</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
-              </ul>
-            </div>
-          </c:otherwise>
+		<c:otherwise>
+		  <div class="dropdown">
+		    <c:choose>
+		      <c:when test="${not empty sessionScope.member.avatar}">
+		        <img src="${pageContext.request.contextPath}/uploads/member/${sessionScope.member.avatar}"
+		             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/avatar.png';"
+		             class="avatar-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		      </c:when>
+		      <c:otherwise>
+		        <img src="${pageContext.request.contextPath}/dist/images/avatar.png"
+		             class="avatar-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+		      </c:otherwise>
+		    </c:choose>
+		    <ul class="dropdown-menu dropdown-menu-end">
+		      <c:choose>
+		       
+		        <c:when test="${sessionScope.member.userLevel == 9}">
+		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/mypage">관리자 마이페이지</a></li>
+		        </c:when>
+		       
+		        <c:otherwise>
+		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/mypage">마이페이지</a></li>
+		        </c:otherwise>
+		      </c:choose>
+		
+		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/cart">장바구니</a></li>
+		      <li><hr class="dropdown-divider"></li>
+		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
+		    </ul>
+		  </div>
+		</c:otherwise>
         </c:choose>
       </div>
 
