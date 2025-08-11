@@ -10,13 +10,27 @@
 </head>
 <body>
 
-
-<main>
-
 <header>
-	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+  <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
 
+<main>
+  <div class="container layout-container">
+    <div class="row gx-4">
+    
+      <aside class="col-12 col-lg-3 sidebar">
+        <div class="sidebar-sticky">
+          <jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+        </div>
+      </aside>
+      
+	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"/>
+      
+
+      <section class="col-12 col-lg-9">
+      </section>
+    </div>
+  </div>
 </main>
 
 </body>

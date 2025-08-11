@@ -97,7 +97,6 @@
 }
 .avatar-sm { width:34px; height:34px; border-radius:50%; border:1px solid #ddd; object-fit:cover; cursor:pointer; }
 
-/* 반응형 */
 @media (max-width:992px){
   .header-line { flex-wrap:wrap; }
   .center-box { min-width:100%; order:3; }
