@@ -10,16 +10,13 @@
 </head>
 <body>
 
+
 <main>
-	<h3>메인 페이지</h3>
 
-	<c:if test="${sessionScope.member == null}">
-		<a href="${pageContext.request.contextPath}/member/login" class="border-link-right">로그인</a>
-	</c:if>
+<header>
+	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+</header>
 
-	<c:if test="${sessionScope.member != null}">
-		<a href="${pageContext.request.contextPath}/member/logout" class="border-link-right">로그아웃</a>
-	</c:if>
 </main>
 
 </body>
