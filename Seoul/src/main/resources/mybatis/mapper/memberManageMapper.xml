@@ -1,11 +1,14 @@
-<mapper namespace="com.sp.app.mapper.MemberMapper">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.MemberManageMapper">
 	<!-- 회원 리스트 -->
 	<sql id="where-list">
 		<choose>
-			<when test="schType == 'login_id'"> 
+			<when test="schType == 'login_id'">
 				( INSTR(login_id, #{kwd}) &gt; 1 OR INSTR(sns_id, #{kwd}) &gt; 1 )
 			</when>
-			<when test="schType == 'member_id'"> 
+			<when test="schType == 'member_id'">
 				member_id = #{kwd}
 			</when>
 			<otherwise>
@@ -13,22 +16,23 @@
 			</otherwise>
 		</choose>
 	</sql>
-	
+
 	<select id="dataCount" parameterType="map" resultType="Integer">
-		SELECT COUNT(*) 
+		SELECT COUNT(*)
 		FROM member
 		<where>
 			<if test="kwd != null and kwd != '' ">
 				<include refid="where-list" />
 			</if>
 			<if test="enabled != '' ">
-				 AND enabled = #{enabled} </if>
-			<choose> 
-				<when test="role == 2 and non == 0"> 
+				AND enabled = #{enabled}
+			</if>
+			<choose>
+				<when test="role == 2 and non == 0">
 					AND ( userLevel &gt;= 5 AND userLevel &lt; 9 )
 				</when>
-				<when test="role == 2 and nin == 1"> 
-					AND ( userLevel &gt; 4 AND userLevel &lt; 9) 
+				<when test="role == 2 and non == 1">
+					AND ( userLevel &gt; 4 AND userLevel &lt; 9)
 				</when>
 				<when test="role == 1 and non == 0">
 					AND userLevel = 1
@@ -39,24 +43,26 @@
 			</choose>
 		</where>
 	</select>
-	
-	<select id="listMember" parameterType="map" resultType="com.sp.app.admin.model.MemberManage">
-		SELECT member_id, login_id, sns_provider, sns_id, userLevel, enabled, created_at, update_at, last_login,
-			name, email, profile_photo
+
+	<select id="listMember" parameterType="map"
+		resultType="com.sp.app.admin.model.MemberManage">
+		SELECT member_id, login_id, sns_provider, sns_id, userLevel, enabled,
+		created_at, update_at, last_login,
+		name, email, profile_photo
 		FROM member
 		<where>
 			<if test="kwd != null and kwd != '' ">
-				<include refid="where-list"/>
+				<include refid="where-list" />
 			</if>
 			<choose>
-				<when test="role == 2 and non == 0"> 
+				<when test="role == 2 and non == 0">
 					AND ( userLevel &gt;= 5 AND userLevel &lt; 9 )
 				</when>
-				<when test="role == 2 and nin == 1"> 
-					AND ( userLevel &gt; 4 AND userLevel &lt; 9) 
+				<when test="role == 2 and non == 1">
+					AND ( userLevel &gt; 4 AND userLevel &lt; 9)
 				</when>
 				<when test="role == 1 and non == 0">
-				 	AND userLevel = 1
+					AND userLevel = 1
 				</when>
 				<otherwise>
 					AND ( userLevel = 0 OR userLevel = 1 )
@@ -64,49 +70,68 @@
 			</choose>
 		</where>
 		ORDER BY created_at DESC
-		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS
+		ONLY
 	</select>
-	
-	<select id="findById" parameterType="Integer" resultType="com.sp.app.admin.model.MemberManage">
-		SELECT member_id, login_id, password, sns_provider, sns_id, userLevel, enabled,
-			created_at, update_at, last_login, failure_cnt, name, email, profile_photo
-		FROM member
+
+	<select id="findById" parameterType="Long"
+		resultType="com.sp.app.admin.model.MemberManage">
+		SELECT member_id, login_id, password, sns_provider, sns_id,
+		userLevel, enabled,
+		created_at, update_at, last_login, failure_cnt, name, email, profile_photo
+		FROM
+		member
 		WHERE member_id = #{member_id}
 	</select>
-	
-	<update id="updateFailUreCountReset" parameterType="Integer">
-		UPDATE member SET failure_cnt = 0
+
+	<update id="updateFailUreCountReset" parameterType="Long">
+		UPDATE member
+		SET failure_cnt = 0
 		WHERE member_id = #{member_id}
 	</update>
-	
+
 	<update id="updateMember" parameterType="map">
-		UPDATE member SET name = #{name}, userLevel = #{userLevel}, enabled = #{enabled}
-		WHERE member_id = #{member_id}
+		UPDATE member SET name =
+		#{name}, userLevel = #{userLevel}, enabled = #{enabled}
+		WHERE member_id
+		= #{member_id}
 	</update>
-	
+
 	<delete id="deleteMember" parameterType="map">
 		DELETE FROM member
-		WHERE member_id = #{member_id}
+		WHERE
+		member_id = #{member_id}
 	</delete>
-	
-	<insert id="insertMemberStatus" parameterType="com.sp.app.admin.model.MemberManage">
-		INSERT INTO member_status(status_id, member_id, status_code, memo, register_id, reg_date)
-		VALUES ( memberStatus_seq.NEXTVAL, #{member_id}, #{status_code}, #{memo}, #{register_id}, SYSDATE)
+
+	<insert id="insertMemberStatus"
+		parameterType="com.sp.app.admin.model.MemberManage">
+		INSERT INTO member_status(status_id, member_id,
+		status_code, memo, register_id, reg_date)
+		VALUES (
+		memberStatus_seq.NEXTVAL, #{member_id}, #{status_code}, #{memo},
+		#{register_id}, SYSDATE)
 	</insert>
-	
-	<select id="listMemberStauts" parameterType="Integer" resultType="com.sp.app.admin.model.MemberManage">
-		SELECT status_id, member_id, status_code, memo, register_id, name registerName, reg_date
-		FROM member_status
-		WHERE member_id = #{member_id}
+
+	<select id="listMemberStatus" parameterType="Long"
+		resultType="com.sp.app.admin.model.MemberManage">
+		SELECT status_id, s.member_id, status_code, memo,
+		s.register_id, m.name registerName, s.reg_date
+		FROM member_status s
+		JOIN member m ON s.register_id = m.member_id
+		WHERE
+		s.member_id = #{member_id}
 		ORDER BY status_id DESC
 	</select>
-	
-	<select id="findByStatus" parameterType="Integer" resultType="com.sp.app.admin.model.MemberManage">
-		SELECT status_id, member_id, status_code, memo, register_id, name registerName, reg_date
+
+	<select id="findByStatus" parameterType="Long"
+		resultType="com.sp.app.admin.model.MemberManage">
+		SELECT status_id, member_id, status_code, memo,
+		register_id, reg_date
 		FROM member_status
-		WHERE member_id = #{member_id}
+		WHERE
+		member_id = #{member_id}
 		ORDER BY status_id DESC
 		FETCH FIRST 1 ROWS ONLY
 	</select>
-	
+
 </mapper>

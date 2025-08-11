@@ -98,7 +98,7 @@ public class MemberManageController {
 			throw e;
 		}
 		
-		return "admin/memberManage.list";
+		return "admin/memberManage/list";
 	}
 	
 	//회원상세 정보 : AJAX-TEXT
