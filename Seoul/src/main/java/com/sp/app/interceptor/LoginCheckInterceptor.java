@@ -5,6 +5,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sp.app.model.SessionInfo;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,43 +18,46 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
-		boolean result = true;
+	    HttpSession session = req.getSession(false);
+	    SessionInfo info = (session == null) ? null : (SessionInfo) session.getAttribute("member");
+	    final String cp = req.getContextPath();
+	    String uri = req.getRequestURI();
+	    String qs  = req.getQueryString();
 
-		try {
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo)session.getAttribute("member");
-			String cp = req.getContextPath();
-			String uri = req.getRequestURI();
-			String queryString = req.getQueryString();
+	    // 에러 디스패치 건드리지 않음
+	    if (req.getDispatcherType() == DispatcherType.ERROR) {
+	        return true;
+	    }
 
-			if (info == null) {
-				result = false;
+	    try {
+	        // 권한 체크(예: /admin)
+	        if (info != null && uri.contains("/admin") && info.getUserLevel() < 5) {
+	            resp.sendRedirect(cp + "/member/noAuthorized");
+	            return false;
+	        }
 
-				if (isAjaxRequest(req)) {
-					resp.sendError(401);
-				} else {
-					if (uri.indexOf(cp) == 0) {
-						uri = uri.substring(cp.length());
-					}
-					
-					if (queryString != null) {
-						uri += "?" + queryString;
-					}
+	        // 로그인 체크
+	        if (info == null) {
+	            if (uri.startsWith(cp)) uri = uri.substring(cp.length());
+	            if (qs != null) uri += "?" + qs;
+	            req.getSession(true).setAttribute("preLoginURI", uri);
 
-					session.setAttribute("preLoginURI", uri);
-					resp.sendRedirect(cp + "/member/login");
-				}
-			} else {
-				if(uri.indexOf("admin") != -1 && info.getUserLevel() < 5) {
-					result = false;
-					resp.sendRedirect(cp + "/member/noAuthorized");
-				}
-			}
-		} catch (Exception e) {
-			log.info("pre: " + e.toString());
-		}
+	            if (isAjaxRequest(req)) {
+	                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+	            } else {
+	                resp.sendRedirect(cp + "/member/login");
+	            }
+	            return false; 
+	        }
 
-		return result;
+	        return true;
+	    } catch (Exception e) {
+	        log.warn("LoginCheckInterceptor error", e);
+	        if (!resp.isCommitted()) {
+	            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Interceptor error");
+	        }
+	        return false;
+	    }
 	}
 
 
@@ -69,8 +73,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 	}
 
 	private boolean isAjaxRequest(HttpServletRequest req) {
-		String header = req.getHeader("AJAX");
-		return header != null && header.equals("true");
+	    String xrw = req.getHeader("X-Requested-With");
+	    if ("XMLHttpRequest".equalsIgnoreCase(xrw)) return true;
+	    String ajax = req.getHeader("AJAX");
+	    return ajax != null && ajax.equalsIgnoreCase("true");
 	}
 
 }

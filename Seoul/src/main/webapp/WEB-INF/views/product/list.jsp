@@ -16,6 +16,10 @@
 </head>
 <body class="bg-gray-100">
 
+	<header>
+		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+	</header>
+
     <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
         <header class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">우리 동네 상품</h1>
