@@ -189,7 +189,7 @@
 		      <c:choose>
 		       
 		        <c:when test="${sessionScope.member.userLevel == 9}">
-		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/mypage">관리자 마이페이지</a></li>
+		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/memberManage/main">관리자 마이페이지</a></li>
 		        </c:when>
 		       
 		        <c:otherwise>
