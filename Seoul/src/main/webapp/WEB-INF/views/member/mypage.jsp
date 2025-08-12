@@ -37,48 +37,7 @@
 </header>
 
 <main class="wrap">
-  <div class="page">
-    <!-- 왼쪽 사이드 -->
-    <aside class="sidebar">
-      <div class="menu-title">마이페이지</div>
-      <ul class="menu">
-        <li>
-          <strong>거래내역+</strong>
-          <ul class="sub">
-            <li><a href="${pageContext.request.contextPath}/mypage/orders/sales">판매내역</a></li>
-            <li><a href="${pageContext.request.contextPath}/mypage/orders/purchases">구매내역</a></li>
-          </ul>
-        </li>
-
-        <li>
-          <div><a href="${pageContext.request.contextPath}/mypage/shipping">배송 현황</a></div>
-        </li>
-
-        <li><a href="${pageContext.request.contextPath}/mypage/posts">내가 쓴 글</a></li>
-        <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 상품</a></li>
-        <li><a href="${pageContext.request.contextPath}/mypage/likes">찜한 상품</a></li>
-        <li><a href="${pageContext.request.contextPath}/mypage/cart">장바구니</a></li>
-        <li><a href="${pageContext.request.contextPath}/mypage/calendar">캘린더</a></li>
-        <li><a href="${pageContext.request.contextPath}/mypage/events">이벤트 참여 내역</a></li>
-        <li><a href="${pageContext.request.contextPath}/member/profile">내 정보 수정</a></li>
-        <li style="margin-top: 18px;"><a href="${pageContext.request.contextPath}/mypage/stats">거래 통계</a></li>
-      </ul>
-    </aside>
-
-    <!-- 우측 콘텐츠 -->
-    <section class="content">
-      <div class="page-title">마이페이지</div>
-      <div class="card">
-        <p class="muted">좌측 메뉴에서 항목을 선택해 주세요. (예: <b>판매내역</b>, <b>구매내역</b>, <b>찜한 상품</b> 등)</p>
-        <hr style="border:none;border-top:1px solid #eee; margin:16px 0;">
-        <ul style="margin:0; padding-left:16px;">
-          <li>최근 거래 요약</li>
-          <li>최근 본 상품 5개</li>
-          <li>알림/메시지 요약</li>
-        </ul>
-      </div>
-    </section>
-  </div>
+  <jsp:include page="/WEB-INF/views/layout/leftmypage.jsp"/>
 </main>
 
 </body>

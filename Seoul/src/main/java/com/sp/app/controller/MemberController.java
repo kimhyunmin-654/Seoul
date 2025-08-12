@@ -2,6 +2,7 @@ package com.sp.app.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -292,4 +293,48 @@ public class MemberController {
 	    model.addAttribute("loginUser", info);
 	    return "member/mypage";
 	}
+	
+	@GetMapping("pwd")
+	public String pwdForm(@RequestParam(name = "dropout", required = false) String dropout, 
+			Model model) {
+
+		if (dropout == null) {
+			model.addAttribute("mode", "update");
+		} 
+
+		return "member/pwd";
+	}
+	
+	@PostMapping("pwd")
+	public String pwdSubmit(@RequestParam(name = "password") String password,
+			@RequestParam(name = "mode") String mode, 
+			final RedirectAttributes reAttr,
+			Model model,
+			HttpSession session) {
+
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			Member dto = Objects.requireNonNull(service.findById(info.getMember_id()));
+
+			if (! dto.getPassword().equals(password)) {
+				model.addAttribute("mode", mode);
+				model.addAttribute("message", "패스워드가 일치하지 않습니다.");
+				
+				return "member/pwd";
+			}
+
+			model.addAttribute("dto", dto);
+			model.addAttribute("mode", "update");
+			
+			// 회원정보수정폼
+			return "member/member";
+			
+		} catch (NullPointerException e) {
+			session.invalidate();
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/member/mypage";
+	}
+	
 }

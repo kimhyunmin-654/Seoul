@@ -10,7 +10,9 @@
 </head>
 <body>
 
-
+<header>
+  <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+</header>
 
 <main>
 	<div class="section bg-light">
@@ -66,7 +68,7 @@ function sendOk() {
 		return;
 	}
 
-	f.action = '${pageContext.request.contextPath}/';
+	f.action = '${pageContext.request.contextPath}/member/pwd';
 	f.submit();
 }
 </script>
