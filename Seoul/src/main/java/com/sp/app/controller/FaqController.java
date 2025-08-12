@@ -1,9 +1,11 @@
 package com.sp.app.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -113,7 +115,18 @@ public class FaqController {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
 			}
 			
-			service.updateHitCount(faq_id);
+	        @SuppressWarnings("unchecked")
+	        Set<Long> viewed = (Set<Long>) session.getAttribute("viewedFaq");
+	        if (viewed == null) {
+	            viewed = new HashSet<>();
+	        }
+	        
+	        if (!viewed.contains(faq_id)) {
+	            service.updateHitCount(faq_id); 
+	            viewed.add(faq_id);         
+	            session.setAttribute("viewedFaq", viewed); 
+	        }
+			
 			
 			FaqManage dto = Objects.requireNonNull(service.findById(faq_id));
 			

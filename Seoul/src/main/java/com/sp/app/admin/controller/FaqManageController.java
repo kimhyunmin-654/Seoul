@@ -152,7 +152,6 @@ public class FaqManageController {
 	            session.setAttribute("viewedFaq", viewed); 
 	        }
 			
-			// service.updateHitCount(faq_id);
 			
 			FaqManage dto = Objects.requireNonNull(service.findById(faq_id));
 			
