@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sp.app.mapper.MemberMapper">
-	<select id="noticeSeq" resultType="Long">
+<mapper namespace="com.sp.app.admin.mapper.NoticeManageMapper">
+	<select id="notice_seq" resultType="Long">
 		SELECT notice_seq.NEXTVAL FROM dual
 	</select>
 	
@@ -22,7 +22,7 @@
 				]]>
 			</when>
 			<when test="schType == 'reg_date' ">
-				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD') #{kwd}) &gt; 0
+				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD'), #{kwd}) &gt; 0
 					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
 			</when>
 			<when test="schType == 'content' ">
@@ -74,7 +74,7 @@
 			SELECT num, COUNT(*) fileCount
 			FROM notice_File
 			GROUP BY num
-		) f.ON n.num = f.num
+		) f ON n.num = f.num
 		<where>
 			<if test="showNotice != null">
 				showNotice = #{showNotice}
@@ -104,14 +104,13 @@
 	</update>
 	
 	<!-- 이전글 -->
-	<select id="finByPrev" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
 		SELECT num, subject
-		FROM notice n
-		JOIN member m ON n.member_id = m.member_id
+		FROM notice 
 		<where>
 			<if test="showNotice != null">
 				showNotice = #{showNotice}
-			</if>
+			</if>		
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>
 			</if>
@@ -119,25 +118,24 @@
 		</where>
 		ORDER BY modify_date ASC
 		FETCH FIRST 1 ROWS ONLY
-	</select>
+    </select>
 	
 	<!-- 다음글 -->
-		<select id="finByNext" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
+    <select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.NoticeManage">
 		SELECT num, subject
-		FROM notice n
-		JOIN member m ON n.member_id = m.member_id
+		FROM notice 
 		<where>
 			<if test="showNotice != null">
 				showNotice = #{showNotice}
-			</if>
+			</if>		
 			<if test="kwd != null and kwd != '' ">
 				AND <include refid="where-list"/>
 			</if>
-			AND (modify_date &gt; TO_DATE(#{modify_date}, 'YYYY-MM-DD HH24:MI:SS'))
+			AND (modify_date &lt; TO_DATE(#{modify_date}, 'YYYY-MM-DD HH24:MI:SS'))
 		</where>
 		ORDER BY modify_date DESC
 		FETCH FIRST 1 ROWS ONLY
-	</select>
+    </select>
 	
 	<!-- 수정 -->
 	<update id="updateNotice" parameterType="com.sp.app.admin.model.NoticeManage">
@@ -154,8 +152,8 @@
 	
 	<!-- 파일 -->
 	<insert id="insertNoticeFile" parameterType="com.sp.app.admin.model.NoticeManage">
-		INSERT INTO noticeFile(fileNum, num, save_filename, original_filename, filesize)
-		VALUES (noticeFile_seq.NEXTVALM #{num}, #{save_filename}, #{original_filename}, #{filesize})
+		INSERT INTO notice_File(fileNum, num, save_filename, original_filename, filesize)
+		VALUES (noticeFile_seq.NEXTVAL, #{num}, #{save_filename}, #{original_filename}, #{filesize})
 	</insert>
 	
 	<select id="listNoticeFile" parameterType="Long" resultType="com.sp.app.admin.model.NoticeManage">
