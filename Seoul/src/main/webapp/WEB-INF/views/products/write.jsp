@@ -24,9 +24,6 @@
 
     <!-- 본문 섹션 -->
 
-
-
-
 			<div class="market-wrap">
 			  <div class="market-card">
 			  

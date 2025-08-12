@@ -28,7 +28,7 @@
     --vertical-nav-bg-color: #FFFFFF;
     --vertical-nav-bg-accent-color: #fafafa;
     --vertical-nav-border-color: #cbd0dd;
-    --vertical-nav-accent-color: #d32f2f;
+    --vertical-nav-accent-color: #FFCC00;
     --vertical-nav-bg-hover-color: #F5F0E2;
     --nav-mobile-bg-color: #ffffff;
 
@@ -91,7 +91,7 @@
 .header-top .header-right .header-avatar .avatar-sm {
     width: 2.35rem; height: 2.35rem;
     object-fit: cover;
-  	/* background: #cbd0dd; */
+  /* background: #cbd0dd; */
     border: 1px solid #cbd0dd;  border-radius: 50% !important;
     cursor: pointer;
     transition: transform 0.5s ease-in-out;
@@ -614,7 +614,7 @@ section, .section {
 .accordion-button:focus,
 .accordion-button:active {
 	background-color: transparent !important;
-	box-shadow: none !important
+	box-shadow: none !important;
 	outline: none !important;
 }
 

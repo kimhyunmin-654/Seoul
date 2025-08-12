@@ -94,8 +94,8 @@
 				<span class="menu-label">고객센터</span>
 			</label>
 			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin' />">FAQ</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/noticeManage/list' />">공지사항</a></li>
+				<li><a class="sub-menu-link" href="<c:url value='/admin/faqManage/list' />">FAQ</a></li>
+				<li><a class="sub-menu-link" href="<c:url value='/admin' />">공지사항</a></li>
 			</ul>
 		</li>
 
@@ -105,7 +105,7 @@
 				<span class="menu-label">문의 및 신고</span>
 			</label>
 			<ul>
-				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/inquiryManage/list">1:1문의</a></li>
+				<li><a class="sub-menu-link" href="#">1:1문의</a></li>
 				<li><a class="sub-menu-link" href="#">신고</a></li>
 			</ul>
 		</li>

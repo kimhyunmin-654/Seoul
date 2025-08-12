@@ -21,6 +21,11 @@
     </style>
 </head>
 <body>
+
+	<header>
+		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+	</header>
+
     <div class="container my-5">
         <h2 class="text-center mb-4">어떤 물건을 판매하시나요? 📦</h2>
 
@@ -36,18 +41,15 @@
                     <label for="category_id" class="form-label">카테고리</label>
                     <select class="form-select" id="category_id" name="category_id" required>
                         <option value="">카테고리 선택</option>
-                        <c:forEach var="vo" items="${categoryList }">                        
-	                        <option value="${vo.category_id }">${vo.category_name }</option>
-                        </c:forEach>
+                        <option value="1">디지털기기</option>
+                        <%-- 컨트롤러에서 categoryList를 받아와 동적으로 생성 --%>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label for="region_id" class="form-label">거래 지역</label>
                     <select class="form-select" id="region_id" name="region_id" required>
                         <option value="">지역 선택</option>
-                        <c:forEach var="region" items="${regionList }">
-	                        <option value="${region.region_id }">${region.region_name }</option>                        
-                        </c:forEach>
+                        <option value="R001">강남구</option>
                     </select>
                 </div>
             </div>

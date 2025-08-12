@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
@@ -28,6 +27,8 @@
 	<tr>
 		<td class="bg-light col-sm-2">로그인 아이디</td>
 		<td class="col-sm-4">${dto.login_id}</td>
+		<td class="bg-light col-sm-2">전화번호</td>
+		<td class="col-sm-4"></td> <!-- 전화번호 필드가 누락되어 있어 빈 <td> 추가 -->
 	</tr>	
 
 	<tr>
@@ -39,7 +40,7 @@
 
 	<tr>
 		<td class="bg-light col-sm-2">이메일</td>
-		<td class="col-sm-4">${dto.email}</td>
+		<td colspan="3">${dto.email}</td>
 	</tr>
 
 	<tr>
@@ -68,7 +69,7 @@
 	<tr> 
 		<td class="text-end">
 			<button type="button" class="btn-default" onclick="statusDetailesMember();">계정상태</button>
-			<c:if test="${dto.userLevel < 4 || sessionScope.member.userLevel > 9 }">
+			<c:if test="${dto.userLevel < 50 || sessionScope.member.userLevel > 90 }">
 				<button type="button" class="btn-default" onclick="updateMember();">수정</button>
 				<button type="button" class="btn-default" onclick="deleteMember('${dto.member_id}');">삭제</button>
 			</c:if>
@@ -104,16 +105,17 @@
 							<td>
 								<select name="userLevel" class="form-select" style="width: 95%;">
 									<c:choose>
-										<c:when test="${dto.userLevel < 50}">
-											<option value="1" ${dto.userLevel==1 ? "selected":""}>회원</option>
+										<c:when test="${dto.userLevel < 6}">
+											<option value="1" ${dto.userLevel==1 ? "selected":""}>일반회원</option>
 											<option value="5" ${dto.userLevel==5 ? "selected":""}>셀러</option>
+											<option value="0" ${dto.userLevel==0 ? "selected":""}>비회원</option>
 										</c:when>
-										<c:when test="${dto.userLevel == 5}">
-											<c:if test="${sessionScope.member.userLevel > 9}">
-												<option value="5" ${dto.userLevel==5 ? "selected":""}>셀러</option>
-												<option value="1" ${dto.userLevel==1 ? "selected":""}>회원</option>
+										<c:otherwise>
+											<option value="5" ${dto.userLevel==5 ? "selected":""}>셀러</option>
+											<c:if test="${sessionScope.member.userLevel > 90}">
+												<option value="50" ${dto.userLevel==50 ? "selected":""}>폐점</option>
 											</c:if>
-										</c:when>
+										</c:otherwise>
 									</c:choose>
 								</select>
 							</td>
@@ -189,6 +191,7 @@
 					<thead class="table-light">
 						<tr>
 							<th>내용</th>
+							<th width="120">담당자</th>
 							<th width="180">등록일</th>
 						</tr>
 					</thead>
@@ -214,4 +217,113 @@
 		</div>
 	</div>
 </div>
-			
+
+<!-- 커스텀 알림/확인 모달 -->
+<div class="modal fade" id="customDialogModal" tabindex="-1" aria-labelledby="customDialogModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customDialogModalLabel">알림</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center" id="customDialogMessage">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+        <button type="button" class="btn btn-primary d-none" id="customDialogConfirmBtn">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+// 커스텀 알림 모달 함수
+function showCustomAlert(message) {
+	const modal = $('#customDialogModal');
+	modal.find('#customDialogModalLabel').text('알림');
+	modal.find('#customDialogMessage').html(message.replace(/\n/g, '<br>'));
+	modal.find('.btn-primary').addClass('d-none');
+	modal.find('.btn-secondary').text('확인').attr('data-bs-dismiss', 'modal');
+	modal.modal('show');
+}
+
+// 커스텀 확인 모달 함수
+function showCustomConfirm(message, callback) {
+	const modal = $('#customDialogModal');
+	modal.find('#customDialogModalLabel').text('확인');
+	modal.find('#customDialogMessage').html(message.replace(/\n/g, '<br>'));
+	
+	const confirmBtn = modal.find('#customDialogConfirmBtn');
+	const cancelBtn = modal.find('.btn-secondary');
+	
+	confirmBtn.removeClass('d-none').text('확인');
+	cancelBtn.text('취소').attr('data-bs-dismiss', 'modal');
+
+	confirmBtn.off('click').on('click', function() {
+		modal.modal('hide');
+		callback();
+	});
+	
+	modal.modal('show');
+}
+
+function updateMemberOk(page) {
+	// 회원 정보 변경(권한, 이름, 생년월일)
+	const f = document.memberUpdateForm;
+
+	if( ! f.name.value ) {
+		showCustomAlert('이름을 입력 하세요.');
+		f.name.focus();
+		return;
+	}
+	
+	if(f.userLevel.value === '0' || f.userLevel.value === '50') {
+		f.enabled.value = '0';	
+	}
+	
+	showCustomConfirm('회원 정보를 수정하시겠습니까 ? ', function() {
+		let url = '${pageContext.request.contextPath}/admin/memberManage/updateMember';
+		let params = $('#memberUpdateForm').serialize();
+
+		const fn = function(data){
+			listMember(page);
+		};
+		ajaxRequest(url, 'post', params, 'json', fn);
+		
+		$('#memberUpdateDialogModal').modal('hide');
+	});
+}
+
+function deleteMember(memberIdx) {
+	// 회원 삭제
+	
+}
+
+function updateStatusOk(page) {
+	// 회원 상태 변경
+	const f = document.memberStatusDetailesForm;
+
+	if( ! f.status_code.value ) {
+		showCustomAlert('상태 코드를 선택하세요.');
+		f.status_code.focus();
+		return;
+	}
+	if( ! f.memo.value.trim() ) {
+		showCustomAlert('상태 메모를 입력하세요.');
+		f.memo.focus();
+		return;
+	}
+	
+	showCustomConfirm('상태 정보를 수정하시겠습니까 ? ', function() {
+		let url = '${pageContext.request.contextPath}/admin/memberManage/updateMemberStatus';
+		let params = $('#memberStatusDetailesForm').serialize();
+
+		const fn = function(data){
+			listMember(page);
+		};
+		ajaxRequest(url, 'post', params, 'json', fn);
+		
+		$('#memberStatusDetailesDialogModal').modal('hide');
+	});
+}
+</script>

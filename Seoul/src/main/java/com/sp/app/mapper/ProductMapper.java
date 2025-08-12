@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.sp.app.model.Category;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductImage;
-import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 
 @Mapper
@@ -23,8 +21,7 @@ public interface ProductMapper {
 	public Product findById(long product_id);
 	public int dataCount(SearchCondition cond);
 		
-	public List<ProductImage> listProductImages(long product_id);
-	public List<Category> listCategory();
-	public List<Region> listRegion();
+	public List<Product> listProductImages(long product_id);
+	public List<Product> listCategory();
 	
 }

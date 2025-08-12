@@ -21,13 +21,12 @@ public class NoticeManage {
 	private String reg_date;
 	private String modify_date;
 	private int showNotice;
-	private String name;
+	
 	private long fileNum;
 	private String save_filename;
 	private String original_filename;
 	private long filesize;
 	private int fileCount;
-	private String login_id;
 	
 	private List<MultipartFile> selectFile;
 	private long gap;

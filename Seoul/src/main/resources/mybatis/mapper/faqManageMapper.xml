@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.FaqManageMapper">
+	<select id="faqSeq" resultType="Long">
+		SELECT faq_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertFaq" parameterType="com.sp.app.admin.model.FaqManage">
+		INSERT INTO faq(faq_id, member_id, question, content, reg_date, hit_count, update_date)
+		VALUES(#{faq_id}, #{member_id}, #{question}, #{content}, SYSDATE, 0, SYSDATE)	
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				<![CDATA[
+					(
+						INSTR(question, #{kwd}) > 0
+						OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+					)				
+				]]>
+			</when>
+			<when test="schType == 'reg_date' ">
+				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<update id="updateFaq" parameterType="com.sp.app.admin.model.FaqManage">
+		UPDATE faq SET question = #{question}, content = #{content}, update_date = sysdate 
+		WHERE faq_id = #{faq_id}
+	</update>
+	
+	<delete id="deleteFaq">
+		DELETE FROM faq
+		WHERE faq_id = #{faq_id}
+	</delete>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM faq f
+		JOIN member m ON f.member_id = m.member_id
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="listFaq" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT f.faq_id, f.member_id, question, content, hit_count, TO_CHAR(update_date, 'YYYY-MM-DD') update_date, m.nickname
+		FROM faq f
+		JOIN member m ON f.member_id = m.member_id
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"></include>
+			</if>
+		</where>
+		ORDER BY reg_date DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT f.faq_id, f.member_id, f.question, f.content, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, hit_count, TO_CHAR(update_date, 'YYYY-MM-DD') update_date, m.nickname
+		FROM faq f
+		JOIN member m ON f.member_id = m.member_id
+		WHERE faq_id = #{faq_id} 
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE faq SET hit_count = hit_count + 1
+		WHERE faq_id = #{faq_id}
+	</update>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT faq_id, question
+		FROM faq
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND faq_id &lt; #{faq_id}
+		</where>
+		ORDER BY faq_id DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.FaqManage">
+		SELECT faq_id, question
+		FROM faq
+		<where>
+			<if test="kwd != null and kwd != '' ">
+				<include refid="where-list"/>
+			</if>
+			AND faq_id &gt; #{faq_id}
+		</where>
+		ORDER BY faq_id ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+</mapper>

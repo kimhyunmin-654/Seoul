@@ -3,7 +3,6 @@ package com.sp.app.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +13,8 @@ import com.sp.app.common.StorageService;
 import com.sp.app.mapper.AuctionMapper;
 import com.sp.app.mapper.ProductMapper;
 import com.sp.app.model.Auction;
-import com.sp.app.model.Category;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductImage;
-import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 
 import lombok.RequiredArgsConstructor;
@@ -160,23 +157,9 @@ public class ProductServiceImpl implements ProductService {
 
 
 	@Override
-	public Product findById(long product_id) {
-		Product dto = null;
-		
-		try {
-			dto = Objects.requireNonNull(productMapper.findById(product_id));
-			
-			if(dto != null && dto.getContent() != null) {
-				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-			}
-			
-			
-		} catch (NullPointerException e) {
-		} catch (Exception e) {
-			log.info("findById : ", e);
-		}
-		
-		return dto;
+	public Product findbyId(long product_id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -184,32 +167,6 @@ public class ProductServiceImpl implements ProductService {
 	public int dataCount(SearchCondition cond) {
 		
 		return productMapper.dataCount(cond);
-	}
-
-
-	@Override
-	public List<ProductImage> listProductImage(long product_id) {
-		List<ProductImage> list = null;
-		
-		try {
-			list = productMapper.listProductImages(product_id);
-		} catch (Exception e) {
-			log.info("listProductImage : ", e);
-		}
-		
-		return list;
-	}
-
-
-	@Override
-	public List<Category> listCategories() {
-		return productMapper.listCategory();
-	}
-
-
-	@Override
-	public List<Region> listRegion() {
-		return productMapper.listRegion();
 	}
 
 

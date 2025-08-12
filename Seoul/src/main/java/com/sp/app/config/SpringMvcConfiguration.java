@@ -32,6 +32,7 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/uploads/photo/**");
 		excludePaths.add("/oauth/kakao/callback");
 		excludePaths.add("/.well-known/**");
+		excludePaths.add("/faq/list");
 		
 		registry.addInterceptor(new LoginCheckInterceptor()).excludePathPatterns(excludePaths);
 	}

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <!-- Favicons -->
-<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
+<link href="${pageContext.request.contextPath}/dist/images/h.png" rel="icon">
  
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect">

@@ -153,7 +153,7 @@
 		    </a>
 		    <ul class="dropdown-menu">
 		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
-		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/faq/main">FAQ</a></li>
+		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/faq/list">FAQ</a></li>
 		    </ul>
 		  </div>
       

@@ -159,7 +159,7 @@ public class MemberManageController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("member_id", dto.getMember_id());
 			if(dto.getStatus_code() == 0) {
-				map.put("enabled", 1);
+				map.put("enavled", 1);
 			} else {
 				map.put("enabled", 0);
 			}
