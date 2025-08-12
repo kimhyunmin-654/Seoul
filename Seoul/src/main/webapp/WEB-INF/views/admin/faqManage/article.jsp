@@ -18,94 +18,75 @@
 <main class="main-container">
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
-<!-- Page Title -->
-	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
-			<h1>FAQ 관리</h1>
-			<div class="page-title-underline-accent"></div>
-		</div>
-	</div>
-    
-	<!-- Page Content -->    
-	<div class="section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
-			<div class="row justify-content-center">
-				<div class="col-md-10 board-section my-4 p-5">
-
-					<div class="pb-2">
-						<span class="small-title">상세정보</span>
+	<div class="container py-4 px-5">
+		<div class="row justify-content-center">
+			<div class="col-xl-8 col-lg-9 col-md-10"> 
+	
+				<div class="bg-white shadow-sm rounded p-5">
+	
+					<div class="pb-4 border-bottom">
+						<h5 class="fw-bold mb-3">${dto.question}</h5>
+						<div class="d-flex justify-content-between text-secondary small">
+							<span>작성자: ${dto.nickname}</span>
+							<span>작성일: ${dto.update_date} | 조회수: ${dto.hit_count}</span>
+						</div>
 					</div>
-									
-					<table class="table board-article">
-						<thead>
-							<tr>
-								<td colspan="2" class="text-center">
-									${dto.question}
-								</td>
-							</tr>
-						</thead>
-
-						<tbody>
-							<tr>
-								<td width="50%">
-									작성자 : ${dto.nickname}
-								</td>
-								<td width="50%" class="text-end">
-									작성일 : ${dto.update_date} | 조회 ${dto.hit_count}
-								</td>
-							</tr>
-							
-							<tr>
-								<td colspan="2" valign="top" height="200" class="article-content" style="border-bottom: none;">
-									${dto.content}
-								</td>
-							</tr>						
-							
-							<tr>
-								<td colspan="2">
-									이전글 : 
-									<c:if test="${not empty prevDto}">
-										<a href="${pageContext.request.contextPath}/admin/faqManage/article?${query}&faq_id=${prevDto.faq_id}">${prevDto.question}</a>
-									</c:if>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									다음글 : 
-									<c:if test="${not empty nextDto}">
-										<a href="${pageContext.request.contextPath}/admin/faqManage/article?${query}&faq_id=${nextDto.faq_id}">${nextDto.question}</a>
-									</c:if>									
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div class="row mb-2">
-						<div class="col-md-6 align-self-center">
+	
+					<div class="py-4" style="min-height: 200px;">
+						${dto.content}
+					</div>
+	
+					<hr>
+	
+					<div class="mb-2 text-truncate">
+						<strong>이전글:</strong>
+						<c:if test="${not empty prevDto}">
+							<a href="${pageContext.request.contextPath}/admin/faqManage/article?${query}&faq_id=${prevDto.faq_id}">
+								${prevDto.question}
+							</a>
+						</c:if>
+					</div>
+					<div class="mb-4 text-truncate">
+						<strong>다음글:</strong>
+						<c:if test="${not empty nextDto}">
+							<a href="${pageContext.request.contextPath}/admin/faqManage/article?${query}&faq_id=${nextDto.faq_id}">
+								${nextDto.question}
+							</a>
+						</c:if>
+					</div>
+	
+					<div class="d-flex justify-content-between mt-4">
+						<div>
 							<c:choose>
 								<c:when test="${sessionScope.member.member_id == dto.member_id}">
-									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/update?faq_id=${dto.faq_id}&page=${page}';">수정</button>									
+									<button type="button" class="btn btn-outline-primary me-2"
+										onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/update?faq_id=${dto.faq_id}&page=${page}';">
+										수정
+									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" class="btn-default" disabled>수정</button>								
-								</c:otherwise>							
+									<button type="button" class="btn btn-outline-secondary me-2" disabled>수정</button>
+								</c:otherwise>
 							</c:choose>
+	
 							<c:choose>
 								<c:when test="${sessionScope.member.member_id == dto.member_id || sessionScope.member.userLevel > 5}">
-									<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>									
+									<button type="button" class="btn btn-outline-danger" onclick="deleteOk();">삭제</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" class="btn-default" disabled>삭제</button>
-								</c:otherwise>							
+									<button type="button" class="btn btn-outline-secondary" disabled>삭제</button>
+								</c:otherwise>
 							</c:choose>
-			
-						
 						</div>
-						<div class="col-md-6 align-self-center text-end">
-							<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/list';">리스트</button>
+	
+						<div>
+							<button type="button" class="btn btn-secondary"
+								onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/list';">
+								리스트
+							</button>
 						</div>
 					</div>
-					
+	
 				</div>
 			</div>
 		</div>

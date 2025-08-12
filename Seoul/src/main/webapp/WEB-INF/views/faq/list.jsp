@@ -7,6 +7,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seoul</title>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/faqlist.css" type="text/css">
 </head>
 <body>
 
@@ -17,48 +19,46 @@
 <main class="main-container">
 	
 
-<!-- Page Title -->
-	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
-			<h1>FAQ</h1>
-			<div class="page-title-underline-accent"></div>
-		</div>
-	</div>
-    
-	<!-- Page Content -->    
 	<div class="section">
 		<div class="container" data-aos="fade-up" data-aos-delay="100">
 			<div class="row justify-content-center">
 				<div class="col-md-10 board-section my-4 p-5">
 				
-					<div class="row py-1 mb-2">
-						<div class="col-md-6 align-self-center">
-							<span class="small-title">질문목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
-						</div>	
-						<div class="col-md-6 align-self-center text-end">
-						<c:if test="${dataCount != 0}">
-                            <form name="pageSizeForm" class="me-2">
-                                <select name="size" class="form-select" onchange="changeList();">
-                                    <option value="5" ${size==5 ? "selected":""}>5개씩 출력</option>
-                                    <option value="10" ${size==10 ? "selected":""}>10개씩 출력</option>
-                                    <option value="20" ${size==20 ? "selected":""}>20개씩 출력</option>
-                                    <option value="30" ${size==30 ? "selected":""}>30개씩 출력</option>
-                                    <option value="50" ${size==50 ? "selected":""}>50개씩 출력</option>
-                                </select>
-                                <input type="hidden" name="page" value="${page}">
-                                <input type="hidden" name="schType" value="${schType}">
-                                <input type="hidden" name="kwd" value="${kwd}">
-                            </form>
-                        </c:if>
+				<div class="row py-1 mb-3 align-items-center">
+					<div class="col-md-8">
+						<div class="d-flex align-items-center flex-wrap gap-2">
+							<span class="small-title">FAQ목록</span>
+							<span class="dataCount">${dataCount}개 (${page}/${total_page} 페이지)</span>
 						</div>
-					</div>				
+					</div>
+				
+					<div class="col-md-4 text-md-end mt-2 mt-md-0">
+						<c:if test="${dataCount != 0}">
+							<form name="pageSizeForm" class="d-inline-block">
+								<div style="display: inline-block; min-width: 130px;">
+									<select name="size" class="form-select" style="padding: 5px 10px;" onchange="changeList();">
+										<option value="5" ${size==5 ? "selected":""}>5개씩 출력</option>
+										<option value="10" ${size==10 ? "selected":""}>10개씩 출력</option>
+										<option value="20" ${size==20 ? "selected":""}>20개씩 출력</option>
+										<option value="30" ${size==30 ? "selected":""}>30개씩 출력</option>
+										<option value="50" ${size==50 ? "selected":""}>50개씩 출력</option>
+									</select>
+								</div>
+					
+								<input type="hidden" name="page" value="${page}">
+								<input type="hidden" name="schType" value="${schType}">
+								<input type="hidden" name="kwd" value="${kwd}">
+							</form>
+						</c:if>
+					</div>
+				</div>			
 				
 				<form name="listForm" method="post">
 					<table class="table table-hover board-list">
 						<thead>
 							<tr>
 								<th class="num">번호</th>
-								<th class="subject">제목</th>
+								<th class="subject" style="text-align: center">제목</th>
 								<th class="name">작성자</th>
 								<th class="date">작성일</th>
 								<th class="hit">조회수</th>
@@ -83,10 +83,10 @@
 					</table>
 				</form>
 				
-					<div class="page-navigation">
-						${dataCount == 0 ? "등록된 FAQ가 없습니다." : paging}
-					</div>
-
+				<div class="page-navigation text-center my-4">
+					${dataCount == 0 ? "등록된 FAQ가 없습니다." : paging}
+				</div>
+ 
 					<div class="row mt-3">
 						<div class="col-md-3">
 							<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/faq/list';" title="새로고침"><i class="bi bi-arrow-clockwise"></i></button>

@@ -24,63 +24,53 @@
 <main class="main-container">
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
-	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
-			<h1>FAQ 관리</h1>
-			<div class="page-title-underline-accent"></div>
-		</div>
-	</div>
-    
-	<div class="section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
-			<div class="row justify-content-center">
-				<div class="col-md-10 board-section my-4 p-5">
-
-					<div class="pb-2">
-						<span class="small-title">FAQ 등록</span>
+	<div class="container-fluid py-4 px-5">
+		<div class="row justify-content-center">
+			<div class="col-xl-8 col-lg-9 col-md-10"> <!-- 중앙 정렬 및 폭 제한 -->
+				<div class="bg-white shadow-sm rounded p-5">
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h5 class="fw-bold mb-0">FAQ 등록</h5>
 					</div>
-
-					<form name="postForm" action="" method="post" enctype="multipart/form-data">
-						<table class="table write-form">
+	
+					<form name="postForm" method="post" enctype="multipart/form-data">
+						<table class="table table-bordered align-middle">
 							<tr>
-								<td class="col-md-2 bg-light">제 목</td>
+								<th class="bg-light text-center col-md-3">제목</th>
 								<td>
-									<input type="text" name="question" class="form-control" maxlength="100" placeholder="question" value="${dto.question}">
+									<input type="text" name="question" class="form-control" maxlength="100"
+										placeholder="질문 제목을 입력하세요" value="${dto.question}">
 								</td>
 							</tr>
-
 							<tr>
-								<td class="col-md-2 bg-light">작성자</td>
+								<th class="bg-light text-center">작성자</th>
 								<td>
-									<div class="row">
-										<div class="col-md-6">
-											<input type="text" name="name" class="form-control" readonly tabindex="-1" value="${sessionScope.member.nickname}">
-										</div>
-									</div>
+									<input type="text" name="name" class="form-control" value="${sessionScope.member.nickname}" readonly tabindex="-1">
 								</td>
 							</tr>
-						
 							<tr>
-								<td class="col-md-2 bg-light">내 용</td>
+								<th class="bg-light text-center">내용</th>
 								<td>
-									<div id="editor">${dto.content}</div>
+									<div id="editor" style="min-height: 250px;">${dto.content}</div>
 									<input type="hidden" name="content">
 								</td>
 							</tr>
-																					
 						</table>
-						
-						<div class="text-center">
-							<button type="button" class="btn-accent btn-md" onclick="sendOk();">${mode == 'update' ? '수정완료' : '등록완료' }</button>
-							<button type="reset" class="btn-default btn-md">다시입력</button>
-							<button type="button" class="btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/list';">${mode == 'update' ? '수정취소' : '등록취소' }</button>
+	
+						<div class="text-end mt-4">
+							<button type="button" class="btn btn-primary px-4 me-2" onclick="sendOk();">
+								${mode == 'update' ? '수정완료' : '등록완료'}
+							</button>
+							<button type="reset" class="btn btn-outline-secondary me-2">다시입력</button>
+							<button type="button" class="btn btn-outline-secondary" 
+								onclick="location.href='${pageContext.request.contextPath}/admin/faqManage/list';">
+								${mode == 'update' ? '수정취소' : '등록취소'}
+							</button>
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="faq_id" value="${dto.faq_id}">
-						    	<input type="hidden" name="page" value="${page}">														
-							</c:if>							
-						</div>						
+								<input type="hidden" name="page" value="${page}">
+							</c:if>
+						</div>
 					</form>
-
 				</div>
 			</div>
 		</div>
