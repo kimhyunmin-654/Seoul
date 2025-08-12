@@ -96,6 +96,10 @@
 		WHERE member_id
 		= #{member_id}
 	</update>
+	<update id="updateMemberEnabled" parameterType="map">
+		UPDATE member SET enabled = #{enabled}
+		WHERE member_id = #{member_id}
+	</update>
 
 	<delete id="deleteMember" parameterType="map">
 		DELETE FROM member
