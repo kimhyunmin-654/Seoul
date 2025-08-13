@@ -15,70 +15,11 @@
 			</a>
 		</li>
 		
-		<li class="has-sub-menu" aria-expanded="false">
-			<label class="menu-link" title="상품관리">
-				<i class="menu-icon bi bi-grid-fill"></i>
-				<span class="menu-label">상품관리</span>
-			</label>
-			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/products/main'/>">상품리스트</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/products/write/100'/>">상품등록</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/specials/main'/>">특가및기획전</a></li>
-				<li><a class="sub-menu-link" href="#">상품카테고리</a></li>
-			</ul>
-		</li>
-		
-		<li class="has-sub-menu" aria-expanded="false">
-			<label class="menu-link" title="상품진열">
-				<i class="menu-icon bi bi-boxes"></i>
-				<span class="menu-label">상품진열</span>
-			</label>
-			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/display/main/1'/>">메인상품</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/display/main/10'/>">베스트상품</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/display/specials/200'/>">오늘의 특가</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/display/specials/300'/>">기획전</a></li>
-				<li><a class="sub-menu-link" href="#">분류별진열</a></li>
-			</ul>
-		</li>
-		
-		<li class="has-sub-menu" aria-expanded="false">
-			<label class="menu-link" title="주문관리">
-				<i class="menu-icon bi bi-bag-plus-fill"></i>
-				<span class="menu-label">주문관리</span>
-			</label>
-			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/100'/>">주문완료</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/110'/>">배송</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/100'/>">배송후교환</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/110'/>">구매확정</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/orderManage/120'/>">주문리스트</a></li>
-			</ul>
-		</li>
-
-		<li class="has-sub-menu" aria-expanded="false">
-			<label class="menu-link" title="주문취소">
-				<i class="menu-icon bi bi-bag-x"></i>
-				<span class="menu-label">주문취소</span>
-			</label>
-			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/200'/>">배송전환불</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/210'/>">배송후반품</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/220'/>">판매취소</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/order/detailManage/230'/>">취소리스트</a></li>
-			</ul>
-		</li>
-		
-		<li class="has-sub-menu" aria-expanded="false">
-			<label class="menu-link" title="통계분석">
-				<i class="menu-icon bi bi-graph-up"></i>
-				<span class="menu-label">통계분석</span>
-			</label>
-			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin/analysis/salesStatus'/>">판매현황</a></li>
-				<li><a class="sub-menu-link" href="#">주문통계</a></li>
-				<li><a class="sub-menu-link" href="#">접속자통계</a></li>
-			</ul>
+		<li>
+			<a class="menu-link" href="<c:url value='/admin/celler/main' />" title="관리자 판매">
+				<i class="menu-icon bi bi-person-square"></i>
+				<span class="menu-label">관리자 판매</span>
+			</a>
 		</li>
 		
 		<li>
@@ -95,7 +36,7 @@
 			</label>
 			<ul>
 				<li><a class="sub-menu-link" href="<c:url value='/admin/faqManage/list' />">FAQ</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin' />">공지사항</a></li>
+				<li><a class="sub-menu-link" href="<c:url value='/admin/noticeManage/list' />">공지사항</a></li>
 			</ul>
 		</li>
 
@@ -105,8 +46,8 @@
 				<span class="menu-label">문의 및 신고</span>
 			</label>
 			<ul>
-				<li><a class="sub-menu-link" href="#">1:1문의</a></li>
-				<li><a class="sub-menu-link" href="#">신고</a></li>
+				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/inquiryManage/list">1:1문의</a></li>
+				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/reportManage/list">신고</a></li>
 			</ul>
 		</li>
 		
