@@ -26,8 +26,11 @@ select.form-select,
   padding: .385rem .75rem;
   box-shadow: none;
   border: 1px solid var(--accent-color);
-  border-radius: 30px;
   background-color: color-mix(in srgb, var(--background-color), transparent 50%);
+}
+
+.round-select {
+  border-radius: 30px;
 }
 
 textarea.form-control {
