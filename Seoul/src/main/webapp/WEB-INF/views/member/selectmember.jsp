@@ -7,11 +7,21 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/selectmember.css" type="text/css">
 </head>
 <body>
 
-	<a href="${pageContext.request.contextPath}/member/account2" class="border-link-right">일반회원가입</a>
-	<a href="${pageContext.request.contextPath}/member/account3" class="border-link-right">셀러회원가입</a>
+<div class="signup-select-container">
+	<h2>회원가입 유형 선택</h2>
+
+	<a href="${pageContext.request.contextPath}/member/account2" class="btn signup-btn btn-user">
+		👤 일반회원 가입
+	</a>
+
+	<a href="${pageContext.request.contextPath}/member/account3" class="btn signup-btn btn-seller">
+		🛍️ 셀러회원 가입
+	</a>
+</div>
 
 </body>
 </html>

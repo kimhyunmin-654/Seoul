@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+	body {
+		background-color: #f5f7fa;
+		font-family: 'Segoe UI', sans-serif;
+	}
+	.signup-select-container {
+		max-width: 500px;
+		margin: 100px auto;
+		background: white;
+		padding: 40px 30px;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		text-align: center;
+	}
+	.signup-select-container h2 {
+		font-weight: 600;
+		margin-bottom: 30px;
+	}
+	.signup-btn {
+		width: 100%;
+		padding: 15px;
+		font-size: 16px;
+		font-weight: bold;
+		margin-bottom: 15px;
+		border-radius: 8px;
+	}
+	.btn-user {
+		background-color: #3f51b5;
+		color: white;
+	}
+	.btn-user:hover {
+		background-color: #303f9f;
+	}
+	.btn-seller {
+		background-color: #4caf50;
+		color: white;
+	}
+	.btn-seller:hover {
+		background-color: #388e3c;
+	}

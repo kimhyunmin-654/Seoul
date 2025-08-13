@@ -110,8 +110,24 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public void updateMember(Member dto, String uploadPath) throws Exception {
+		try {
+			if(dto.getSelectFile() != null && ! dto.getSelectFile().isEmpty()) {
+				if(! dto.getProfile_photo().isBlank()) {
+					storageService.deleteFile(uploadPath, dto.getProfile_photo());
+				}
+				
+				String saveFilename = storageService.uploadFileToServer(dto.getSelectFile(), uploadPath);
+				dto.setProfile_photo(saveFilename);
+			}
+			mapper.updateMember(dto);			
+		} catch (Exception e) {
+			log.info("updateMember : ", e);
+			
+			throw e;
+		}
 		
 	}
 
@@ -165,7 +181,18 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void deleteProfilePhoto(Map<String, Object> map, String uploadPath) throws Exception {
-		
+		try {
+			String filename = (String)map.get("filename");
+			if(filename!= null && ! filename.isBlank()) {
+				storageService.deleteFile(uploadPath, filename);
+			}
+			
+			mapper.deleteProfilePhoto(map);
+		} catch (Exception e) {
+			log.info("deleteProfilePhoto : ", e);
+			
+			throw e;
+		}
 	}
 
 	@Override
@@ -219,7 +246,7 @@ public class MemberServiceImpl implements MemberService {
 			
 			// 테이블의 패스워드 변경
 			dto.setPassword(password.toString());
-			mapper.updateMember1(dto);
+			mapper.updateMember(dto);
 			
 			// 메일 전송
 			boolean b = mailSender.mailSend(mail);

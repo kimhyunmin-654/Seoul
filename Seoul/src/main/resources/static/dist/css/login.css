@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+    body {
+        background-color: #f2f4f6;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .login-container {
+        max-width: 420px;
+        margin: 80px auto;
+        background: white;
+        border-radius: 12px;
+        padding: 40px 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .login-container h3 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .btn-accent {
+        background-color: #3f51b5;
+        color: white;
+        border: none;
+    }
+
+    .btn-accent:hover {
+        background-color: #303f9f;
+    }
+
+    .btn-kakao {
+        background-color: #fee500;
+        color: #3c1e1e;
+        font-weight: bold;
+        border: none;
+    }
+
+    .btn-kakao:hover {
+        background-color: #ffd600;
+    }
+
+    .login-links a {
+        font-size: 14px;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+
+    .login-links a:hover {
+        text-decoration: underline;
+    }

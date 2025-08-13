@@ -112,13 +112,13 @@ public class MemberController {
 	
 	@GetMapping("account2")
 	public String memberForm2(Model model) {
-		model.addAttribute("mode", "account");
+		model.addAttribute("mode", "account2");
 		return "member/member";
 	}
 	
 	@GetMapping("account3")
 	public String memberForm3(Model model) {
-		model.addAttribute("mode", "account");
+		model.addAttribute("mode", "account3");
 		return "member/member2";
 	}
 
@@ -139,13 +139,13 @@ public class MemberController {
 			return "redirect:/member/complete";
 			
 		} catch (DuplicateKeyException e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode", "account2");
 			model.addAttribute("message", "아이디 중복으로 회원가입이 실패했습니다.");
 		} catch (DataIntegrityViolationException e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode", "account2");
 			model.addAttribute("message", "제약 조건 위반으로 회원가입이 실패했습니다.");
 		} catch (Exception e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode", "account2");
 			model.addAttribute("message", "회원가입이 실패했습니다.");
 		}
 
@@ -170,17 +170,49 @@ public class MemberController {
 			return "redirect:/member/complete";
 			
 		} catch (DuplicateKeyException e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode2", "account3");
 			model.addAttribute("message", "아이디 중복으로 회원가입이 실패했습니다.");
 		} catch (DataIntegrityViolationException e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode2", "account3");
 			model.addAttribute("message", "제약 조건 위반으로 회원가입이 실패했습니다.");
 		} catch (Exception e) {
-			model.addAttribute("mode", "account");
+			model.addAttribute("mode2", "account3");
 			model.addAttribute("message", "회원가입이 실패했습니다.");
 		}
 		
 		return "member/member2";
+	}
+	
+	@PostMapping("update")
+	public String updateSubmit(Member dto,
+			final RedirectAttributes reAttr,
+			Model model,
+			HttpSession session) {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		StringBuilder sb = new StringBuilder();
+		try {
+			dto.setMember_id(info.getMember_id());
+			
+			service.updateMember(dto, uploadPath);
+			
+			info.setNickname(dto.getNickname());
+			info.setEmail(dto.getEmail());
+			info.setAvatar(dto.getProfile_photo());
+			
+			session.setAttribute("member", info);
+			
+			sb.append(dto.getName() + "님의 회원정보가 정상적으로 변경되었습니다.<br>");
+			sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
+		} catch (Exception e) {
+			sb.append(dto.getName() + "님의 회원정보 변경이 실패했습니다.<br>");
+			sb.append("잠시후 다시 변경 하시기 바랍니다.<br>");
+		}
+		
+		reAttr.addFlashAttribute("title", "회원 정보 수정");
+		reAttr.addFlashAttribute("message", sb.toString());
+		
+		return "redirect:/member/complete";
 	}
 	
 	@GetMapping("complete")
@@ -326,15 +358,47 @@ public class MemberController {
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "update");
 			
-			// 회원정보수정폼
-			return "member/member";
 			
+			if(dto.getUserLevel() == 1) {
+				return "member/member"; // 일반회원 수정폼
+			} else if(dto.getUserLevel() == 5) {
+				return "member/member2"; // 셀러 수정폼
+			}
+					
 		} catch (NullPointerException e) {
 			session.invalidate();
 		} catch (Exception e) {
 		}
 		
 		return "redirect:/member/mypage";
+	}
+	
+	@ResponseBody
+	@PostMapping("deleteProfile")
+	public Map<String, ?> deleteProfilePhoto(@RequestParam(name = "profile_photo") String profile_photo,
+			HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+
+		String state = "false";
+		try {
+			if(! profile_photo.isBlank()) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("member_id", info.getMember_id());
+				map.put("filename", info.getAvatar());
+				
+				service.deleteProfilePhoto(map, uploadPath);
+				
+				info.setAvatar("");
+				state = "true";
+			}
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
+		
+		return model;
 	}
 	
 }

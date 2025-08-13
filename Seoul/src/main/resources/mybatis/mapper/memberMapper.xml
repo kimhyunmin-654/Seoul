@@ -82,20 +82,16 @@
 	</update>
 	
 	
-	<update id="updateMember1" parameterType="com.sp.app.model.Member"> 
-		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},
-			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR},
-			password = #{password}, update_at = SYSDATE
+	<update id="updateMember" parameterType="com.sp.app.model.Member">
+		UPDATE member SET email = #{email, jdbcType=VARCHAR},
+			nickname = #{nickname, jdbcType=VARCHAR}, update_at = SYSDATE,
+			profile_photo = #{profile_photo, jdbcType=VARCHAR}
+		<if test="password != null and password != ''">
+			, password = #{password}
+		</if>
 		WHERE member_id = #{member_id}
 	</update>
 	
-	<update id="updateMember2" parameterType="com.sp.app.model.Member">
-		UPDATE member SET login_id = #{login_id, jdbcType=VARCHAR},email = #{email}, password = #{password},
-			name = #{name, jdbcType=VARCHAR}, nickname = ${nickname},
-			sns_provider = #{sns_provider, jdbcType=VARCHAR}, sns_id = #{sns_id, jdbcType=VARCHAR}, 
-			update_at = SYSDATE, profile_photo = #{profile_photo, jdbcType=VARCHAR}
-		WHERE member_id = #{member_id}  			
-	</update>
 	
 	<update id="deleteProfilePhoto" parameterType="map">
 		UPDATE member SET profile_photo = ''
