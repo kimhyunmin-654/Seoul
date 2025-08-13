@@ -363,6 +363,8 @@ public class MemberController {
 				return "member/member"; // 일반회원 수정폼
 			} else if(dto.getUserLevel() == 5) {
 				return "member/member2"; // 셀러 수정폼
+			} else if(dto.getUserLevel() == 9) {
+				return "member/member"; // 관리자 수정폼
 			}
 					
 		} catch (NullPointerException e) {

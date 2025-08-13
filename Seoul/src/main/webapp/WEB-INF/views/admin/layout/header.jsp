@@ -36,7 +36,7 @@
 					<li><a href="#" class="dropdown-item">일정관리</a></li>
 					<li><a href="#" class="dropdown-item">환경설정</a></li>
 					<li><hr class="dropdown-divider"></li>
-					<li><a href="#" class="dropdown-item">정보수정</a></li>
+					<li><a href="${pageContext.request.contextPath}/member/pwd" class="dropdown-item">정보수정</a></li>
 				</ul>
 			</div>
 		</div>

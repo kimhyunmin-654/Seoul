@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/pwd.css" type="text/css">
 <title>Spring</title>
 </head>
 <body>
@@ -15,47 +16,19 @@
 </header>
 
 <main>
-	<div class="section bg-light">
-		<div class="container">
+    <div class="password-box">
+        <h3>패스워드 재확인</h3>
+        <p class="info">정보보호를 위해 패스워드를 다시 한 번 입력해주세요.</p>
 
-			<div class="row justify-content-center" data-aos="fade-up" data-aos-delay="200">
-				<div class="col-md-5">
-					<div class="bg-white box-shadow my-5 p-5">
-	                    <h3 class="text-center pt-3">패스워드 재확인</h3>
-	                    
-	                    <form name="pwdForm" action="" method="post" class="row g-3 mb-2">
-	                        <div class="col-12">
-								<p class="form-control-plaintext text-center">
-	                            	정보보호를 위해 패스워드를 다시 한 번 입력해주세요.
-								</p>
-	                        </div>
-	                        	                    
-	                        <div class="col-12">
-								<input type="text" name="login_id" class="form-control form-control-lg" placeholder="아이디"
-	                            		value="${sessionScope.member.login_id}" 
-	                            		readonly>
+        <form name="pwdForm" method="post">
+            <input type="text" name="login_id" placeholder="아이디" value="${sessionScope.member.login_id}" readonly>
+            <input type="password" name="password" placeholder="패스워드" autocomplete="off">
+            <input type="hidden" name="mode" value="${mode}">
+            <button type="button" onclick="sendOk()">확인 <i class="bi bi-check2"></i></button>
+        </form>
 
-	                        </div>
-	                        <div class="col-12">
-								<input type="password" name="password" class="form-control form-control-lg" autocomplete="off" placeholder="패스워드">
-	                        </div>
-	                        <div class="col-12 text-center">
-								<input type="hidden" name="mode" value="${mode}">
-								<button type="button" class="btn-accent btn-lg w-100" onclick="sendOk();">확인 <i class="bi bi-check2"></i></button>
-	                        </div>
-	                    </form>
-	                    
-		                <div>
-							<p class="form-control-plaintext text-center text-danger">${message}</p>
-						</div>
-
-	                </div>
-	
-				</div>
-			</div>
-
-		</div>
-	</div>
+        <p class="text-danger">${message}</p>
+    </div>
 </main>
 
 <script type="text/javascript">

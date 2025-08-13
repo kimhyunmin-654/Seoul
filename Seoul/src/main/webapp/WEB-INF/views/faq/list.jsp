@@ -114,13 +114,7 @@
 <script>
     const ctx = '${pageContext.request.contextPath}';
 </script>
-<script src="${pageContext.request.contextPath}/dist/js/faqlist.js"></script>
-
-
-
-
-
-
+<script src="${pageContext.request.contextPath}/dist/js/faqlist2.js"></script>
 
 </body>
 </html>

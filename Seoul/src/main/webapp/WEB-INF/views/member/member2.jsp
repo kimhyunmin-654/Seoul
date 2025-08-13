@@ -17,7 +17,7 @@
 <main>
   <div class="page-title">
     <div class="container">
-      <h1>${mode2=="account3"?"셀러회원가입":"회원정보수정"}</h1>
+      <h1>${mode=="account3"?"셀러회원가입":"회원정보수정"}</h1>
       <div class="page-title-underline-accent"></div>
     </div>
   </div>
