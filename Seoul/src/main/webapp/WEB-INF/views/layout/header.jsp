@@ -50,7 +50,7 @@
           <a href="${pageContext.request.contextPath}/local">동네한바퀴</a>
           <a href="${pageContext.request.contextPath}/wish/list">찜한 상품</a>
           <a href="${pageContext.request.contextPath}/event/list">이벤트</a>
-          <a href="${pageContext.request.contextPath}/admin/sales">관리자 판매</a>
+          <a href="${pageContext.request.contextPath}/admin/sales">관리자 판매</a> 
           
 		  <div class="dropdown">
 		    <a href="#" class="dropdown-toggle subnav-dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
