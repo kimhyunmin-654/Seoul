@@ -12,6 +12,7 @@ public class Product {
 	private long product_id;
 	private long member_id;
 	private String nickName;
+	private String sellerAvatar;
 	private String category_id;
 	private String region_id;
 	private String product_name;
@@ -26,7 +27,7 @@ public class Product {
 	private String region_name;
 	
 	// 상품 카테고리
-	private String categoryName;
+	private String category_name;
 	private Long parentNum;
 	
 	// 경매 정보
@@ -35,6 +36,8 @@ public class Product {
 	private int current_price;
 	private String end_time;
 	private int bidCount;
-
+	
+	// 유저의 상품 찜 여부
+	private int userWish;
 
 }
