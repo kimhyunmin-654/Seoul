@@ -15,7 +15,7 @@
 
       <a href="<c:url value='/'/>" class="brand">
         <img class="logo" src="${pageContext.request.contextPath}/dist/images/logo-seoul-hanbak.png"
-             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/logo-placeholder.png';">
+             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/user.png';">
         <div class="brand-text">
           <div class="brand-title">서울한바퀴</div>
           <div class="brand-sub">중고거래 커뮤니티</div>
