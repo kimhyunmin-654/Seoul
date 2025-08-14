@@ -150,6 +150,7 @@ function updateHeaderRegion(name){
   }catch(e){}
 })();
 
+
 function openChatPanel() {
 	  document.getElementById('chatPanel').classList.add('open');
 	}

@@ -85,7 +85,7 @@ public class MemberController {
 		String uri = (String) session.getAttribute("preLoginURI");
 		session.removeAttribute("preLoginURI");
 		if (uri == null) {
-			uri = "redirect:/";
+			uri = "redirect:/product/list";
 		} else {
 			uri = "redirect:" + uri;
 		}
@@ -101,7 +101,7 @@ public class MemberController {
 		// 세션에 저장된 모든 정보 지우고, 세션초기화
 		session.invalidate();
 
-		return "redirect:/";
+		return "redirect:/product/list";
 	}
 
 	@GetMapping("account")
