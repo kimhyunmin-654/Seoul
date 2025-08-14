@@ -13,7 +13,7 @@
   <div class="container">
     <div class="header-line">
 
-      <a href="<c:url value='/'/>" class="brand">
+      <a href="<c:url value='/product/list'/>" class="brand">
         <img class="logo" src="${pageContext.request.contextPath}/dist/images/logo-seoul-hanbak.png"
              onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/user.png';">
         <div class="brand-text">
