@@ -84,12 +84,18 @@
  	
  	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
 <script>
-    
-    const message = "${message}";
-    if (message) {
-        alert(message);
-    }
-    
+    (function() {
+        const message = "${message}";
+        const messageId = "${messageId}";
+
+        if (message && messageId) {
+            
+            if (!sessionStorage.getItem(messageId)) {
+                alert(message);
+                sessionStorage.setItem(messageId, 'shown');
+            }
+        }
+    })();
 </script>
 <script src="${pageContext.request.contextPath }/dist/js/util-jquery.js"></script>
 <script>

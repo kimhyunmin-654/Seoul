@@ -32,6 +32,12 @@
 		WHERE product_id = #{product_id}
 	</delete>
 	
+	<!-- 이미지 id로 이미지 조회 -->
+	<select id="findImageById" parameterType="Long" resultType="com.sp.app.model.ProductImage">
+		SELECT image_id, product_id, filename, image_order
+		FROM product_image
+		WHERE image_id = #{image_id}
+	</select>
 	
 	<!-- 추가 이미지 선택 삭제 -->
 	<delete id="deleteProductImage" parameterType="Long">
@@ -137,6 +143,7 @@
 		SELECT image_id, product_id, filename, image_order 
 		FROM product_image
 		WHERE product_id = #{product_id}
+		ORDER BY image_order ASC
 	</select>
 	
 	

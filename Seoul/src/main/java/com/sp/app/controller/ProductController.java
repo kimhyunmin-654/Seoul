@@ -62,6 +62,7 @@ public class ProductController {
 	
 	@PostMapping("write")
 	public String insertSubmit(Product dto, @RequestParam("addFiles") List<MultipartFile> addFiles,
+			@RequestParam(name = "thumbnailIndex", defaultValue = "0") Integer thumbnailIndex,
 			HttpSession session) throws Exception {
 	
 		
@@ -77,7 +78,7 @@ public class ProductController {
 			String root = storageService.getRootRealPath();
 			String path = root + "uploads" + File.separator + "product";
 			
-			productService.insertProduct(dto, addFiles, path);
+			productService.insertProduct(dto, addFiles, thumbnailIndex, path);
 		} catch (Exception e) {
 			log.info("insertSubmit : ", e);
 			return "redirect:/product/write";
@@ -133,7 +134,8 @@ public class ProductController {
 			@RequestParam(name = "deleteFilename", required = false) List<String> deleteFilename,
 			@RequestParam(name = "newThumbnailFilename", required = false) String newThumbnailFilename,
 			@RequestParam(name = "oldThumbnailToMove", required = false) String oldThumbnailToMove,
-			@RequestParam(name = "imageIdToPromote", required = false) Long imageIdToPromote, 
+			@RequestParam(name = "imageIdToPromote", required = false) Long imageIdToPromote,
+			@RequestParam(name = "thumbnailIndex", required = false, defaultValue = "0") int thumbnailIndex,
 			HttpSession session,
 			RedirectAttributes ra 
 			) {
@@ -150,8 +152,8 @@ public class ProductController {
 			
 			dto.setThumbnail(newThumbnailFilename);
 			
-			productService.updateProduct(dto, addFiles, deleteImageIds, deleteFilename, oldThumbnailToMove, imageIdToPromote, path);
-
+			productService.updateProduct(dto, addFiles, deleteImageIds, deleteFilename, oldThumbnailToMove, imageIdToPromote, path, thumbnailIndex);
+			
 		} catch (Exception e) {
 			log.info("updateSubmit : ", e);
 			ra.addFlashAttribute("message", "상품 수정에 실패했습니다.");
@@ -251,11 +253,12 @@ public class ProductController {
 		} catch (Exception e) {
 			log.info("deleteProduct : ", e);
 			ra.addFlashAttribute("message", "상품 삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
-			
+			ra.addFlashAttribute("messageId", System.currentTimeMillis());
 			return "redirect:/product/detail?product_id=" + product_id;
 		}
 		
 		ra.addFlashAttribute("message", "상품이 성공적으로 삭제되었습니다.");
+		ra.addFlashAttribute("messageId", System.currentTimeMillis());
 		return "redirect:/product/list";
 	}
 	

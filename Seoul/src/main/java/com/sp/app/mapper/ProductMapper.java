@@ -22,6 +22,7 @@ public interface ProductMapper {
 	
 	public List<Product> listProduct(SearchCondition cond);	
 	public Product findById(long product_id);
+	public ProductImage findImageById(long image_id);
 	public int dataCount(SearchCondition cond);
 		
 	public List<ProductImage> listProductImages(long product_id);

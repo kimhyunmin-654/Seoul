@@ -38,16 +38,18 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void insertProduct(Product dto, List<MultipartFile> addFiles, String path) throws Exception {
+	public void insertProduct(Product dto, List<MultipartFile> addFiles, Integer thumbnailIndex, String path) throws Exception {
 		
 		try {
-			
 			String thumbnailFilename = null;
 			if(addFiles != null && !addFiles.isEmpty()) {
 				
-				MultipartFile firstFile = addFiles.get(0);
-				if(!firstFile.isEmpty()) {
-					thumbnailFilename = storageService.uploadFileToServer(firstFile, path);
+				int index = (thumbnailIndex != null) ? thumbnailIndex.intValue() : 0;
+				if(index < 0 || index >= addFiles.size()) index = 0;
+				
+				MultipartFile thumbFile = addFiles.get(index);
+				if(thumbFile != null && !thumbFile.isEmpty()) {
+					thumbnailFilename = storageService.uploadFileToServer(thumbFile, path);
 					dto.setThumbnail(thumbnailFilename);
 				}
 			}
@@ -55,9 +57,10 @@ public class ProductServiceImpl implements ProductService {
 			productMapper.insertProduct(dto);
 			
 			if(addFiles != null && addFiles.size() > 1) {
-				for(int i=1; i< addFiles.size(); i++) {
+				int cnt = 1;
+				for(int i=0; i< addFiles.size(); i++) {
 					MultipartFile mf = addFiles.get(i);
-					if(mf.isEmpty()) {
+					if(thumbnailIndex != null && i == thumbnailIndex) {
 						continue;
 					}
 					
@@ -67,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 					imageDto.setProduct_id(dto.getProduct_id());
 					imageDto.setFilename(filename);
 					imageDto.setFilesize(mf.getSize());
-					imageDto.setImage_order(i);
+					imageDto.setImage_order(cnt++);
 					
 					productMapper.insertProductFile(imageDto);
 				}
@@ -98,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateProduct(Product dto, List<MultipartFile> addFiles, List<Long> deleteImageIds, List<String> deleteFilename, String oldThumbnailToMove, Long imageIdToPromote, String path) throws Exception {
+	public void updateProduct(Product dto, List<MultipartFile> addFiles, List<Long> deleteImageIds, List<String> deleteFilename, String oldThumbnailToMove, Long imageIdToPromote, String path, int thumbnailIndex) throws Exception {
 		
 		try {
 			Product oldDto = productMapper.findById(dto.getProduct_id());
@@ -106,31 +109,9 @@ public class ProductServiceImpl implements ProductService {
 				throw new RuntimeException("수정할 상품이 존재하지 않습니다.");
 			}
 			
-			if(imageIdToPromote != null && oldThumbnailToMove != null && !oldThumbnailToMove.isEmpty()) {
-				productMapper.deleteProductImage(imageIdToPromote);
-				
-				ProductImage oldThumbnailImage = new ProductImage();
-				oldThumbnailImage.setProduct_id(dto.getProduct_id());
-				oldThumbnailImage.setFilename(oldThumbnailToMove);
-				oldThumbnailImage.setFilesize(0L);
-				oldThumbnailImage.setImage_order(99);
-				
-				productMapper.insertProductFile(oldThumbnailImage);
-			}
+			String originalThumbnail = oldDto.getThumbnail();
+			String newThumbnail = dto.getThumbnail();
 			
-			
-			if(deleteImageIds != null && deleteFilename != null && deleteImageIds.size() == deleteFilename.size()) {
-				
-				for(int i = 0; i < deleteImageIds.size(); i++) {
-					long image_id = deleteImageIds.get(i);
-					String filename = deleteFilename.get(i);
-					
-					storageService.deleteFile(path, filename);
-					
-					productMapper.deleteProductImage(image_id);
-				}
-				
-			}
 			
 			if(addFiles != null && !addFiles.isEmpty()) {
 				
@@ -143,6 +124,13 @@ public class ProductServiceImpl implements ProductService {
 					}
 									
 					String filename = storageService.uploadFileToServer(mf, path);
+					
+					if(i == thumbnailIndex && thumbnailIndex >= 0 && imageIdToPromote == null) {
+						newThumbnail = filename;
+						
+						continue;
+					}
+					
 					ProductImage imageDto = new ProductImage();
 					imageDto.setProduct_id(dto.getProduct_id());
 					imageDto.setFilename(filename);
@@ -153,6 +141,83 @@ public class ProductServiceImpl implements ProductService {
 				}
 			}
 			
+			
+			if(imageIdToPromote != null) {
+				
+				ProductImage promotedImage = productMapper.findImageById(imageIdToPromote);
+				
+				if(promotedImage != null) {
+					newThumbnail = promotedImage.getFilename();
+					
+					productMapper.deleteProductImage(imageIdToPromote);
+					
+					if(oldThumbnailToMove != null && !oldThumbnailToMove.isEmpty()) {
+						
+						ProductImage oldThumbnailImage = new ProductImage();
+						oldThumbnailImage.setProduct_id(dto.getProduct_id());
+						oldThumbnailImage.setFilename(oldThumbnailToMove);
+						oldThumbnailImage.setFilesize(0L);
+						oldThumbnailImage.setImage_order(99);
+						
+						productMapper.insertProductFile(oldThumbnailImage);
+					}
+					
+				}
+			
+			} else if(thumbnailIndex >= 0 && oldThumbnailToMove != null && !oldThumbnailToMove.isEmpty()) {
+				ProductImage oldThumbnailImage = new ProductImage();
+				oldThumbnailImage.setProduct_id(dto.getProduct_id());
+				oldThumbnailImage.setFilename(oldThumbnailToMove);
+				oldThumbnailImage.setFilesize(0L);
+				oldThumbnailImage.setImage_order(99);
+				
+				productMapper.insertProductFile(oldThumbnailImage);
+		
+			}
+			
+			
+			if(deleteImageIds != null && deleteFilename != null) {
+				
+				for(int i = 0; i < deleteImageIds.size() && i < deleteFilename.size(); i++) {
+					String filename = deleteFilename.get(i);
+					
+					if(filename.equals(newThumbnail)) {
+						continue;
+					}
+
+					long image_id = deleteImageIds.get(i);
+					
+					storageService.deleteFile(path, filename);
+					
+					productMapper.deleteProductImage(image_id);
+				}
+				
+			}
+			
+			if(deleteFilename != null) {
+				for(String filename : deleteFilename) {
+					
+					if(filename.equals(newThumbnail)) {
+						continue;
+					}
+					
+					boolean alreadyProcessed = false;
+					if(deleteImageIds != null) {
+						for(int i = 0; i < deleteImageIds.size() && i < deleteFilename.size(); i++) {
+							if(filename.equals(deleteFilename.get(i))) {
+								alreadyProcessed = true;
+								break;								
+							}
+						}
+					}
+					
+					if(!alreadyProcessed) {
+						storageService.deleteFile(path, filename);
+					}
+				}
+			}
+			
+			dto.setThumbnail(newThumbnail);
 			productMapper.updateProduct(dto);
 			
 				

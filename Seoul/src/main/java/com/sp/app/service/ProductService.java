@@ -13,8 +13,8 @@ import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 
 public interface ProductService {
-	public void insertProduct(Product dto, List<MultipartFile> addFiles, String path) throws Exception;
-	public void updateProduct(Product dto, List<MultipartFile> addFiles, List<Long> deleteImageIds, List<String> deleteFilename, String oldThumbnailToMove, Long imageIdToPromote, String path) throws Exception;
+	public void insertProduct(Product dto, List<MultipartFile> addFiles, Integer thumbnailIndex, String path) throws Exception;
+	public void updateProduct(Product dto, List<MultipartFile> addFiles, List<Long> deleteImageIds, List<String> deleteFilename, String oldThumbnailToMove, Long imageIdToPromote, String path, int thumbnailIndex) throws Exception;
 	public void deleteProduct(long product_id, long member_id, String path) throws Exception;
 	public void deleteProductImage(long image_id, String pathString) throws Exception;
 	public Map<String, Object> listProduct(SearchCondition cond) throws Exception;
