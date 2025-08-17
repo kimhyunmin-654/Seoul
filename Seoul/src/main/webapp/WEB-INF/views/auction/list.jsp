@@ -15,16 +15,16 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: #111827; /* gray-900 */
+            background-color: #111827; 
         }
         .font-display {
             font-family: 'Bai Jamjuree', sans-serif;
         }
         .glass-pane {
-            background: rgba(31, 41, 55, 0.5); /* gray-800 with 50% opacity */
+            background: rgba(31, 41, 55, 0.5); 
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(55, 65, 81, 0.3); /* gray-700 with 30% opacity */
+            border: 1px solid rgba(55, 65, 81, 0.3);
         }
         .hero-glow {
             background: radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.15), transparent 70%);
@@ -43,15 +43,14 @@
 
         <c:if test="${not empty featuredAuction}">
             <div class="relative hero-glow rounded-3xl overflow-hidden mb-12">
-                <img src="<c:url value='${featuredAuction.thumbnail}'/>" class="absolute inset-0 w-full h-full object-cover opacity-30" alt="추천 경매 상품">
+                <img src="<c:url value='/uploads/product/${featuredAuction.thumbnail}'/>" class="absolute inset-0 w-full h-full object-cover opacity-30" alt="추천 경매 상품">
                 <div class="relative p-8 md:p-16 flex flex-col justify-center items-start h-full">
-                    <h1 class="text-4xl md:text-6xl font-black text-white leading-tight max-w-2xl">${featuredAuction.productName}</h1>
-                    <p class="mt-4 text-lg text-gray-300 max-w-lg">${featuredAuction.shortDescription}</p>
+                    <h1 class="text-4xl md:text-6xl font-black text-white leading-tight max-w-2xl">${featuredAuction.product_name}</h1>
                     <div class="mt-8 flex items-center space-x-6">
                         <div>
                             <p class="text-sm font-medium text-gray-400">현재 최고가</p>
                             <p class="text-4xl font-bold text-orange-400">
-                                <fmt:formatNumber value="${featuredAuction.currentPrice}" pattern="#,##0"/>원
+                                <fmt:formatNumber value="${featuredAuction.current_price}" pattern="#,##0"/>원
                             </p>
                         </div>
                         <div>
@@ -59,7 +58,7 @@
                             <p class="text-4xl font-bold text-white">${featuredAuction.remainingTime}</p>
                         </div>
                     </div>
-                    <a href="<c:url value='/auction/${featuredAuction.auctionId}'/>" class="mt-8 bg-orange-500 hover:bg-orange-400 text-white font-bold text-lg py-3 px-8 rounded-lg transition-colors shadow-lg">
+                    <a href="<c:url value='/auction/detail?auction_id=${featuredAuction.auction_id}'/>" class="mt-8 bg-orange-500 hover:bg-orange-400 text-white font-bold text-lg py-3 px-8 rounded-lg transition-colors shadow-lg">
                         지금 입찰하기
                     </a>
                 </div>
@@ -70,7 +69,7 @@
             <div class="flex space-x-2">
                 <button class="bg-gray-700/50 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md transition-colors text-sm">전체</button>
                 <c:forEach var="category" items="${categoryList}">
-                    <button class="hover:bg-gray-700/50 text-gray-400 font-semibold py-2 px-4 rounded-md transition-colors text-sm">${category.categoryName}</button>
+                    <button class="hover:bg-gray-700/50 text-gray-400 font-semibold py-2 px-4 rounded-md transition-colors text-sm">${category.category_name}</button>
                 </c:forEach>
             </div>
             <div>
@@ -86,23 +85,23 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-            <c:forEach var="auction" items="${auctionList}">
-                <div class="glass-pane rounded-2xl overflow-hidden ${auction.isHot ? 'card-glow-hot' : 'card-glow'} transform hover:-translate-y-2 transition-transform duration-300">
+            <c:forEach var="vo" items="${list}">
+                <div class="glass-pane rounded-2xl overflow-hidden ${vo.hot ? 'card-glow-hot' : 'card-glow'} transform hover:-translate-y-2 transition-transform duration-300">
                     <div class="relative">
-                        <img src="<c:url value='${auction.thumbnail}'/>" class="w-full h-56 object-cover" alt="경매 상품">
-                        <c:if test="${auction.isHot}">
+                        <img src="<c:url value='/uploads/product/${vo.thumbnail}'/>" class="w-full h-56 object-cover" alt="경매 상품">
+                        <c:if test="${vo.hot}">
                              <div class="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">HOT</div>
                         </c:if>
                     </div>
                     <div class="p-5">
-                        <h3 class="font-bold text-lg text-white truncate">${auction.productName}</h3>
+                        <h3 class="font-bold text-lg text-white truncate">${vo.product_name}</h3>
                         <p class="text-sm text-gray-400 mt-1">현재 최고가</p>
                         <p class="text-2xl font-bold text-orange-400">
-                            <fmt:formatNumber value="${auction.currentPrice}" pattern="#,##0"/>원
+                            <fmt:formatNumber value="${vo.current_price}" pattern="#,##0"/>원
                         </p>
                         <div class="mt-3 flex justify-between items-center text-sm">
-                            <span class="text-gray-400">입찰 ${auction.bidCount}회</span>
-                            <span class="font-semibold ${auction.isUrgent ? 'text-red-400' : 'text-gray-300'}">${auction.remainingTime} 남음</span>
+                            <span class="text-gray-400">입찰 ${vo.bidCount}회</span>
+                            <span class="font-semibold ${vo.urgent ? 'text-red-400' : 'text-gray-300'}">${vo.remainingTime} 남음</span>
                         </div>
                     </div>
                 </div>

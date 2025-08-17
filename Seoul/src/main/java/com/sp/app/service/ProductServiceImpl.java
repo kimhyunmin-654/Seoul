@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import com.sp.app.common.FileManager;
+
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.AuctionMapper;
@@ -27,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
-
-    private final FileManager fileManager;
 
     private final PaginateUtil paginateUtil;
 	private final ProductMapper productMapper;
@@ -87,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 				auctionDto.setProduct_name(dto.getProduct_name());
 				auctionDto.setThumbnail(dto.getThumbnail());
 				auctionDto.setSeller_id(dto.getMember_id());
-				auctionDto.setSeller_nickName(dto.getNickName());
+				auctionDto.setSeller_nickname(dto.getNickName());
 				
 				auctionMapper.insertAuction(auctionDto);
 			}
@@ -109,7 +107,6 @@ public class ProductServiceImpl implements ProductService {
 				throw new RuntimeException("수정할 상품이 존재하지 않습니다.");
 			}
 			
-			String originalThumbnail = oldDto.getThumbnail();
 			String newThumbnail = dto.getThumbnail();
 			
 			
@@ -290,7 +287,9 @@ public class ProductServiceImpl implements ProductService {
 		Map<String, Object> map = new HashMap<>();
 
 		try {
-				
+			
+			cond.setType("NORMAL");
+			
 			int size = cond.getSize();
 			int dataCount = this.dataCount(cond);
 			int total_page = paginateUtil.pageCount(dataCount, size);
@@ -322,13 +321,6 @@ public class ProductServiceImpl implements ProductService {
 
 
 	@Override
-	public List<Auction> listAuction(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public Product findById(long product_id) {
 		Product dto = null;
 		
@@ -352,7 +344,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public int dataCount(SearchCondition cond) {
-		
 		return productMapper.dataCount(cond);
 	}
 
@@ -397,9 +388,5 @@ public class ProductServiceImpl implements ProductService {
 
 
 	
-
-
-	
-
 
 }

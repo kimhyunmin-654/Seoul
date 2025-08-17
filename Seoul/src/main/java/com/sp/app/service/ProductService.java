@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sp.app.model.Auction;
 import com.sp.app.model.Category;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductImage;
@@ -19,7 +18,6 @@ public interface ProductService {
 	public void deleteProductImage(long image_id, String pathString) throws Exception;
 	public Map<String, Object> listProduct(SearchCondition cond) throws Exception;
 	public List<ProductImage> listProductImage(long product_id);
-	public List<Auction> listAuction(Map<String, Object> map);
 	public Product findById(long product_id);
 	public int dataCount(SearchCondition cond);
 	public List<Category> listCategories();

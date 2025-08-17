@@ -15,12 +15,15 @@ public class Auction {
 	private String end_time;
 	private String status;
 	private int bidCount;
+	private String remainingTime;
+	private boolean hot;
+	private boolean urgent;
 	
 	// 상품 정보 
 	private long product_id;
 	private String product_name;
 	private String thumbnail;
 	private long seller_id;
-	private String seller_nickName;
+	private String seller_nickname;
 	
 }

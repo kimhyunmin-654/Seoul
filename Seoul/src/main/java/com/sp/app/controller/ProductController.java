@@ -37,10 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/product/*")
 public class ProductController {
 
-    private final MyUtil myUtil;
 	private final ProductService productService;
 	private final StorageService storageService;
-	private final PaginateUtil paginateUtil;
 	
 	@GetMapping("write")
 	public String insertForm(HttpSession session, Model model) {
