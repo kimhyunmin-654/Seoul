@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.BoardMapper">
+	<!-- 지역 코드에 따른 지역명 가져오기 -->
+	<select id="getRegionnameById" parameterType="String" resultType="String">
+		SELECT region_name FROM region WHERE region_id = #{region_id}
+	</select>
+	
+	<!-- 게시글 -->
+	<insert id="insertBoard" parameterType="com.sp.app.model.Board">
+		INSERT INTO community(num, region_id, member_id, subject, content, hit_count, reg_date, block, save_filename, original_filename, filesize)
+		VALUES (community_seq.NEXTVAL, #{region_id}, #{member_id}, #{subject}, #{content}, 0, SYSDATE, 0, 
+			#{saveFilename, jdbcType=VARCHAR}, #{originalFilename, jdbcType=VARCHAR}, #{filesize})
+	</insert>
+	
+	<!-- 검색조건 -->
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all'">
+				<![CDATA[
+					(
+						INSTR(subject, #{kwd}) > 0
+						OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+					)
+				]]>
+			</when>
+			<when test="schType == 'reg_date'">
+				( INSTR(TO_CHAR(reg_date, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<when test="schType == 'content'">
+				<![CDATA[
+					DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+				]]>
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community c
+		JOIN member m ON c.member_id = m.member_id
+		<where>
+			<if test="region_id != null and region_id != ''">
+				region_id = #{region_id}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND
+				<include refid="where-list"/>
+			</if>
+			AND block = 0
+		</where>
+	</select>
+	
+	<select id="listBoard" parameterType="map" resultType="com.sp.app.model.Board">
+		SELECT c.num, region_id, c.member_id, m.nickname, subject, TO_CHAR(c.reg_date, 'YYYY-MM-DD') reg_date, hit_count,
+			NVL(replyCount, 0) replyCount, NVL(communityLikeCount, 0) communityLikeCount
+		FROM community c
+		JOIN member m ON c.member_id = m.member_id
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) replyCount
+			FROM community_reply
+			WHERE parent_num = 0 AND show_reply = 0
+			GROUP BY num
+		) r ON c.num = r.num
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) communityLikeCount
+			FROM community_like
+			GROUP BY num
+		) cl ON c.num = cl.num
+		<where>
+			<if test="region_id != null and region_id != ''">
+				region_id = #{region_id}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND
+				<include refid="where-list"/>
+			</if>
+			AND block = 0
+		</where>
+		ORDER BY c.num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Board">
+		SELECT c.num, c.region_id, c.member_id, nickname, subject, content, hit_count, c.reg_date,
+			save_filename AS saveFilename, original_filename AS originalFilename, block, filesize, NVL(community_like_count, 0) communityLikeCount
+		FROM community c
+		JOIN member m ON c.member_id = m.member_id
+		LEFT OUTER JOIN (
+			SELECT num, COUNT(*) community_like_count
+			FROM community_like
+			GROUP BY num
+		) cl ON c.num = cl.num
+		WHERE c.num = #{num} AND block = 0
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE community SET hit_count = hit_count + 1
+		WHERE num = #{num}
+	</update>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Board">
+		SELECT num, subject, region_id
+		FROM community c
+		JOIN member m ON c.member_id = m.member_id
+		<where>
+			<if test="region != null and region != ''">
+				region_id = #{region_id}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND
+				<include refid="where-list"/>
+			</if>
+			AND (num &lt; #{num})
+			AND block = 0
+		</where>
+		ORDER BY num DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Board">
+		SELECT num, subject, region_id
+		FROM community c
+		JOIN member m ON c.member_id = m.member_id
+		<where>
+			<if test="region_id != null and region_id != ''">
+				region_id = #{region_id}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND
+				<include refid="where-list"/>
+			</if>
+			AND (num &gt; #{num})
+			AND block = 0
+		</where>
+		ORDER BY num ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<update id="updateBoard" parameterType="com.sp.app.model.Board">
+		UPDATE community SET subject = #{subject}, content = #{content},
+			save_filename = #{saveFilename, jdbcType=VARCHAR},
+			original_filename = #{originalFilename, jdbcType=VARCHAR}
+		WHERE num = #{num}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="Long">
+		DELETE FROM community WHERE num = #{num}
+	</delete>
+	
+	<!-- 게시글 좋아요 -->
+	<insert id="insertBoardLike" parameterType="map">
+		INSERT INTO community_like(num, member_id) VALUES (#{num}, #{member_id})
+	</insert>
+	
+	<delete id="deleteBoardLike" parameterType="map">
+		DELETE FROM community_like WHERE num = #{num} AND member_id = #{member_id}
+	</delete>
+	
+	<select id="boardLikeCount" parameterType="Long" resultType="Integer">
+		SELECT COUNT(*) FROM community_like WHERE num = #{num}
+	</select>
+	
+	<select id="isUserBoardLiked" parameterType="map" resultType="com.sp.app.model.Board">
+		SELECT num, member_id
+		FROM community_like
+		WHERE num = #{num} AND member_id = #{member_id}
+	</select>
+	
+	
+	<!-- 댓글 -->
+	<insert id="insertReply" parameterType="com.sp.app.model.Reply">
+		INSERT INTO community_reply(reply_num, member_id, num, content, parent_num, reg_date, show_reply, block)
+		VALUES(reply_seq.NEXTVAL, #{member_id}, #{num}, #{content}, #{parent_num}, SYSDATE, 0, 0)
+	</insert>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community_reply
+		WHERE num = #{num} AND parent_num = 0
+		<if test="userLevel neq 9">
+			AND ( show_reply = 0 OR member_id = #{member_id} )
+		</if>
+	</select>
+	
+	<select id="listReply" parameterType="map" resultType="com.sp.app.model.Reply">
+		SELECT r.reply_num, r.member_id, nickname, r.num, content, r.reg_date,
+			show_reply, profile_photo, r.block,
+			NVL(answerCount, 0) answerCount,
+			NVL(likeCount, 0) likeCount,
+			NVL(dislikeCount, 0) dislikeCount
+		FROM community_reply r
+		JOIN member m ON r.member_id = m.member_id
+		LEFT OUTER JOIN (
+			SELECT parent_num, COUNT(*) answerCount
+			FROM community_reply
+			WHERE num = #{num} AND parent_num != 0
+			<if test="userLevel neq 9">
+				AND ( show_reply = 0 OR member_id = #{member_id} )
+			</if>
+			GROUP BY parent_num
+		) a ON r.reply_num = a.parent_num
+		LEFT OUTER JOIN (
+			SELECT reply_num, COUNT(DECODE(reply_like, 1, 1)) likeCount,
+				COUNT(DECODE(reply_like, 0, 1)) dislikeCount
+			FROM community_replylike
+			GROUP BY reply_num
+		) lc ON r.reply_num = lc.reply_num
+		WHERE num = #{num} AND r.parent_num = 0
+		<if test="userLevel neq 9">
+			AND ( show_reply = 0 OR r.member_id = #{member_id} )
+		</if>
+		ORDER BY r.reply_num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM community_reply
+		WHERE reply_num = #{reply_num}
+		<if test="mode == 'reply'">
+			OR parent_num = #{reply_num}
+		</if>
+	</delete>
+	
+	<!-- 답글 -->
+	<select id="listReplyAnswer" parameterType="map" resultType="com.sp.app.model.Reply">
+		SELECT reply_num, num, r.member_id, nickname, content, reg_date, profile_photo, parent_num, show_reply, r.block
+		FROM community_reply r
+		JOIN member m ON r.member_id = m.member_id
+		WHERE parent_num = #{parent_num}
+		<if test="userLevel neq 9">
+			AND ( show_reply = 0 OR r.member_id = #{member_id} )
+		</if>
+		ORDER BY reply_num DESC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community_reply
+		WHERE parent_num = #{parent_num}
+		<if test="userLevel neq 9">
+			AND ( show_reply = 0 OR member_id = #{member_id} )
+		</if>
+	</select>
+	
+	<!-- 댓글 좋아요/싫어요 -->
+	<insert id="insertReplyLike" parameterType="map">
+		INSERT INTO community_replylike(reply_num, member_id, reply_like)
+		VALUES(#{reply_num}, #{member_id}, #{reply_like})
+	</insert>
+	
+	<delete id="deleteReplyLike" parameterType="map">
+		DELETE FROM community_replylike
+		WHERE reply_num = #{reply_num} AND member_id = #{member_id}
+	</delete>
+	
+	<select id="isUserReplyLiked" parameterType="map" resultType="Integer">
+		SELECT reply_like
+		FROM community_replylike
+		WHERE reply_num = #{reply_num} AND member_id = #{member_id}
+	</select>
+	
+	<select id="replyLikeCount" parameterType="map" resultType="map">
+		SELECT COUNT(DECODE(reply_like, 1, 1)) likeCount, COUNT(DECODE(reply_like, 0, 1)) disLikeCount
+		FROM community_replylike
+		WHERE reply_num = #{reply_num}
+	</select>
+	
+	<!-- 숨김 -->
+	<update id="updateReplyShowHide" parameterType="map">
+		UPDATE community_reply
+		SET show_reply = #{show_reply}
+		WHERE reply_num = #{reply_num} AND member_id = #{member_id}
+	</update>
+	
+	<!-- 차단 -->
+	<!-- 사용자 차단 -->
+	<insert id="insertBlockMember" parameterType="map">
+		INSERT INTO community_block(member_id, blocked_member_id, block_date)
+		VALUES(#{member_id}, #{blocked_member_id}, SYSDATE)
+	</insert>
+	
+	<delete id="deleteBlockMember" parameterType="map">
+		DELETE FROM community_block WHERE member_id = #{member_id} AND blocked_member_id = #{blocked_member_id}
+	</delete>
+	
+	<select id="findBlockMemberById" parameterType="Long" resultType="Long">
+		SELECT blocked_member_id
+		FROM community_block
+		WHERE member_id = #{member_id}
+	</select>
+	
+	<!-- 관리자 차단 -->
+	<update id="updateReplyBlockByManager" parameterType="map">
+		UPDATE community_reply
+		SET block = #{block}
+		WHERE reply_num = #{reply_num}
+	</update>
+	
+	<!-- 신고 -->
+	<insert id="insertCommunityReports" parameterType="com.sp.app.model.Reports">
+		INSERT INTO reports(report_num, reported_by, target_num, target_table, target_type, target_content,
+			reason_code, reason_detail, report_ip, report_date, report_status)
+		VALUES(reports_seq.NEXTVAL, #{reported_by}, #{target_num}, #{target_table}, #{target_type}, #{target_content},
+			#{reason_code}, #{reason_detail}, #{report_ip}, SYSDATE, 1)
+	</insert>
+	
+</mapper>
