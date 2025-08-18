@@ -2,8 +2,6 @@ package com.sp.app.chat.model;
 
 import java.util.Date;
 
-import org.apache.ibatis.type.Alias;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,12 +13,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Alias("ChatRoom")
 public class ChatRoom {
-	private Long roomId;
-	private Long productId;
-	private Long buyerId;
-	private Long sellerId;
-	private Date createdAt;
+	private Long room_id;
+	private Long product_id;
+	private Long buyer_id;
+	private Long seller_id;
+	private Date created_at;
+	private String nickname;
+	private String product_name;
 	private String lastMessage;
+	private Date lastTime;
 }

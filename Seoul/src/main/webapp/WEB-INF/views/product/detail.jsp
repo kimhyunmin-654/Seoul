@@ -179,9 +179,15 @@ body {
 								<button type="button"
 									class="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold text-lg py-4 rounded-lg border-2 border-orange-500 transition-colors">
 									🤍 찜하기</button>
-								<button type="button"
-									class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-all duration-300 transform hover:scale-105 glow-button">
-									채팅하기</button>
+							<c:if test="${empty sessionScope.member or sessionScope.member.member_id != dto.member_id}">
+							  <button type="button"
+							          class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-all duration-300 transform hover:scale-105 glow-button btn-open-chat"
+							          data-product-id="${dto.product_id}"
+							          data-seller-id="${dto.member_id}"
+							          data-seller-nick="${dto.nickName}">
+							    채팅하기
+							  </button>
+							</c:if>
 							</div>
 						</div>
 					</div>
@@ -257,13 +263,14 @@ body {
                  }
              });
         	
-        });
-        
-       
+        });     
     </script>
 
-	<footer> 
-	</footer>
+<script>
+    const ctx = '${pageContext.request.contextPath}';
+</script>    
+<script src="${pageContext.request.contextPath}/dist/js/detailchat.js"></script>
+
 
 </body>
 </html>

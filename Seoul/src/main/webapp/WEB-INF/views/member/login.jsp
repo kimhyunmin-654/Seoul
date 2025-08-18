@@ -6,9 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spring</title>
+<title>서울 한바퀴</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/login.css" type="text/css">
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 </head>
 <body>
 

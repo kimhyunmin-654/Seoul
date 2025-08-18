@@ -14,9 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatNotification {
-	private Long notiId;
-	private Long chatId;
-	private Long memberId;
-	private boolean isRead;
-	private Date createdAt;
+	private Long noti_id;
+	private Long chat_id;
+	private Long member_id;
+	private boolean is_read;
+	private Date created_at;
 }

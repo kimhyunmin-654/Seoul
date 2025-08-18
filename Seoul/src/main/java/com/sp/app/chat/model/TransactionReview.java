@@ -14,10 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class TransactionReview {
-	private Long reviewId;
-	private Long chatId;
-	private Long productId;
+	private Long review_id;
+	private Long chat_id;
+	private Long product_id;
 	private int rating;
 	private String content;
-	private Date createdAt;
+	private Date created_at;
 }

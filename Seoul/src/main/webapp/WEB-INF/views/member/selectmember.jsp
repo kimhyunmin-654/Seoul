@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>서울 한바퀴</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/selectmember.css" type="text/css">
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 </head>
 <body>
 

@@ -9,105 +9,121 @@
     INSERT INTO chat_room (
         room_id, product_id, buyer_id, seller_id, created_at
     ) VALUES (
-        chatroom_seq.NEXTVAL, #{productId}, #{buyerId}, #{sellerId}, SYSDATE
+        chatroom_seq.NEXTVAL, #{product_id}, #{buyer_id}, #{seller_id}, SYSDATE
     )
 </insert>
 
 <select id="findByRoomId" parameterType="long" resultType="com.sp.app.chat.model.ChatRoom">
     SELECT * FROM chat_room
-    WHERE room_id = #{roomId}
+    WHERE room_id = #{room_id}
 </select>
 
-<select id="findByProductAndBuyer" parameterType="com.sp.app.chat.model.ChatRoomQuery" resultType="com.sp.app.chat.model.ChatRoom">
+<select id="findByProductAndBuyer" parameterType="map" resultType="com.sp.app.chat.model.ChatRoom">
     SELECT * FROM chat_room
-    WHERE product_id = #{productId} AND buyer_id = #{user1Id}
+    WHERE product_id = #{product_id} AND buyer_id = #{user1Id}
 </select>
 
 <select id="listRoomsByMemberId" parameterType="long" resultType="com.sp.app.chat.model.ChatRoom">
-    SELECT * FROM chat_room
-    WHERE buyer_id = #{memberId} OR seller_id = #{memberId}
+    SELECT cr.room_id, cr.product_id, cr.buyer_id, cr.seller_id, cr.created_at, p.product_name
+    FROM chat_room cr
+    LEFT JOIN product p ON p.product_id = cr.product_id
+    WHERE cr.buyer_id = #{member_id} OR cr.seller_id = #{member_id}
     ORDER BY created_at DESC
 </select>
 
 
 <!-- Chat Message -->
 
-<insert id="insertChatMessage" parameterType="com.sp.app.chat.model.ChatMessage" >
-    INSERT INTO product_chat (chat_id, product_id, sender_id, receiver_id, message, sent_time) 
-    	VALUES (productchat_seq.NEXTVAL, #{productId}, #{senderId}, #{receiverId}, #{message}, SYSDATE)
+<insert id="insertChatMessage" parameterType="com.sp.app.chat.model.ChatMessage">
+  <selectKey resultType="long" keyProperty="chat_id" order="BEFORE">
+    SELECT productchat_seq.NEXTVAL FROM dual
+  </selectKey>
+  INSERT INTO product_chat (
+    chat_id, room_id, product_id, sender_id, receiver_id, message, sent_time
+  ) VALUES (
+    #{chat_id}, #{room_id}, #{product_id}, #{sender_id}, #{receiver_id}, #{message}, SYSDATE
+  )
 </insert>
 
 <select id="listMessagesByRoomId" parameterType="long" resultType="com.sp.app.chat.model.ChatMessage">
-    SELECT * FROM product_chat
-    WHERE product_id = (
-        SELECT product_id FROM chat_room WHERE room_id = #{roomId}
-    )
-    AND (
-        sender_id = (SELECT buyer_id FROM chat_room WHERE room_id = #{roomId})
-        OR sender_id = (SELECT seller_id FROM chat_room WHERE room_id = #{roomId})
-    )
-    ORDER BY sent_time ASC
+  SELECT pc.chat_id , pc.room_id , pc.product_id , pc.sender_id , m.nickname AS nickname, m.profile_photo AS profile_photo, pc.receiver_id, pc.message, pc.sent_time
+  FROM product_chat pc
+  LEFT JOIN member m ON m.member_id = pc.sender_id
+  WHERE pc.room_id = #{room_id}
+  ORDER BY pc.sent_time ASC
 </select>
 
 <select id="findLastMessage" parameterType="long" resultType="com.sp.app.chat.model.ChatMessage">
-    SELECT * FROM product_chat
-    WHERE product_id = (
-        SELECT product_id FROM chat_room WHERE room_id = #{roomId}
-    )
-    AND (
-        sender_id = (SELECT buyer_id FROM chat_room WHERE room_id = #{roomId})
-        OR sender_id = (SELECT seller_id FROM chat_room WHERE room_id = #{roomId})
-    )
+    SELECT chat_id, product_id, sender_id, receiver_id, message, sent_time AS sent_time, room_id
+    FROM product_chat
+    WHERE room_id = #{room_id}
     ORDER BY sent_time DESC
     FETCH FIRST 1 ROWS ONLY
+</select>
+
+<select id="findNicknameById" parameterType="long" resultType="String">
+    SELECT nickname 
+    FROM member 
+    WHERE member_id = #{memberId}
 </select>
 
 <!-- Chat Notification -->
 <insert id="insertNotification" parameterType="com.sp.app.chat.model.ChatNotification" >
     INSERT INTO chat_notification (noti_id, chat_id, member_id, is_read, created_at) 
-    	VALUES (chatnotification_seq.NEXTVAL, #{chatId}, #{memberId}, 0, SYSDATE)
+    	VALUES (chatnotification_seq.NEXTVAL, #{chat_id}, #{member_id}, 0, SYSDATE)
 </insert>
 
-<update id="markAsRead">
+<update id="markAsRead" parameterType="map">
     UPDATE chat_notification
     SET is_read = 1
-    WHERE chat_id = #{chatId} AND member_id = #{memberId}
+    WHERE chat_id = #{chat_id} AND member_id = #{member_id}
 </update>
 
 <select id="countUnreadByMemberId" parameterType="long" resultType="int">
     SELECT COUNT(*) FROM chat_notification
-    WHERE member_id = #{memberId} AND is_read = 0
+    WHERE member_id = #{member_id} AND is_read = 0
 </select>
 
 <select id="listUnreadByMemberId" parameterType="long" resultType="com.sp.app.chat.model.ChatNotification">
     SELECT * FROM chat_notification
-    WHERE member_id = #{memberId} AND is_read = 0
+    WHERE member_id = #{member_id} AND is_read = 0
 </select>
+
+<update id="markAllAsRead" parameterType="long">
+    UPDATE chat_notification
+    SET is_read = 1
+    WHERE member_id = #{member_id} AND is_read = 0
+</update>
 
 <!--  Transaction Review -->
 
 <insert id="insertReview" parameterType="com.sp.app.chat.model.TransactionReview" >
     INSERT INTO transaction_review (review_id, chat_id, product_id, rating, content, created_at) 
-    	VALUES (transactionreview_seq.NEXTVAL, #{chatId}, #{productId}, #{rating}, #{content}, SYSDATE)
+    	VALUES (transactionreview_seq.NEXTVAL, #{chat_id}, #{product_id}, #{rating}, #{content}, SYSDATE)
 </insert>
 
 <select id="findReviewByChatId" parameterType="long" resultType="com.sp.app.chat.model.TransactionReview">
     SELECT * FROM transaction_review
-    WHERE chat_id = #{chatId}
+    WHERE chat_id = #{chat_id}
 </select>
 
-<select id="existsReviewByChatId" parameterType="long" resultType="boolean">
+<select id="existsReviewByChatId" parameterType="long" resultType="int">
     SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
     FROM transaction_review
-    WHERE chat_id = #{chatId}
+    WHERE chat_id = #{chat_id}
 </select>
 
 <select id="listReviewByProductId" parameterType="long" resultType="com.sp.app.chat.model.TransactionReview">
     SELECT * FROM transaction_review
-    WHERE product_id = #{productId}
+    WHERE product_id = #{product_id}
     ORDER BY created_at DESC
 </select>
 
+<select id="findById" parameterType="long" resultType="com.sp.app.model.Member">
+  SELECT member_id, nickname, profile_photo
+  FROM member
+  WHERE member_id = #{memberId}
+</select>
 
 </mapper>
 

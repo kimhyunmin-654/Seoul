@@ -7,7 +7,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/pwd.css" type="text/css">
-<title>Spring</title>
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
+<title>서울 한바퀴</title>
 </head>
 <body>
 

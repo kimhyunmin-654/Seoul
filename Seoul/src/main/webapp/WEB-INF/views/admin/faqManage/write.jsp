@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seoul</title>
+<title>서울 한바퀴</title>
 <jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 
 <!-- Quill Rich Text Editor -->

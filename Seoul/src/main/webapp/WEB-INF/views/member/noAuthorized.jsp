@@ -6,7 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spring</title>
+<title>서울 한바퀴</title>
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 </head>
 <body>
 

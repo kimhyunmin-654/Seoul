@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+  .chat-room-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  .chat-profile {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .chat-meta {
+    font-size: 13px;
+    color: #6c757d;
+  }
+
+  /* nickname / product name 영역 정리 */
+  .chat-room-item .header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 닉네임과 상품명 사이 간격 */
+    width: 100%;
+  }
+
+  .chat-room-item .nickname {
+    font-size: 14px;
+    color: #333;
+    flex: 0 0 auto;
+  }
+
+  /* 상품명: 굵게, 줄임표 처리, 최대 너비 지정 */
+  .chat-room-item .productname {
+    font-weight: 700;        /* 굵게 */
+    font-size: 15px;         /* 필요하면 조정 */
+    color: #111;
+    margin-left: 6px;
+    line-height: 1;
+    white-space: nowrap;     /* 한 줄로 유지 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 길면 ... 처리 */
+    max-width: 55%;          /* 상황에 맞게 조정 (반응형 고려) */
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .chat-room-item .time {
+    font-size: 12px;
+    color: #8a8a8a;
+    flex: 0 0 auto;
+    margin-left: auto; /* 시간을 오른쪽으로 정렬 */
+  }
+
+  .chat-room-item .message-preview {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatRoomQuery {
-	private Long productId;
+	private Long product_id;
 	private Long user1Id;
 	private Long user2Id;
 }

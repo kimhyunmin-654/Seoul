@@ -8,6 +8,7 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/chat.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/myRooms.css" type="text/css">
 
 <div class="container-fluid header-wrap px-3 px-md-4">
   <div class="container">
@@ -15,7 +16,7 @@
 
       <a href="<c:url value='/product/list'/>" class="brand">
         <img class="logo" src="${pageContext.request.contextPath}/dist/images/logo-seoul-hanbak.png"
-             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/user.png';">
+             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/dist/images/favicon.png';">
         <div class="brand-text">
           <div class="brand-title">서울한바퀴</div>
           <div class="brand-sub">중고거래 커뮤니티</div>
@@ -25,7 +26,7 @@
       <div class="center-box">
         <div class="top-controls">
           <div class="region-label" id="regionName">
-            <c:out value="${empty sessionScope.regionName ? '지역이름' : sessionScope.regionName}"/>
+            <c:out value="${sessionScope.regionName}" default="지역이름"/>
           </div>
 
 
@@ -67,7 +68,32 @@
 
       <div class="right-box">
         <a href="${pageContext.request.contextPath}/alerts" class="icon-btn" title="알림"><i class="bi bi-bell"></i></a>
-        <a href="javascript:void(0);" onclick="openChatPanel()" class="link-text">채팅하기</a>
+	        
+<div class="chat-link-wrap">
+  <c:choose>
+    <c:when test="${empty sessionScope.member}">
+      <a href="${pageContext.request.contextPath}/member/login"
+         class="link-text chat-link">
+        <span class="chat-icon">
+          <i class="bi bi-chat-dots"></i>
+          <span id="chatNotificationBadge" class="chat-badge d-none" aria-live="polite" aria-atomic="true">0</span>
+        </span>
+        <span class="chat-text">채팅하기</span>
+      </a>
+    </c:when>
+
+    <c:otherwise>
+      <a href="javascript:void(0);" onclick="openChatPanel()" class="link-text chat-link">
+        <span class="chat-icon">
+          <i class="bi bi-chat-dots"></i>
+          <span id="chatNotificationBadge" class="chat-badge d-none" aria-live="polite" aria-atomic="true">0</span>
+        </span>
+        <span class="chat-text">채팅하기</span>
+      </a>
+    </c:otherwise>
+  </c:choose>
+</div>
+        
         <a href="${pageContext.request.contextPath}/product/write" class="btn-sell">판매하기</a>
 
         <c:choose>
@@ -111,29 +137,45 @@
         </c:choose>
       </div>
       
-	<div id="chatPanel" class="chat-panel">
-	  <div class="chat-header">
-	    <span>채팅</span>
-	    <button class="btn-close" onclick="closeChatPanel()">&times;</button>
-	  </div>
-	  <div class="chat-banner">
-
-	  </div>
-	  <div class="chat-body">
-	    <div class="empty-chat">
-	      <i class="bi bi-chat-dots"></i>
-	      <p>채팅 내역이 없습니다.</p>
-	    </div>
-	  </div>
-	</div>
+		<div id="chatPanel" class="chat-panel">
+		  <div class="chat-header">
+		    <span>채팅</span>
+		    <button type="button" class="chat-close" onclick="closeChatPanel()">×</button>
+		  </div>
+		  <div class="chat-banner">
+	
+		  </div>
+			<div class="chat-body">
+			  <div class="empty-chat">
+			    <i class="bi bi-chat-dots"></i>
+			    <p>채팅 내역이 없습니다.</p>
+			  </div>
+			  
+			  <div id="chatRoomList"></div>
+			</div>
+		</div>
+		
+		<div id="coBackdrop" class="co-backdrop"></div>
+		<div id="coOverlay" class="chat-overlay" role="dialog" aria-modal="true">
+		  <div class="co-header">
+		    <div class="co-title"><strong id="coOpponent">채팅</strong></div>
+		    <button type="button" class="co-close" onclick="closeCenterChat()">×</button>
+		  </div>
+		  <div id="coMessages" class="co-body"><!-- 메시지 --></div>
+		  <div class="co-input">
+		    <input id="coInput" type="text" class="form-control" placeholder="메시지를 입력하세요..." autocomplete="off">
+		    <button id="coSend" class="btn btn-primary">전송</button>
+		  </div>
+		</div>		
       
 
     </div>
   </div>
 </div>
 
-<script>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
 function updateHeaderRegion(name){
   const el = document.getElementById('regionName');
   if(el){ el.textContent = name || '지역이름'; }
@@ -149,15 +191,20 @@ function updateHeaderRegion(name){
     }
   }catch(e){}
 })();
-
-
-function openChatPanel() {
-	  document.getElementById('chatPanel').classList.add('open');
-	}
-	
-function closeChatPanel() {
-	  document.getElementById('chatPanel').classList.remove('open');
-}
-
-
 </script>
+
+
+<script>
+  window.CTX = '${pageContext.request.contextPath}';
+  window.WS_PROTO = (location.protocol === 'https:') ? 'wss' : 'ws';
+  <c:choose>
+    <c:when test="${not empty sessionScope.member}">
+      window.CURRENT_MEMBER_ID = ${sessionScope.member.member_id};
+    </c:when>
+    <c:otherwise>
+      window.CURRENT_MEMBER_ID = null;
+    </c:otherwise>
+  </c:choose>
+</script>
+
+<script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>

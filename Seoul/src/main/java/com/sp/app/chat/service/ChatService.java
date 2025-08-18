@@ -7,28 +7,33 @@ import com.sp.app.chat.model.ChatNotification;
 import com.sp.app.chat.model.ChatRoom;
 import com.sp.app.chat.model.ChatRoomQuery;
 import com.sp.app.chat.model.TransactionReview;
+import com.sp.app.model.Member;
 
 public interface ChatService {
     // ===== 채팅방 =====
-    int createChatRoom(ChatRoom dto);
-    ChatRoom getChatRoomById(Long roomId);
-    ChatRoom getChatRoomByProductAndBuyer(ChatRoomQuery query);
-    List<ChatRoom> getMyChatRooms(Long memberId);
+    public int createChatRoom(ChatRoom dto);
+    public ChatRoom getChatRoomById(Long room_id);
+    public ChatRoom getChatRoomByProductAndBuyer(ChatRoomQuery query);
+    public List<ChatRoom> getMyChatRooms(Long member_id);
 
     // ===== 메시지 =====
-    int sendMessage(ChatMessage dto);
-    List<ChatMessage> getMessagesByRoomId(Long roomId);
-    ChatMessage getLastMessage(Long roomId);
+    public int sendMessage(ChatMessage dto);
+    public List<ChatMessage> getMessagesByRoomId(Long room_id);
+    public ChatMessage getLastMessage(Long room_id);
 
     // ===== 알림 =====
-    int createNotification(ChatNotification dto);
-    int markAsRead(Long chatId, Long memberId);
-    int countUnread(Long memberId);
-    List<ChatNotification> getUnreadNotifications(Long memberId);
+    public int createNotification(ChatNotification dto);
+    public int markAsRead(Long chat_id, Long member_id);
+    public int countUnread(Long member_id);
+    public List<ChatNotification> getUnreadNotifications(Long member_id);
+    public int markAllAsRead(Long member_id);
 
     // ===== 리뷰 =====
-    int writeReview(TransactionReview dto);
-    TransactionReview getReviewByChatId(Long chatId);
-    boolean hasReview(Long chatId);
-    List<TransactionReview> getReviewsByProductId(Long productId);	
+    public int writeReview(TransactionReview dto);
+    public TransactionReview getReviewByChatId(Long chat_id);
+    public int hasReview(Long chat_id);
+    public List<TransactionReview> getReviewsByProductId(Long product_id);	
+    
+    
+    public Member getMemberById(Long member_id);
 }

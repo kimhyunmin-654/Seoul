@@ -95,3 +95,89 @@
   .center-box { min-width:100%; order:3; }
   .right-box { order:2; margin-left:auto; }
 }
+
+/* wrapper는 이미 position:relative 여야 함 */
+.chat-link-wrap { position: relative; display:inline-flex; align-items:center; }
+.chat-link .chat-icon {
+  position: relative;
+  display: inline-block;
+  width: 28px;   /* 아이콘 크기에 맞춰 조정 */
+  height: 28px;
+  line-height: 28px;
+  vertical-align: middle;
+}
+
+/* 배지: 아이콘의 오른쪽 상단, 텍스트를 가리지 않음 */
+.chat-link .chat-icon .chat-badge {
+  position: absolute;
+  top: -6px;          /* 수직 위치: 음수로 더 위로 올림 */
+  right: -6px;        /* 수평 위치: 음수로 아이콘 위쪽으로 붙임 */
+  transform: none;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: #37c36a;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  pointer-events: none;
+  z-index: 999;
+}
+/* 숨김 유틸 */
+.d-none { display: none !important; }
+
+/* 큰 숫자에 대한 축소 */
+.chat-badge.overflow { padding: 0 4px; min-width: 18px; }
+
+/* 만약 아이콘 왼쪽 위에 정확히 붙이고 싶다면 이런 값으로 더 미세 조정 */
+.chat-link-wrap.badge-on-icon .chat-badge {
+  top: -8px;
+  right: 2px;
+}
+
+/* 강제 적용용 — specificity 높이고 !important 사용 */
+.header-wrap .chat-link-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* 배지: 텍스트 오른쪽 위 (스크린샷과 유사한 위치) */
+.header-wrap .chat-link-wrap .chat-badge {
+  position: absolute !important;
+  top: 6px !important;        /* 위/아래 미세조정: +값이면 아래로, -값이면 위로 */
+  right: -8px !important;     /* 왼/오 미세조정: 음수면 더 왼쪽으로 이동 */
+  transform: translateY(-50%) !important; /* 수직 중앙 정렬 보정 */
+  min-width: 20px !important;
+  height: 20px !important;
+  padding: 0 6px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  background-color: #37c36a !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  line-height: 1 !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+}
+
+/* 작은 화면용 */
+@media (max-width: 576px) {
+  .header-wrap .chat-link-wrap .chat-badge {
+    top: 4px !important;
+    right: -6px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    font-size: 11px !important;
+  }
+}
+
