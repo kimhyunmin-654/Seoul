@@ -37,7 +37,7 @@
 		    <option value="content">내용</option>
 		    <option value="seller">판매자</option>
 		  </select>
-		  <input type="text" name="q" placeholder="검색" aria-label="검색" class="search-input">
+		  <input type="text" name="kwd" placeholder="검색" aria-label="검색" class="search-input">
 		  <button type="submit" class="btn search-btn" title="검색"><i class="bi bi-search"></i></button>
 		</form>
 		
@@ -48,7 +48,7 @@
           <a class="with-icon" href="${pageContext.request.contextPath}/auction/list">
             <i class="bi bi-gavel"></i><span>경매</span>
           </a>
-          <a href="${pageContext.request.contextPath}/local">동네한바퀴</a>
+          <a href="${pageContext.request.contextPath}/bbs/list?region={param.region}">동네한바퀴</a>
           <a href="${pageContext.request.contextPath}/wish/list">찜한 상품</a>
           <a href="${pageContext.request.contextPath}/event/list">이벤트</a>
           <a href="${pageContext.request.contextPath}/admin/sales">관리자 판매</a> 
@@ -60,6 +60,7 @@
 		    <ul class="dropdown-menu">
 		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/notice/list">공지사항</a></li>
 		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/faq/list">FAQ</a></li>
+		      <li><a class="dropdown-item" href="${pageContext.request.contextPath}/inquiry/list">1:1문의하기</a></li>
 		    </ul>
 		  </div>
       
