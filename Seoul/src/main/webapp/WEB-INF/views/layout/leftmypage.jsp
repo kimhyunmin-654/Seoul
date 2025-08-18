@@ -58,6 +58,7 @@
         <li><a href="${pageContext.request.contextPath}/mypage/events">이벤트 참여 내역</a></li>
         <li><a href="${pageContext.request.contextPath}/member/pwd">내 정보 수정</a></li>
         <li style="margin-top: 18px;"><a href="${pageContext.request.contextPath}/mypage/stats">거래 통계</a></li>
+        <li style="margin-top: 18px;"><a href="${pageContext.request.contextPath}/mypage/withdrawal">회원탈퇴</a></li>
       </ul>
     </aside>
 
