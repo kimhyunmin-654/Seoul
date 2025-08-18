@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.InquiryMapper">
+	<insert id="insertInquiry" parameterType="com.sp.app.model.Inquiry">
+		INSERT INTO inquiry(inquiry_id, member_id, title, content, created_at)
+		VALUES (inquiry_seq.NEXTVAL, #{member_id}, #{title}, #{content}, SYSDATE)
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all' ">
+				( INSTR(title, #{kwd}) &gt; 0
+					OR INSTR(content, #{kwd}) &gt; 0 )
+			</when>
+			<when test="schType == 'reg_date' ">
+				( INSTR(TO_CHAR(i.created_at, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(i.created_at, 'YYYY-MM-DD') = #{kwd} )
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 글개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM inquiry i
+		JOIN member m ON i.member_id = m.member_id
+		<where>
+			i.member_id = #{member_id}
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+
+	<!-- 글 리스트 -->
+	<select id="listInquiry" parameterType="map" resultType="com.sp.app.model.Inquiry">
+		SELECT i.inquiry_id, i.member_id, m.name, i.title, TO_CHAR(i.created_at, 'YYYY-MM-DD') created_at, i.answered_at
+		FROM inquiry i
+		JOIN member m ON i.member_id = m.member_id
+		<where>
+			i.member_id = #{member_id}
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY i.inquiry_id DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 글보기 -->
+	<select id="findById" resultType="com.sp.app.model.Inquiry" parameterType="Long">
+		SELECT i.inquiry_id, i.member_id, m.name, i.title, i.content, i.created_at, 
+			a.name answerName, i.answer, i.answered_at
+		FROM inquiry i
+		JOIN member m ON i.member_id = m.member_id
+		LEFT OUTER JOIN member a ON i.answer_id = a.member_id
+		WHERE i.inquiry_id = #{inquiry_id}
+	</select>
+	
+	<!-- 이전글 -->
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Inquiry">
+		SELECT inquiry_id, title
+		FROM inquiry i
+		JOIN member m ON i.member_id = m.member_id
+		<where>
+			i.member_id = #{member_id}
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (inquiry_id &gt; #{inquiry_id})
+		</where>
+		ORDER BY inquiry_id ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 다음글 -->
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Inquiry">
+				SELECT inquiry_id, title
+		FROM inquiry i
+		JOIN member m ON i.member_id = m.member_id
+		<where>
+			i.member_id = #{member_id}
+			<if test="kwd != null and kwd != '' ">
+				AND <include refid="where-list"/>
+			</if>
+			AND (inquiry_id &lt; #{inquiry_id})
+		</where>
+		ORDER BY inquiry_id DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<!-- 삭제 -->
+	<delete id="deleteInquiry" parameterType="Long">
+		DELETE FROM inquiry
+		WHERE inquiry_id = #{inquiry_id}
+	</delete>
+	
+</mapper>
