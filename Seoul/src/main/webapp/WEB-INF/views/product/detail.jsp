@@ -268,8 +268,8 @@ body {
 
 <script>
     const ctx = '${pageContext.request.contextPath}';
-</script>    
-<script src="${pageContext.request.contextPath}/dist/js/detailchat.js"></script>
+</script>     
+<script src="${pageContext.request.contextPath}/dist/js/detailchat.js"></script> 
 
 
 </body>
