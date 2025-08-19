@@ -14,7 +14,8 @@
 </insert>
 
 <select id="findByRoomId" parameterType="long" resultType="com.sp.app.chat.model.ChatRoom">
-    SELECT * FROM chat_room
+    SELECT room_id, product_id, buyer_id, seller_id, created_at 
+    FROM chat_room
     WHERE room_id = #{room_id}
 </select>
 
@@ -31,6 +32,10 @@
     ORDER BY created_at DESC
 </select>
 
+<delete id="deleteChatRoom">
+	DELETE FROM chat_room
+	WHERE room_id = #{room_id}
+</delete>
 
 <!-- Chat Message -->
 

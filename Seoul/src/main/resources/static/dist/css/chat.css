@@ -1,191 +1,255 @@
+/* chat.css — 통합 수정본
+   - 상품명: 말줄임 제거, 줄바꿈 허용 -> 상품 전체 노출
+   - 삭제 버튼 우측 고정
+   - 헤더 높이 변수화로 첫 항목 가려짐 문제 해결
+   - 중앙 채팅(오버레이) 및 입력영역 스타일 보정
+*/
+
+/* ===== 전역 변수 ===== */
+:root {
+  --chat-header-height: 64px;
+  --panel-width-desktop: 480px;
+  --panel-width-mid: 420px;
+  --panel-width-small: 340px;
+
+  --bg: #f7f8fa;
+  --bubble-me: #4f7cff;
+  --bubble-other: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --radius: 18px;
+}
+
+/* ===== Chat Panel (오른쪽 목록) ===== */
 .chat-panel {
   position: fixed;
   top: 0;
   right: 0;
-  width: 400px;
-  max-width: 100vw;
+  width: var(--panel-width-desktop);
+  max-width: calc(100vw - 24px);
   height: 100vh;
   background-color: #fff;
-  box-shadow: -4px 0 10px rgba(0,0,0,0.2);
+  box-shadow: -6px 0 18px rgba(0,0,0,0.18);
   z-index: 1050;
   transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.28s ease-in-out;
+  box-sizing: border-box;
 }
 .chat-panel.open { transform: translateX(0%); }
 
+@media (max-width: 1100px) { .chat-panel { width: var(--panel-width-mid); } }
+@media (max-width: 780px)  { .chat-panel { width: var(--panel-width-small); } }
+
+/* header */
 .chat-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 15px; font-weight: bold; font-size: 18px;
-  background: #f8f9fa; border-bottom: 1px solid #ddd;
-}
-.chat-body { height: calc(100vh - 60px); overflow-y: auto; padding: 15px; }
-.chat-close{ background:none; border:none; font-size:20px; line-height:1; cursor:pointer; padding:4px; }
-
-.chat-room-item { padding:10px 12px; margin-bottom:10px; border-radius:10px; background:#f1f3f5; transition:background .2s; }
-.chat-room-item:hover { background:#e9ecef; cursor:pointer; }
-.chat-room-item .nickname { font-weight:600; margin-bottom:3px; }
-.chat-room-item .message-preview { font-size:13px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.chat-room-item .time { font-size:12px; color:#999; text-align:right; }
-
-:root{
-  --bg:#f7f8fa;
-  --bubble-me:#4f7cff;
-  --bubble-other:#ffffff;
-  --text:#111827;
-  --muted:#6b7280;
-  --radius:18px;
-}
-
-.co-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.25); z-index:1390; display:none; }
-.co-backdrop.show{ display:block; }
-
-.chat-overlay{
-  position:fixed; left:50%; top:64px; transform:translateX(-50%);
-  width:760px; max-width:92vw; height:78vh; background:#fff; border-radius:14px;
-  box-shadow:0 16px 40px rgba(0,0,0,.18); z-index:1400; display:none; flex-direction:column;
-}
-.chat-overlay.open{ display:flex; }
-
-.co-header{
-  position:sticky; top:0; z-index:2;
-  padding:12px 16px; border-bottom:1px solid #eee;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.co-close{ background:none; border:none; font-size:22px; line-height:1; cursor:pointer; }
-
-.co-body{
-  flex:1; overflow-y:auto; padding:16px 18px; background:var(--bg);
-}
-.co-body::-webkit-scrollbar{ width:8px }
-.co-body::-webkit-scrollbar-thumb{ background:#d4d7de; border-radius:8px }
-
-.co-input{
-  border-top:1px solid #eee; padding:12px; display:flex; gap:8px; background:#fff;
-  box-shadow:0 -6px 12px rgba(0,0,0,.02) inset;
-}
-
-.co-line{ display:flex; gap:8px; align-items:flex-end; margin:10px 0; }
-.co-line.other{ justify-content:flex-start; }  
-.co-line.me{ justify-content:flex-end; }       
-
-.co-line .avatar{
-  width:32px; height:32px; border-radius:50%; object-fit:cover; flex:0 0 32px;
-}
-
-.bubble{
-  position:relative;
-  max-width:72%;
-  padding:10px 12px; border-radius:var(--radius);
-  background:var(--bubble-other); color:var(--text);
-  box-shadow:0 1px 1px rgba(0,0,0,.06);
-  word-break:break-word; white-space:pre-wrap;
-}
-.co-line.me .bubble{ background:var(--bubble-me); color:#fff; }
-
-.bubble::after{
-  content:""; position:absolute; bottom:8px; border:7px solid transparent;
-}
-.co-line.other .bubble::after{ left:-6px; border-right-color:var(--bubble-other); }
-.co-line.me .bubble::after{ right:-6px; border-left-color:var(--bubble-me); }
-
-.nick{ font-size:12px; color:var(--muted); margin-bottom:2px; }
-.time{ font-size:11px; color:#9ca3af; min-width:40px; text-align:right; margin:0 6px; }
-.co-line.me .time{ order:-1; text-align:left; }
-
-/* COMPACT: 아바타/닉네임은 항상 보이게, 크기/간격만 축소 */
-.co-line.compact{
-  margin-top:4px;
-  /* 추가 축소 스타일은 아래에서 덮어쓸 수 있음 */
-}
-.co-line.compact .avatar{
-  display: block;              /* 항상 노출 */
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex: 0 0 26px;
-  opacity: 0.98;
-}
-.co-line.compact .nick{
-  display: block;              /* 항상 노출 */
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 1px;
-}
-
-/* 날짜 구분선 */
-.co-day-sep{
-  display:flex; align-items:center; gap:12px; margin:18px 0; color:#6b7280; font-size:12px;
-}
-.co-day-sep::before, .co-day-sep::after{
-  content:""; height:1px; background:#e5e7eb; flex:1;
-}
-
-@media (max-width: 640px){
-  .chat-overlay{ top:0; height:100vh; width:100vw; border-radius:0; }
-}
-
-#coOverlay.compact{ width:600px; max-width:92vw; height:72vh; }
-
-#coOverlay.compact .co-body{ padding:8px 10px; }
-#coOverlay.compact .co-line{ gap:6px; margin:6px 0; }
-#coOverlay.compact .avatar{ width:26px; height:26px; }
-
-#coOverlay.compact .bubble{
-  max-width:58%;
-  padding:8px 10px;
-  border-radius:14px;
-  font-size:14px;
-  line-height:1.4;
-}
-#coOverlay.compact .nick{ font-size:11px; margin-bottom:1px; }
-#coOverlay.compact .time{ font-size:10px; min-width:28px; margin:0 4px; color:#b0b7c3; }
-
-#coOverlay.ultra .bubble{ max-width:52%; font-size:13px; padding:7px 9px; }
-#coOverlay.ultra .time{ font-size:9.5px; min-width:24px; }
-#coOverlay.ultra .avatar{ width:22px; height:22px; }
-
-
-.chat-overlay.open.compact {
-  width: 600px !important;
-  max-width: 92vw !important;
-  height: 72vh !important;
-  border-radius: 12px !important;
-}
-
-.chat-overlay.open.compact .co-body {
-  padding: 8px 10px !important;
-}
-
-.chat-overlay.open.compact .co-line { gap: 6px !important; margin: 6px 0 !important; }
-.chat-overlay.open.compact .avatar { width: 26px !important; height: 26px !important; flex:0 0 26px !important; }
-.chat-overlay.open.compact .nick { font-size: 11px !important; margin-bottom: 1px !important; }
-.chat-overlay.open.compact .time { font-size: 10px !important; min-width: 28px !important; margin: 0 4px !important; }
-
-.chat-overlay.open.compact .bubble {
-  max-width: 58% !important;
-  padding: 8px 10px !important;
-  border-radius: 14px !important;
-  font-size: 14px !important;
-  line-height: 1.4 !important;
-}
-
-.chat-overlay.open.compact .co-input { padding: 8px !important; gap:8px !important; }
-.chat-overlay.open.compact #coInput { height: 40px !important; padding: 6px 10px !important; font-size: 14px !important; }
-.chat-overlay.open.compact #coSend { height: 40px !important; padding: 0 10px !important; font-size: 14px !important; }
-
-.chat-overlay.open.ultra .bubble { max-width: 52% !important; font-size: 13px !important; padding: 7px 9px !important; }
-.chat-overlay.open.ultra .avatar { width: 22px !important; height: 22px !important; flex:0 0 22px !important; }
-
-
-/* 입력영역 레이아웃(수직 정렬 문제 개선) */
-.co-input {
+  height: var(--chat-header-height);
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
   align-items: center;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 18px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e6e6e6;
+  box-sizing: border-box;
+}
+.chat-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* body: header 높이를 빼서 첫 항목 가려짐 방지 */
+.chat-body {
+  height: calc(100vh - var(--chat-header-height));
+  overflow-y: auto;
+  padding: 16px;
   box-sizing: border-box;
 }
 
+/* ===== 채팅 룸 리스트 아이템 ===== */
+.chat-room-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  position: relative;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: #f1f3f5;
+}
+.chat-room-item:hover { background: #eef0f2; cursor: pointer; }
+
+/* 왼쪽 클릭 영역(제목+미리보기) — 링크은 왼쪽 전부 차지 */
+.chat-room-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0; /* 중요: flex 내부에서 동작 보장 */
+  color: inherit;
+  text-decoration: none;
+}
+
+/* header-row: 왼쪽(닉+상품) / 오른쪽(시간) */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* title-wrap: 닉네임 + 상품명(가능한 폭을 전부 차지) */
+.title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;    /* 중요: 자식이 줄바꿈하지 않게 고정 */
+}
+
+/* 닉네임: 한 줄, 보통 짧음 */
+.nickname {
+  flex: 0 0 auto;
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;    /* 닉네임이 너무 길면 여기서 잘라짐 — 필요시 조정 */
+}
+
+/* 상품명: ***절대 말줄임 없이 전체 보이기*** (줄바꿈으로 전체 노출)
+   - white-space: normal 으로 줄바꿈 허용
+   - overflow: visible 으로 숨김 해제
+*/
+.productname {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;                 /* flex 내부에서 동작 보장 */
+  white-space: nowrap !important;   /* 한 줄 고정 */
+  overflow: hidden !important;      /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis !important; /* 말줄임(...) 처리 */
+  word-break: normal;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* 시간: 우측 상단 고정폭 */
+.chat-room-item .time {
+  flex: 0 0 auto;
+  margin-left: 12px;
+  white-space: nowrap;
+  color: #999;
+  font-size: 12px;
+}
+
+/* 미리보기 텍스트: 한 줄로 간단히 */
+.message-preview {
+  font-size: 13px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* 삭제 버튼: 우측 고정, 항목 길어져도 위치 유지 */
+.btn-chat-delete {
+  flex: 0 0 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #eddede;
+  background: #fff;
+  color: #c33;
+  cursor: pointer;
+  margin-left: 12px;
+  align-self: center;
+  z-index: 2;
+}
+.btn-chat-delete:hover {
+  background: #fff6f6;
+  border-color: #f2cfcf;
+}
+.btn-chat-delete .bi { font-size: 18px; }
+
+@media (max-width: 540px) {
+  .btn-chat-delete { flex: 0 0 36px; height: 36px; }
+  .productname { font-size: 15px; }
+}
+
+/* ===== 중앙 대화창 (오버레이) ===== */
+.co-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 1390;
+  display: none;
+}
+.co-backdrop.show { display: block; }
+
+.chat-overlay {
+  position: fixed;
+  left: 50%;
+  top: 64px;
+  transform: translateX(-50%);
+  width: 760px;
+  max-width: 92vw;
+  height: 78vh;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+  z-index: 1400;
+  display: none;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.chat-overlay.open { display: flex; }
+
+.co-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+.co-close { background: none; border: none; font-size: 22px; cursor: pointer; }
+
+.co-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  background: var(--bg);
+  box-sizing: border-box;
+}
+.co-body::-webkit-scrollbar { width: 8px; }
+.co-body::-webkit-scrollbar-thumb { background: #d4d7de; border-radius: 8px; }
+
+/* 입력영역(수직정렬 보정) */
+.co-input {
+  border-top: 1px solid #eee;
+  padding: 12px;
+  display: flex;
+  gap: 8px;
+  background: #fff;
+  box-shadow: 0 -6px 12px rgba(0,0,0,0.02) inset;
+  align-items: center;
+  box-sizing: border-box;
+}
 .co-input #coInput {
   flex: 1 1 auto;
   min-width: 0;
@@ -193,10 +257,8 @@
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #e6e7eb;
-  box-sizing: border-box;
   font-size: 14px;
 }
-
 .co-input #coSend {
   flex: 0 0 auto;
   height: 44px;
@@ -208,13 +270,72 @@
   white-space: nowrap;
 }
 
-.chat-overlay.open.compact .co-input #coInput {
-  height: 40px !important;
-  padding: 6px 10px !important;
-  font-size: 14px !important;
+/* ===== 말풍선 라인 ===== */
+.co-line {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin: 10px 0;
 }
-.chat-overlay.open.compact .co-input #coSend {
-  height: 40px !important;
-  padding: 0 10px !important;
-  font-size: 14px !important;
+.co-line.other { justify-content: flex-start; }
+.co-line.me    { justify-content: flex-end; }
+
+.co-line .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 32px;
 }
+
+.bubble {
+  position: relative;
+  max-width: 72%;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--bubble-other);
+  color: var(--text);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.co-line.me .bubble { background: var(--bubble-me); color: #fff; }
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  border: 7px solid transparent;
+}
+.co-line.other .bubble::after { left: -6px; border-right-color: var(--bubble-other); }
+.co-line.me    .bubble::after { right: -6px; border-left-color: var(--bubble-me); }
+
+.nick { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.time { font-size: 11px; color: #9ca3af; min-width: 40px; text-align: right; margin: 0 6px; }
+.co-line.me .time { order: -1; text-align: left; }
+
+/* compact mode: 축소 스타일 (아바타/닉 유지) */
+.co-line.compact { margin-top: 6px; }
+.co-line.compact .avatar { width: 26px; height: 26px; flex: 0 0 26px; }
+.co-line.compact .nick { font-size: 11px; color: var(--muted); margin-bottom: 1px; }
+
+/* 날짜 구분선 */
+.co-day-sep {
+  display: flex; align-items: center; gap: 12px;
+  margin: 18px 0; color: #6b7280; font-size: 12px;
+}
+.co-day-sep::before, .co-day-sep::after {
+  content: ""; height: 1px; background: #e5e7eb; flex: 1;
+}
+
+/* 모바일 대응 */
+@media (max-width: 640px) {
+  .chat-overlay { top: 0; height: 100vh; width: 100vw; border-radius: 0; }
+  .chat-body { padding: 12px; }
+}
+
+/* 안전장치: 리스트 항목이 최상단에 가려질 경우 약간 여유 주기 */
+.chat-body > :first-child { margin-top: 4px; }
+
+/* 패널이 화면에서 벗어나지 않도록(안전장치) */
+.chat-panel { box-sizing: border-box; max-width: calc(100vw - 24px); }

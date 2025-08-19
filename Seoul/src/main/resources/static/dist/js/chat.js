@@ -504,3 +504,47 @@
   $(function(){});
 
 })(window, jQuery);
+
+
+$(function(){
+	$(document).on('click', '.btn-chat-delete', function(e) {
+		e.preventDefault();
+		const $btn = $(this);
+		const roomId = $btn.data('room-id');
+		if(! roomId) return;
+		
+		if(! confirm('채팅방을 삭제하시겠습니까? ')) return;
+		
+		$btn.prop('disabled', true);
+		
+		$.ajax({
+			url: window.CTX + '/chat/deleteroomAjax',
+			method: 'POST',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(
+				{room_id: roomId}
+			),
+			success: function(res) {
+				if (res && res.result === 'success') {
+					$btn.closest('.chat-room-item').remove();
+				} else {
+					alert(res && res.message ? res.message : '삭제 실패했습니다.');
+					$btn.prop('disabled', false);
+				}
+			},
+			error: function(xhr, status, err) {
+				console.error('delete error', err);
+				alert('서버 오류가 발생했습니다.');
+				$btn.prop('disabled', false);
+			}
+		});
+	});
+});
+
+
+
+
+
+
+

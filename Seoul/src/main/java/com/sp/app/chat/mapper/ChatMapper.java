@@ -19,6 +19,7 @@ public interface ChatMapper {
 	public ChatRoom findByRoomId(Long roomId);
 	public ChatRoom findByProductAndBuyer(ChatRoomQuery query);
 	public List<ChatRoom> listRoomsByMemberId(Long member_id);
+	public void deleteChatRoom(Long room_id) throws Exception;
 	
 	// Chat Message
 	public int insertChatMessage(ChatMessage dto);

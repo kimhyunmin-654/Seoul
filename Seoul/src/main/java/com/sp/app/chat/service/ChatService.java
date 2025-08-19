@@ -15,6 +15,8 @@ public interface ChatService {
     public ChatRoom getChatRoomById(Long room_id);
     public ChatRoom getChatRoomByProductAndBuyer(ChatRoomQuery query);
     public List<ChatRoom> getMyChatRooms(Long member_id);
+    public void deleteChatRoom(Long room_id) throws Exception;
+    public ChatRoom findByRoomId(Long room_id);
 
     // ===== 메시지 =====
     public int sendMessage(ChatMessage dto);

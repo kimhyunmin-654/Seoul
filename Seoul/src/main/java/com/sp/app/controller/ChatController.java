@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -247,11 +247,33 @@ public class ChatController {
             return ResponseEntity.ok(map);
 
         } catch (Exception e) {
-            log.error("createRoomAjax error", e);
+            log.info("createRoomAjax error", e);
             map.put("success", false);
             map.put("error", "server_error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
+    }
+    
+    @PostMapping("deleteroomAjax")
+    @ResponseBody
+    public Map<String,Object> deleteRoomAjax(@RequestBody Map<String,Long> body, HttpSession session) {
+        Map<String,Object> resp = new HashMap<>();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        if (info == null) {
+            resp.put("result","error");
+            resp.put("message","로그인이 필요합니다.");
+            return resp;
+        }
+        Long roomId = body.get("room_id");
+        try {
+            chatService.deleteChatRoom(roomId);
+            resp.put("result","success");
+        } catch (Exception e) {
+            log.info("deleteroomAjax error", e);
+            resp.put("result","error");
+            resp.put("message","삭제 중 오류가 발생했습니다.");
+        }
+        return resp;
     }
 	
 }

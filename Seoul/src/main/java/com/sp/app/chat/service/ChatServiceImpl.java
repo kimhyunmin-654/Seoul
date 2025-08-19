@@ -1,6 +1,7 @@
 package com.sp.app.chat.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -266,6 +267,33 @@ public class ChatServiceImpl implements ChatService {
 			dto = chatMapper.findById(member_id);
 		} catch (Exception e) {
 			log.info("getMemberById : ", e);
+		}
+		
+		return dto;
+	}
+
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public void deleteChatRoom(Long room_id) throws Exception{
+		try {
+			ChatRoom dto = Objects.requireNonNull(findByRoomId(room_id));
+			
+			chatMapper.deleteChatRoom(room_id);
+		} catch (Exception e) {
+			log.info("deleteChatRoom : ", e);
+			
+			throw e;
+		}		
+	}
+
+	@Override
+	public ChatRoom findByRoomId(Long room_id) {
+		ChatRoom dto = null;
+		
+		try {
+			dto = chatMapper.findByRoomId(room_id);
+		} catch (Exception e) {
+			log.info("findByRoomId : ", e);
 		}
 		
 		return dto;
