@@ -22,6 +22,8 @@ public interface MemberMapper {
 	public void updateMemberEnabled(Map<String, Object> map) throws SQLException;
 	public void updateMemberLevel(Map<String, Object> map) throws SQLException;
 	public void updateMember(Member dto) throws SQLException;
+	
+	public int deleteMember(Member dto);
 	public void deleteProfilePhoto(Map<String, Object> map) throws SQLException;
 
 	public Member findById(Long member_id);

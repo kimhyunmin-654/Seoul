@@ -403,4 +403,34 @@ public class MemberController {
 		return model;
 	}
 	
+	@GetMapping("delete")
+	public String deleteForm() {
+	    // 회원 탈퇴를 위한 비밀번호 입력 페이지로 이동
+	    return "member/delete";
+	}
+	
+	@PostMapping("delete")
+	public String deleteMember(@RequestParam("password") String password, HttpSession session, Model model) {
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    if (info == null) {
+	        return "redirect:/member/login";
+	    }
+
+	    try {
+	        Member dto = new Member();
+	        dto.setMember_id(info.getMember_id());
+	        dto.setPassword(password);
+
+	        service.deleteMember(dto);
+	        session.invalidate();
+
+	    } catch (Exception e) {
+	        log.info("deleteMember : ", e);
+	        model.addAttribute("message", "회원 탈퇴에 실패했습니다.");
+	        return "redirect:/member/delete"; 
+	    }
+
+	    return "redirect:/";
+	}
+
 }

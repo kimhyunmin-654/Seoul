@@ -175,9 +175,17 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void deleteMember(Map<String, Object> map, String uploadPath) throws Exception {
-		
-	}
+	public void deleteMember(Member dto) throws Exception {
+		try {
+			 mapper.deleteMember(dto);
+			
+		} catch (Exception e) {
+			log.info("deleteMember : ", e);
+			
+			throw e;
+		}
+    
+    }
 
 	@Override
 	public void deleteProfilePhoto(Map<String, Object> map, String uploadPath) throws Exception {

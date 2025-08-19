@@ -116,5 +116,13 @@
 			</if>
 		</where>
 	</select>
+	
+	<update id="deleteMember" parameterType="com.sp.app.model.Member">
+		UPDATE member SET enabled = 0
+		<if test="password != null and password != ''">
+			, password = #{password}
+		</if>
+		WHERE member_id = #{member_id}
+	</update>
 
 </mapper>

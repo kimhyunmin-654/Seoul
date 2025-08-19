@@ -20,7 +20,7 @@ public interface MemberService {
 	public Member findById(String login_id);
 	public Member findByNickName(String nickName);
 	
-	public void deleteMember(Map<String, Object> map, String uploadPath) throws Exception;
+	public void deleteMember(Member dto) throws Exception;
 	public void deleteProfilePhoto(Map<String, Object> map, String uploadPath) throws Exception;
 	
 	public void generatePwd(Member dto) throws Exception;
