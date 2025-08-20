@@ -12,7 +12,7 @@
     background:#f8f9fa; object-fit:cover; display:inline-block;
   }
   .image-viewer{
-    background:#f8f9fa url("${pageContext.request.contextPath}/dist/images/add_photo.png")
+    background:#f8f9fa url("/dist/images/add_photo.png")
       center/56px 56px no-repeat;
   }
   .image-upload-list img{ margin-right:10px; margin-top:6px; }

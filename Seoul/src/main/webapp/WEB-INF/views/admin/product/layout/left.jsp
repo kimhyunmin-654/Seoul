@@ -10,7 +10,7 @@
 	<div class="accordion accordion-flush" id="sidebarAccordion">
 		<%-- 홈 --%>
 		<div class="accordion-item">
-			<a class="accordion-button no-bg" href="<c:url value='/admin' />" title="홈"> 
+			<a class="accordion-button no-bg" href="<c:url value='/admin/product/main' />" title="홈"> 
 			<i class="menu-icon bi bi-h-square me-2"></i>
 			<span class="menu-label"> 홈</span>
 			</a>
@@ -27,8 +27,8 @@
 			<div id="collapseProduct" class="accordion-collapse collapse" aria-labelledby="headingProduct" data-bs-parent="#sidebarAccordion">
 				<div class="accordion-body ps-4">
 					<ul class="list-unstyled mb-0">
-						<li><a class="sub-menu-link" href="<c:url value='/admin/products/main'/>">상품리스트</a></li>
-						<li><a class="sub-menu-link" href="<c:url value='/admin/products/write/100'/>">상품등록</a></li>
+						<li><a class="sub-menu-link" href="<c:url value='/admin/product/list'/>">상품리스트</a></li>
+						<li><a class="sub-menu-link" href="<c:url value='/admin/product/write'/>">상품등록</a></li>
 						<li><a class="sub-menu-link" href="#">상품진열</a></li>
 					</ul>
 				</div>

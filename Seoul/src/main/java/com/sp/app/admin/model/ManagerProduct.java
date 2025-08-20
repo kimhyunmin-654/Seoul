@@ -12,41 +12,41 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ManagerProduct {
-	private long product_num;
-	private String product_name;
-	private int price;
-	private int delivery;
-	private int product_show;
-	private int orderby_category;
-	private String content;
-	private String thumbnail;
-	private String reg_date;
-	private String update_date;
-	private String product_state;
-	
-	private MultipartFile thumbnailFile;
-	
-	private long category_num;
-	private String category_name;
-	private int use;
-	private long parent_num;
+    private long productNum;        // product_num
+    private String productName;     // product_name
+    private int price;
+    private int delivery;
+    private int productShow;        // product_show
+    private int orderbyCategory;    // orderby_category
+    private int optionCount;
+    private String content;
+    private String thumbnail;
+    private String regDate;
+    private String updateDate;
+    private String productState;
 
-	private long file_num;
-	private String filename;
-	private long filesize;
-	private List<MultipartFile> addFiles;
-	
-	private Long option_num;
-	private String option_name;
-	private Long parent_option;
-	// private int optionCount; ?
+    private MultipartFile thumbnailFile;
 
-	private Long detail_num;
-	private String option_value;
-	private List<Long> detail_nums;
-	private List<String> option_values;
-	
-	private int total_stock;
-	
-	private long prevOptionNum;
+    private long categoryNum;       // category_num
+    private String categoryName;    // category_name
+    private int use;
+    private long parentNum;         // parent_num
+
+    private long fileNum;           // file_num
+    private String filename;
+    private long filesize;
+    private List<MultipartFile> addFiles;
+
+    private Long optionNum;         // option_num
+    private String optionName;      // option_name
+    private Long parentOption;      // parent_option
+
+    private Long detailNum;         // detail_num
+    private String optionValue;     // option_value
+    private List<Long> detailNums;
+    private List<String> optionValues;
+
+    private int totalStock;
+
+    private long prevOptionNum;
 }
