@@ -1,5 +1,6 @@
 package com.sp.app.admin.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public interface MemberManageService {
 	public void updateMemberLevel(Map<String, Object> map) throws Exception;
 	public void updateMemberEnabled(Map<String, Object> map) throws Exception;
 	public void updateFailureCountReset(Long member_id) throws Exception;
+	public void deleteMember(Map<String, Object> map) throws SQLException;
 	
 	public void insertMemberStatus(MemberManage dto) throws Exception;
 	public List<MemberManage> listMemberStatus(Long member_id);

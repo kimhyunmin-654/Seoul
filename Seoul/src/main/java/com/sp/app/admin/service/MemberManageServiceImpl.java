@@ -1,10 +1,12 @@
 package com.sp.app.admin.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sp.app.admin.mapper.MemberManageMapper;
 import com.sp.app.admin.model.MemberManage;
@@ -42,6 +44,7 @@ public class MemberManageServiceImpl implements MemberManageService {
 		return list;
 	}
 
+	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public MemberManage findById(Long member_id) {
 		MemberManage dto = null;
@@ -154,6 +157,18 @@ public class MemberManageServiceImpl implements MemberManageService {
 			log.info("listAgeSection : ", e);
 		}
 		return list;
+	}
+
+	@Override
+	public void deleteMember(Map<String, Object> map) throws SQLException {
+		try {
+			
+			mapper.deleteMember(map);
+		} catch (Exception e) {
+			log.info("deleteMember : ", e);
+			
+			throw e;
+		}
 	}
 	
 }

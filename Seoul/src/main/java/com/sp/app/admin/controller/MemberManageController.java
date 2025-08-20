@@ -17,8 +17,11 @@ import com.sp.app.admin.model.MemberManage;
 import com.sp.app.admin.service.MemberManageService;
 import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
+import com.sp.app.model.SessionInfo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -159,18 +162,18 @@ public class MemberManageController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("member_id", dto.getMember_id());
 			if(dto.getStatus_code() == 0) {
-				map.put("enavled", 1);
+				map.put("enabled", 1);
 			} else {
 				map.put("enabled", 0);
 			}
+			
+			map.put("memo", dto.getMemo() != null ? dto.getMemo() : "");
 			service.updateMemberEnabled(map);
 			
 			//회원상태 변경사항 저장
 			service.insertMemberStatus(dto);
 			
 			if(dto.getStatus_code() == 0) {
-				//회원 패스워드 실패횟수 초기화
-				service.updateFailureCountReset(dto.getMember_id());
 			}
 		} catch (Exception e) {
 			state = "false";
@@ -193,6 +196,42 @@ public class MemberManageController {
 		
 		return model;
 	}
+	
+	@PostMapping("deleteMember")
+	@ResponseBody
+	public Map<String, Object> deleteMember(
+			@RequestParam long member_id,
+			HttpSession session,
+			HttpServletRequest req) {
+
+		String state = "true";
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		SessionInfo sessionInfo = (SessionInfo)session.getAttribute("member");
+
+		// 세션 정보 확인 (관리자 권한 체크)
+		if(sessionInfo == null || sessionInfo.getUserLevel() < 9) {
+			model.put("state", "false");
+			model.put("message", "삭제 권한이 없습니다.");
+			return model;
+		}
+		
+		try {
+			// 서비스에 전달할 Map 객체 생성
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("member_id", member_id);
+			map.put("userId", sessionInfo.getMember_id()); 
+
+			service.deleteMember(map);
+		} catch (Exception e) {
+			state = "false";
+			e.printStackTrace();
+		}
+
+		model.put("state", state);
+		return model;
+	}
+	
 	
 
 }

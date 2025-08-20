@@ -71,7 +71,7 @@
 			<button type="button" class="btn-default" onclick="statusDetailesMember();">계정상태</button>
 			<c:if test="${dto.userLevel < 50 || sessionScope.member.userLevel > 90 }">
 				<button type="button" class="btn-default" onclick="updateMember();">수정</button>
-				<button type="button" class="btn-default" onclick="deleteMember('${dto.member_id}');">삭제</button>
+				<button type="button" class="btn-default" onclick="deleteMember('${dto.member_id}', '${page}');">삭제</button>
 			</c:if>
 			<button type="button" class="btn-default" onclick="listMember('${page}');">리스트</button>
 		</td>
@@ -268,20 +268,20 @@ function showCustomConfirm(message, callback) {
 }
 
 function updateMemberOk(page) {
+	
 	// 회원 정보 변경(권한, 이름, 생년월일)
 	const f = document.memberUpdateForm;
 
 	if( ! f.name.value ) {
-		showCustomAlert('이름을 입력 하세요.');
+		alert('이름을 입력 하세요.');
 		f.name.focus();
 		return;
 	}
 	
-	if(f.userLevel.value === '0' || f.userLevel.value === '50') {
-		f.enabled.value = '0';	
+	if( ! confirm('회원 정보를 수정하시겠습니까 ? ')) {
+		return;
 	}
 	
-	showCustomConfirm('회원 정보를 수정하시겠습니까 ? ', function() {
 		let url = '${pageContext.request.contextPath}/admin/memberManage/updateMember';
 		let params = $('#memberUpdateForm').serialize();
 
@@ -294,36 +294,54 @@ function updateMemberOk(page) {
 	});
 }
 
-function deleteMember(memberIdx) {
+function deleteMember(member_id, page) {
 	// 회원 삭제
+	showCustomConfirm('회원 정보를 삭제하시겠습니까 ? ', function() {
+	const url = '${pagecontext.request.contextPath}/admin/memberManage/deleteMember';
+	const params = {member_id: member_id};
+	
+	const fn = function(data) {
+		if(data && data.state === 'true') {
+			showCustomAlert('회원 삭제가 완료되었습니다.');
+			listMember(page);
+		} else {
+			const errorMessage = (data && data.message) ? data.message : '회원 삭제에 실패했습니다.';
+			showCustomAlert(errorMessage);
+		}
+	};
+	
+	ajaxRequest(url, 'post', params, 'json', fn);
+});
+	
 	
 }
 
 function updateStatusOk(page) {
-	// 회원 상태 변경
-	const f = document.memberStatusDetailesForm;
-
-	if( ! f.status_code.value ) {
-		showCustomAlert('상태 코드를 선택하세요.');
-		f.status_code.focus();
-		return;
-	}
-	if( ! f.memo.value.trim() ) {
-		showCustomAlert('상태 메모를 입력하세요.');
-		f.memo.focus();
+    // 폼 데이터 검증
+    const f = document.memberStatusDetailesForm;
+    
+    if (!f.status_code.value) {
+        alert('상태 코드를 선택하세요.');
+        f.status_code.focus();
+        return;
+    }
+    if (!f.memo.value.trim()) {
+        alert('상태 메모를 입력하세요.');
+        f.memo.focus();
+        return;
+    }    
+	if( ! confirm('상태 정보를 수정하시겠습니까 ? ')) {
 		return;
 	}
 	
-	showCustomConfirm('상태 정보를 수정하시겠습니까 ? ', function() {
-		let url = '${pageContext.request.contextPath}/admin/memberManage/updateMemberStatus';
-		let params = $('#memberStatusDetailesForm').serialize();
+	let url = '${pageContext.request.contextPath}/admin/memberManage/updateMemberStatus';
+	let params = $('#memberStatusDetailesForm').serialize();
 
-		const fn = function(data){
-			listMember(page);
-		};
-		ajaxRequest(url, 'post', params, 'json', fn);
-		
-		$('#memberStatusDetailesDialogModal').modal('hide');
-	});
+	const fn = function(data){
+		listMember(page);
+	};
+	ajaxRequest(url, 'post', params, 'json', fn);
+	
+	$('#memberStatusDetailesDialogModal').modal('hide');
 }
 </script>
