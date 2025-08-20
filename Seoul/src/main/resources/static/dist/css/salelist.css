@@ -1,0 +1,242 @@
+﻿/* -------------------------
+   salelist / 마이페이지 스타일 개선
+   ------------------------- */
+
+/* 컨테이너 정렬 — 헤더 로고와 사이드바 정렬을 맞추기 좋게 */
+.wrap {
+  max-width: 1180px;       /* 콘텐츠 폭 제한 (원하시면 조정) */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 전체 레이아웃: 사이드바 고정 너비, 메인 유연 */
+.mypage-row { display:flex; gap:32px; align-items:flex-start; width:100%; }
+
+/* 사이드바(왼쪽) */
+.left-column {
+  flex: 0 0 240px;
+  max-width: 240px;
+  box-sizing: border-box;
+  position: sticky;
+  top: 92px; /* 헤더 높이만큼 띄우기 — 필요에 따라 조정 */
+  height: calc(100vh - 96px);
+  overflow-y: auto;
+  padding-top: 8px;
+}
+
+/* 메인 컬럼 (너비 자동) */
+.content-column { flex: 1 1 auto; }
+
+/* 카드/보드 영역 */
+.board-section {
+  background:#fff;
+  border-radius:8px;
+  padding:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.04);
+}
+
+/* 표 전체 스타일 */
+.board-list {
+  width:100%;
+  border-collapse:collapse;
+  table-layout: fixed;
+  font-family: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+.board-list thead th {
+  text-align:left;
+  font-weight:700;
+  color:#333;
+  padding:12px 8px;
+  border-bottom:1px solid #eee;
+  vertical-align: middle;
+}
+.board-list tbody td {
+  padding:14px 8px;
+  vertical-align: middle;
+  border-bottom:1px solid #f4f4f4;
+}
+
+/* 썸네일 */
+.product-thumb img { width:80px; height:80px; object-fit:cover; border-radius:6px; border:1px solid #efefef; display:block; }
+
+/* 상품명 줄바꿈 + 강조 */
+.subject .text-wrap a { display:block; color:#111; font-weight:700; word-break:break-word; }
+
+/* 상태 영역 */
+.status-cell { white-space:nowrap; }
+
+/* 상태 텍스트(왼쪽) */
+.status-text {
+  display:inline-block;
+  margin-right:10px;
+  color:#222;
+  font-weight:600;
+  vertical-align:middle;
+}
+
+/* 판매완료 뱃지 */
+.status-cell .badge {
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:6px;
+  background:#f0f8f2;
+  color:#2a8a4a;
+  border:1px solid #d6efd9;
+  font-weight:700;
+  font-size:0.9rem;
+}
+
+/* 상태 액션(버튼 묶음) */
+.status-actions { display:inline-flex; gap:8px; align-items:center; margin-left:6px; vertical-align:middle; }
+
+/* 버튼 작은 크기 */
+.btn-small { font-size:0.85rem; padding:6px 8px; border-radius:6px; cursor:pointer; }
+
+/* 스타일 버튼 */
+.btn-outline-success {
+  border:1px solid #2f9e44;
+  color:#2f9e44;
+  background:transparent;
+}
+.btn-outline-secondary {
+  border:1px solid #d7d7d9;
+  color:#444;
+  background:transparent;
+}
+.btn-sm { padding:6px 8px; }
+
+/* 판매완료인 경우 절대 버튼 감춤 (JSP에서 data-status 추가 필요) */
+.status-cell[data-status="판매완료"] .status-actions { display:none !important; }
+
+/* 반응형: 좁은 화면 */
+@media (max-width: 900px) {
+  .mypage-row { flex-direction:column; }
+  .left-column { position:static; height:auto; }
+  .board-section { padding:12px; }
+  .product-thumb img { width:64px; height:64px; }
+}
+
+/* 모달 디자인 정리 */
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1200; align-items:center; justify-content:center; }
+.modal-panel {
+  background:#fff; border-radius:10px; width:520px; max-width:94%; padding:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.12);
+}
+.modal-list { max-height:300px; overflow:auto; margin-top:12px; border-top:1px solid #eee; padding-top:8px; }
+.modal-empty { color:#777; padding:24px 0; text-align:center; }
+
+
+.wrap {
+  max-width: 1400px; /* 더 넓게 해서 테이블에 여유 제공. 필요하면 1300~1500으로 조정 */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.board-list {
+  width:100%;
+  border-collapse:collapse;
+  table-layout: auto; /* fixed -> auto 변경 */
+  font-family: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+/* colgroup으로 지정한 너비를 우선 적용시키기 위해 최소값 지정 */
+.board-list td, .board-list th {
+  box-sizing: border-box;
+}
+
+/* 상태 영역: 줄바꿈 허용 + 최소 너비로 겹침 방지 */
+.status-cell {
+  white-space: normal;   /* 줄바꿈 허용 */
+  min-width: 140px;      /* 버튼들 최소공간 확보 */
+}
+
+/* 상태 액션: 버튼이 좁아지면 아래로 내려가도록 */
+.status-actions {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap; /* 줄바꿈 허용 */
+}
+
+/* 등록일 칼럼 고정/우측정렬 */
+.board-list th.date, .board-list td.date {
+  text-align: right;
+  white-space: nowrap;
+  padding-left: 12px;
+}
+
+/* 판매완료인 경우 버튼 숨김(안전장치) */
+.status-cell[data-status="판매완료"] .status-actions { display:none !important; }
+
+/* 반응형(좁은 화면에서 레이아웃 정리) */
+@media (max-width: 1024px) {
+  .wrap { max-width: 100%; padding: 12px; }
+  .board-list { font-size: 0.95rem; }
+}
+@media (max-width: 900px) {
+  .mypage-row { flex-direction: column; }
+  .left-column { position: static; width: 100%; max-width: none; order: 2; }
+  .content-column { order: 1; }
+  .product-thumb img { width:64px; height:64px; }
+}
+
+.left-column {
+  position: sticky !important;
+  top: 72px;            /* <-- 필요하면 64/72/92 등으로 조정해 보세요 */
+  height: auto !important;
+  max-height: calc(100vh - 84px); /* 스크롤 영역 확보 (top + 여유) */
+  overflow-y: auto;
+  padding-top: 8px;
+  /* margin-top 없애고 header와 수평 기준을 맞추려면 wrap과 같은 좌우 여백 유지 */
+}
+
+/* 2) .wrap 폭/좌우 마진 일관성 — header 컨테이너와 같은 폭을 쓰면 정렬이 더 정확.
+   (이미 wrap이 사용중이면 주석 처리 가능) */
+.wrap {
+  max-width: 1400px;  /* header와 동일한 컨테이너 폭에 맞추세요 (1300~1500 사이) */
+  margin: 0 auto;
+}
+
+/* 3) 등록일을 가운데 정렬 */
+.board-list thead th.date,
+.board-list td.date,
+.board-list th.date,
+.board-list td.date {
+  text-align: center !important;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* 4) 상태버튼과 등록일이 겹치는 경우: 상태 칼럼에 충분한 최소 너비 확보 */
+.status-cell {
+  min-width: 160px;         /* 필요하면 140~200 사이로 조절 */
+  white-space: normal;
+}
+
+/* 5) 상태 액션이 좁을 때 아래로 내려가도록 허용 */
+.status-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* 6) 테이블이 너무 좁아서 겹칠 때(안전장치) — 테이블 레이아웃 auto로, overflow 숨김 방지 */
+.board-list {
+  table-layout: auto !important;
+}
+
+/* responsive 보정 */
+@media (max-width: 1024px) {
+  .left-column { top: 64px; max-height: calc(100vh - 72px); }
+  .status-cell { min-width: 120px; }
+}
+@media (max-width: 900px) {
+  .mypage-row { flex-direction: column; }
+  .left-column { position: static; width: 100%; max-width: none; order: 2; }
+  .content-column { order: 1; }
+  .board-list td, .board-list th { padding:10px 8px; }
+}

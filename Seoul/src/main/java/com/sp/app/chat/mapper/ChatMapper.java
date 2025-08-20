@@ -41,4 +41,6 @@ public interface ChatMapper {
 	public List<TransactionReview> listReviewByProductId(Long product_id);
 	
 	public Member findById(Long member_id);
+	
+	
 }

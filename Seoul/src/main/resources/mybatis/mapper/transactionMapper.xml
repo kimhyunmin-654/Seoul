@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.TransactionMapper">
+
+<!-- 판매자가 올린 상품 목록 -->
+<select id="listProductBySeller" parameterType="map" resultType="com.sp.app.model.Product">
+  SELECT product_id, member_id, product_name, thumbnail, status,
+         TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI') AS reg_date
+  FROM product
+  WHERE member_id = #{member_id}
+  ORDER BY reg_date DESC
+  OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+</select>
+
+<!-- 판매자가 올린 총 개수 -->
+<select id="dataCount" parameterType="map" resultType="Integer">
+	SELECT NVL(COUNT(*),0)
+	FROM product
+	WHERE member_id = #{member_id}
+</select>
+
+<!-- 상품 상태 업데이트 (판매중/예약중/판매완료) -->
+<update id="updateProductStatus" parameterType="map">
+	  UPDATE product
+	  SET status = #{status}
+	  WHERE product_id = #{product_id}
+	    AND member_id = #{member_id}
+</update>
+
+<!-- 구매자 후보: 이 상품으로 이 판매자와 채팅한 사용자 -->
+<select id="listBuyersForProduct" parameterType="map" resultType="com.sp.app.model.BuyerCandidate">
+	SELECT DISTINCT cr.room_id, cr.buyer_id, m.nickname, cr.created_at
+	FROM chat_room cr
+	JOIN member m ON m.member_id = cr.buyer_id
+	WHERE cr.product_id = #{product_id}
+		AND cr.seller_id = #{seller_id}
+	ORDER BY cr.created_at DESC
+</select>
+
+<!-- 거래 내역 -->
+<insert id="insertTransaction" parameterType="com.sp.app.model.ProductTransaction">
+	INSERT INTO product_transaction (transaction_id, product_id, seller_id, buyer_id, room_id, status, created_at)
+		VALUES (product_transaction_seq.NEXTVAL, #{product_id}, #{seller_id}, #{buyer_id}, #{room_id}, #{status}, SYSDATE)
+</insert>
+
+<!-- 상품 단건 -->
+<select id="findProductById" parameterType="long" resultType="com.sp.app.model.Product">
+	SELECT product_id, member_id, status
+	FROM product
+	WHERE product_id = #{product_id}
+</select>
+
+</mapper>

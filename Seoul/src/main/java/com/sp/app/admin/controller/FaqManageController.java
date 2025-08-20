@@ -94,7 +94,7 @@ public class FaqManageController {
 	        model.addAttribute("kwd", kwd);
 
 	    } catch (Exception e) {
-	        log.error("list : " + e.getMessage(), e);
+	        log.info("list : ", e);
 	    }
 
 	    return "admin/faqManage/list";

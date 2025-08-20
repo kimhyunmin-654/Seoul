@@ -1,12 +1,10 @@
 (function(window, $) {
   'use strict';
 
-  // 전역 설정 (header.jsp 에서 초기화됨)
   const CTX = (window.CTX !== undefined) ? window.CTX : '';
   const WS_PROTO = (window.WS_PROTO !== undefined) ? window.WS_PROTO : ((location.protocol === 'https:') ? 'wss' : 'ws');
   const CURRENT_MEMBER_ID = (window.CURRENT_MEMBER_ID !== undefined) ? window.CURRENT_MEMBER_ID : null;
 
-  // 상태
   let coWS = null;
   let coRoomId = null;
   let coProductId = null;

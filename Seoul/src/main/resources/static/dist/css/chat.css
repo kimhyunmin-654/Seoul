@@ -1,11 +1,3 @@
-/* chat.css — 통합 수정본
-   - 상품명: 말줄임 제거, 줄바꿈 허용 -> 상품 전체 노출
-   - 삭제 버튼 우측 고정
-   - 헤더 높이 변수화로 첫 항목 가려짐 문제 해결
-   - 중앙 채팅(오버레이) 및 입력영역 스타일 보정
-*/
-
-/* ===== 전역 변수 ===== */
 :root {
   --chat-header-height: 64px;
   --panel-width-desktop: 480px;
@@ -20,7 +12,6 @@
   --radius: 18px;
 }
 
-/* ===== Chat Panel (오른쪽 목록) ===== */
 .chat-panel {
   position: fixed;
   top: 0;
@@ -83,18 +74,16 @@
 }
 .chat-room-item:hover { background: #eef0f2; cursor: pointer; }
 
-/* 왼쪽 클릭 영역(제목+미리보기) — 링크은 왼쪽 전부 차지 */
 .chat-room-link {
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex: 1 1 auto;
-  min-width: 0; /* 중요: flex 내부에서 동작 보장 */
+  min-width: 0; 
   color: inherit;
   text-decoration: none;
 }
 
-/* header-row: 왼쪽(닉+상품) / 오른쪽(시간) */
 .header-row {
   display: flex;
   align-items: center;
@@ -104,17 +93,15 @@
   min-width: 0;
 }
 
-/* title-wrap: 닉네임 + 상품명(가능한 폭을 전부 차지) */
 .title-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
   flex: 1 1 auto;
-  flex-wrap: nowrap;    /* 중요: 자식이 줄바꿈하지 않게 고정 */
+  flex-wrap: nowrap;    
 }
 
-/* 닉네임: 한 줄, 보통 짧음 */
 .nickname {
   flex: 0 0 auto;
   margin: 0;
@@ -122,27 +109,22 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px;    /* 닉네임이 너무 길면 여기서 잘라짐 — 필요시 조정 */
+  max-width: 120px;   
 }
 
-/* 상품명: ***절대 말줄임 없이 전체 보이기*** (줄바꿈으로 전체 노출)
-   - white-space: normal 으로 줄바꿈 허용
-   - overflow: visible 으로 숨김 해제
-*/
 .productname {
   display: block;
   flex: 1 1 auto;
-  min-width: 0;                 /* flex 내부에서 동작 보장 */
-  white-space: nowrap !important;   /* 한 줄 고정 */
-  overflow: hidden !important;      /* 넘치는 텍스트 숨김 */
-  text-overflow: ellipsis !important; /* 말줄임(...) 처리 */
+  min-width: 0;                
+  white-space: nowrap !important; 
+  overflow: hidden !important;      
+  text-overflow: ellipsis !important; 
   word-break: normal;
   font-weight: 700;
   line-height: 1.15;
   margin: 0;
 }
 
-/* 시간: 우측 상단 고정폭 */
 .chat-room-item .time {
   flex: 0 0 auto;
   margin-left: 12px;
@@ -151,7 +133,6 @@
   font-size: 12px;
 }
 
-/* 미리보기 텍스트: 한 줄로 간단히 */
 .message-preview {
   font-size: 13px;
   color: #555;
@@ -161,7 +142,6 @@
   width: 100%;
 }
 
-/* 삭제 버튼: 우측 고정, 항목 길어져도 위치 유지 */
 .btn-chat-delete {
   flex: 0 0 44px;
   height: 44px;
@@ -188,7 +168,6 @@
   .productname { font-size: 15px; }
 }
 
-/* ===== 중앙 대화창 (오버레이) ===== */
 .co-backdrop {
   position: fixed;
   inset: 0;
@@ -239,7 +218,6 @@
 .co-body::-webkit-scrollbar { width: 8px; }
 .co-body::-webkit-scrollbar-thumb { background: #d4d7de; border-radius: 8px; }
 
-/* 입력영역(수직정렬 보정) */
 .co-input {
   border-top: 1px solid #eee;
   padding: 12px;
@@ -270,7 +248,6 @@
   white-space: nowrap;
 }
 
-/* ===== 말풍선 라인 ===== */
 .co-line {
   display: flex;
   gap: 8px;
@@ -314,12 +291,10 @@
 .time { font-size: 11px; color: #9ca3af; min-width: 40px; text-align: right; margin: 0 6px; }
 .co-line.me .time { order: -1; text-align: left; }
 
-/* compact mode: 축소 스타일 (아바타/닉 유지) */
 .co-line.compact { margin-top: 6px; }
 .co-line.compact .avatar { width: 26px; height: 26px; flex: 0 0 26px; }
 .co-line.compact .nick { font-size: 11px; color: var(--muted); margin-bottom: 1px; }
 
-/* 날짜 구분선 */
 .co-day-sep {
   display: flex; align-items: center; gap: 12px;
   margin: 18px 0; color: #6b7280; font-size: 12px;
@@ -328,14 +303,11 @@
   content: ""; height: 1px; background: #e5e7eb; flex: 1;
 }
 
-/* 모바일 대응 */
 @media (max-width: 640px) {
   .chat-overlay { top: 0; height: 100vh; width: 100vw; border-radius: 0; }
   .chat-body { padding: 12px; }
 }
 
-/* 안전장치: 리스트 항목이 최상단에 가려질 경우 약간 여유 주기 */
 .chat-body > :first-child { margin-top: 4px; }
 
-/* 패널이 화면에서 벗어나지 않도록(안전장치) */
 .chat-panel { box-sizing: border-box; max-width: calc(100vw - 24px); }

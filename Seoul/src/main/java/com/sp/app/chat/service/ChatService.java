@@ -38,4 +38,5 @@ public interface ChatService {
     
     
     public Member getMemberById(Long member_id);
+    
 }
