@@ -9,31 +9,29 @@
 <title>Seoul</title>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/noticeList.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
+
 </head>
 <body>
 
 <header>
 	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
-
 <main>
-	<!-- Page Title -->
-	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
-			<h1>공지사항</h1>
-			<div class="page-title-underline-accent"></div>
-		</div>
+	<div class="row justify-content-center">
+	    <div class="col-md-10 board-section mt-4 p-2">
+	    ...
+	    </div>
 	</div>
     
 	<!-- Page Content -->    
 	<div class="section">
 		<div class="container" data-aos="fade-up" data-aos-delay="100">
-			<div class="row justify-content-center">
-				<div class="col-md-10 board-section my-4 p-5">
-				
+			<div class="row justify-content-center mt-4">
+				<div class="col-md-10 board-section my-4 p-4"style="background: #fff; border: 1px solid #e9ecef; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
 					<div class="row py-1 mb-2">
 						<div class="col-md-6 align-self-center">
-							<span class="small-title">글목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+							<span class="small-title">공지목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
 						</div>	
 						<div class="col-md-6 align-self-center text-end">
 						</div>
