@@ -19,10 +19,6 @@
 					<input type="checkbox" id="enabledCheck2" class="form-check-input" ${enabled == '0' || enabled == '' ? "checked":""}>
 					<label class="form-check-label" for="enabledCheck2">비활성</label>
 				</div>
-				<div class="form-check-inline">
-					<input type="checkbox" id="nonMemberCheckbox" class="form-check-input" ${non == 1 ? "checked":""}>
-					<label class="form-check-label" for="nonMemberCheckbox">비회원 포함</label>
-				</div>
 			</div>
 		</td>
 	</tr>
