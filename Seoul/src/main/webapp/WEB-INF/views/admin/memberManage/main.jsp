@@ -139,6 +139,8 @@ $(function(){
 		f.non.value = non;
 		f.enabled.value = enabled;
 		
+		
+		
 		listMember(1);
 	});
 });

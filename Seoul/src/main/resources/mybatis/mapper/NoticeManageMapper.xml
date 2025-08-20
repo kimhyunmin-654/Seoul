@@ -49,7 +49,7 @@
 			GROUP BY num
 		) f ON n.num = f.num
 		WHERE notice = 1 AND showNotice = 1
-		ORDER BY modify_date DESC	
+		ORDER BY modify_date ASC	
 	</select>
 	
 	<!-- 데이터 개수 -->

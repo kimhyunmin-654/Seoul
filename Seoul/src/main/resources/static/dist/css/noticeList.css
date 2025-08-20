@@ -132,6 +132,10 @@
 /* 헤더와 메인 컨테이너 간격 조정 */
 header {
     height: 60px;
+    z-index: 1000; /* 이 코드를 추가하여 헤더를 다른 요소보다 앞에 배치 */
+    position: fixed; /* 헤더가 항상 상단에 고정되도록 설정 (필요에 따라) */
+    width: 100%;
+    top: 0;
 }
 .main-container {
     padding-top: 60px;
