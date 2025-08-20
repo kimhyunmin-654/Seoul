@@ -200,7 +200,7 @@
 						<c:forEach var="vo" items="${listStatus}">
 							<tr>
 								<td class="left">${vo.memo}</td>
-								<td>${vo.registerName}(${vo.register_id})</td>
+								<td>관리자</td>
 								<td>${vo.reg_date}</td>
 							</tr>
 						</c:forEach>

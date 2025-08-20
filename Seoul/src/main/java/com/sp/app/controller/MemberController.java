@@ -410,33 +410,47 @@ public class MemberController {
 	}
 	
 	@PostMapping("delete")
-	public String deleteMember(@RequestParam("password") String password, HttpSession session, Model model) {
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    if (info == null) {
-	        return "redirect:/member/login";
-	    }
+	@ResponseBody
+	public Map<String, Object> deleteMember(@RequestParam("password") String password, HttpSession session) {
+	    Map<String, Object> model = new HashMap<>();
+	    String state = "true";
+	    String message = "회원 탈퇴가 정상적으로 처리되었습니다.";
 
 	    try {
-	        Member member = service.findById(info.getMember_id());
-	        if (member == null || ! password.equals(member.getPassword())) {
-	            model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
-	            return "redirect:/member/delete"; 
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        if (info == null) {
+	            state = "false";
+	            message = "세션이 만료되었습니다. 다시 로그인해주세요.";
+	            model.put("state", state);
+	            model.put("message", message);
+	            return model;
 	        }
+
+	        Member member = service.findById(info.getMember_id());
+	        if (member == null || !password.equals(member.getPassword())) {
+	            state = "false";
+	            message = "비밀번호가 일치하지 않습니다.";
+	            model.put("state", state);
+	            model.put("message", message);
+	            return model;
+	        }
+
 	        Member dto = new Member();
 	        dto.setMember_id(info.getMember_id());
-	        dto.setPassword(password);
+	        dto.setEnabled(0);
 	        dto.setName("탈퇴한 회원");
 
 	        service.deleteMember(dto);
 	        session.invalidate();
 
 	    } catch (Exception e) {
-	        log.info("deleteMember : ", e);
-	        model.addAttribute("message", "회원 탈퇴에 실패했습니다.");
-	        return "redirect:/member/delete"; 
+	        state = "false";
+	        message = "회원 탈퇴 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+	        e.printStackTrace();
 	    }
-
-	    return "redirect:/";
+	    
+	    model.put("state", state);
+	    model.put("message", message);
+	    return model;
 	}
-
 }

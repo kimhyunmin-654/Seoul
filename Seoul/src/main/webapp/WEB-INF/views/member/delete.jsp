@@ -7,28 +7,118 @@
 <meta charset="UTF-8">
 <title>회원 탈퇴</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<style>
-.container {
-    max-width: 500px;
-    margin-top: 50px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-</style>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
-    <div class="container bg-light">
-        <h2 class="text-center mb-4">회원 탈퇴</h2>
-        <p class="text-center">회원 탈퇴를 위해 비밀번호를 다시 한 번 입력해주세요.</p>
-        
-        <form name="deleteForm" method="post" action="${pageContext.request.contextPath}/member/delete" class="text-center">
-            <div class="mb-3">
-                <input type="password" name="password" id="user_pwd" class="form-control" placeholder="비밀번호" required>
-            </div>
-            <button type="submit" class="btn btn-danger w-100">회원 탈퇴</button>
-            <a href="javascript:history.back()" class="btn btn-secondary mt-3 w-100">취소</a>
-        </form>
+
+<div class="container">
+    <h2>회원 탈퇴</h2>
+    <div class="form-group">
+        <label for="password">비밀번호 확인</label>
+        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
     </div>
+    <button id="deleteBtn">탈퇴하기</button>
+    <p id="message"></p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#deleteBtn').on('click', function(e) {
+            e.preventDefault();
+            
+            var password = $('#password').val();
+            
+            if (password.trim() === '') {
+                $('#message').text('비밀번호를 입력하세요.').removeClass('success').addClass('error');
+                return;
+            }
+            
+            $.ajax({
+                url: '${pageContext.request.contextPath}/member/delete',
+                type: 'POST',
+                data: { password: password },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.state === 'true') {
+                        $('#message').text(response.message).removeClass('error').addClass('success');
+                        alert(response.message);
+                        window.location.href = '${pageContext.request.contextPath}/'; 
+                    } else {
+                        $('#message').text(response.message).removeClass('success').addClass('error');
+                    }
+                },
+                error: function() {
+                    $('#message').text('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.').removeClass('success').addClass('error');
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
