@@ -102,6 +102,10 @@
 		DELETE FROM member
 		WHERE member_id = #{member_id}
 	</delete>
+	
+	<delete id="deleteMemberStatus" parameterType="map">
+   		 DELETE FROM member_status WHERE member_id = #{member_id}
+	</delete>
 
 	<insert id="insertMemberStatus"
 		parameterType="com.sp.app.admin.model.MemberManage">

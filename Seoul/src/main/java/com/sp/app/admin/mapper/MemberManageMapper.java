@@ -20,7 +20,7 @@ public interface MemberManageMapper {
 	public void updateMemberEnabled(Map<String, Object> map) throws SQLException;
 	public void updateFailureCountReset(Long member_id) throws SQLException;
 	public void deleteMember(Map<String, Object> map) throws SQLException;
-	
+	public void deleteMemberStatus(Map<String, Object> map) throws SQLException;
 	public void insertMemberStatus(MemberManage dto) throws SQLException;
 	public List<MemberManage> listMemberStatus(Long member_id);
 	public MemberManage findByStatus(Long member_id);

@@ -17,7 +17,6 @@ public interface MemberManageService {
 	public void updateMemberEnabled(Map<String, Object> map) throws Exception;
 	public void updateFailureCountReset(Long member_id) throws Exception;
 	public void deleteMember(Map<String, Object> map) throws SQLException;
-	
 	public void insertMemberStatus(MemberManage dto) throws Exception;
 	public List<MemberManage> listMemberStatus(Long member_id);
 	public MemberManage findByStatus(Long member_id);

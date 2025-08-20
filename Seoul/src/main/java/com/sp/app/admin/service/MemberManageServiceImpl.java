@@ -159,16 +159,17 @@ public class MemberManageServiceImpl implements MemberManageService {
 		return list;
 	}
 
+	@Transactional(rollbackFor = {SQLException.class})
 	@Override
 	public void deleteMember(Map<String, Object> map) throws SQLException {
-		try {
-			
-			mapper.deleteMember(map);
-		} catch (Exception e) {
-			log.info("deleteMember : ", e);
-			
-			throw e;
-		}
+	    try {
+	        
+	        mapper.deleteMemberStatus(map);
+	        mapper.deleteMember(map);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e; // 트랜잭션 롤백을 위해 예외를 다시 던짐
+	    }
 	}
 	
 }

@@ -200,7 +200,7 @@ public class MemberManageController {
 	@PostMapping("deleteMember")
 	@ResponseBody
 	public Map<String, Object> deleteMember(
-			@RequestParam long member_id,
+			@RequestParam(name = "member_id") long member_id,
 			HttpSession session,
 			HttpServletRequest req) {
 

@@ -220,9 +220,24 @@ function updateMemberOk(page) {
 	$('#memberUpdateDialogModal').modal('hide');
 }
 
-function deleteMember(memberIdx) {
-	// 회원 삭제
-	
+function deleteMember(member_id, page) {
+    if (!confirm('회원을 삭제하시겠습니까?')) {
+        return;
+    }
+    
+    let url = '${pageContext.request.contextPath}/admin/memberManage/deleteMember';
+    let params = 'member_id=' + member_id;
+
+    const fn = function(data) {
+        if (data.state === 'true') {
+            alert('회원이 삭제되었습니다.');
+            listMember(page); // 삭제 후 목록 새로고침
+        } else {
+            alert('회원 삭제에 실패했습니다.');
+        }
+    };
+
+    ajaxRequest(url, 'post', params, 'json', fn);
 }
 
 function updateStatusOk(page) {

@@ -417,9 +417,15 @@ public class MemberController {
 	    }
 
 	    try {
+	        Member member = service.findById(info.getMember_id());
+	        if (member == null || ! password.equals(member.getPassword())) {
+	            model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+	            return "redirect:/member/delete"; 
+	        }
 	        Member dto = new Member();
 	        dto.setMember_id(info.getMember_id());
 	        dto.setPassword(password);
+	        dto.setName("탈퇴한 회원");
 
 	        service.deleteMember(dto);
 	        session.invalidate();

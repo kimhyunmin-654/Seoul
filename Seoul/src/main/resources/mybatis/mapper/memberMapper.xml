@@ -118,10 +118,7 @@
 	</select>
 	
 	<update id="deleteMember" parameterType="com.sp.app.model.Member">
-		UPDATE member SET enabled = 0
-		<if test="password != null and password != ''">
-			, password = #{password}
-		</if>
+		UPDATE member SET enabled = 0, name = '탈퇴한회원'
 		WHERE member_id = #{member_id}
 	</update>
 
