@@ -19,7 +19,6 @@
       </li>
 
       <li><a href="${pageContext.request.contextPath}/mypage/posts">내가 쓴 글</a></li>
-      <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 상품</a></li>
       <li><a href="${pageContext.request.contextPath}/productLike/list">찜한 상품</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/likes">찜한 상품</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/cart">장바구니</a></li>
