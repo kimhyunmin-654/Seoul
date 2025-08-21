@@ -81,7 +81,7 @@
        </main>  
      </div>
    </div>
- 	
+ 	<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"></jsp:include>
  	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
 <script>
     (function() {

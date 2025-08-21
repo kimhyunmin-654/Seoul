@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sp.app.common.MyUtil;
-import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.model.Category;
 import com.sp.app.model.Product;
@@ -76,13 +74,23 @@ public class ProductController {
 			String root = storageService.getRootRealPath();
 			String path = root + "uploads" + File.separator + "product";
 			
-			productService.insertProduct(dto, addFiles, thumbnailIndex, path);
+			Map<String, Long> idMap = productService.insertProduct(dto, addFiles, thumbnailIndex, path);
+			
+			System.out.println(idMap.get("auction_id"));
+			System.out.println(idMap.get("product_id"));
+			
+			
+			if(dto.getType().equalsIgnoreCase("AUCTION")) {
+				return "redirect:/auction/detail/" + idMap.get("auction_id");
+			} else {			
+				return "redirect:/product/detail?product_id=" + idMap.get("product_id");
+			}
+
 		} catch (Exception e) {
 			log.info("insertSubmit : ", e);
 			return "redirect:/product/write";
 		}
 		
-		return "redirect:/product/list";
 	}
 	
 	@GetMapping("update")

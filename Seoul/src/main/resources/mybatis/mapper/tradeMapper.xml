@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.TradeMapper">
+	
+	<!-- 중고상품 등록 -->
+	<insert id="insertProduct" parameterType="com.sp.app.model.Product">
+		<selectKey keyProperty="product_id" resultType="Long" order="BEFORE">
+        SELECT product_seq.NEXTVAL FROM dual
+    	</selectKey>
+		INSERT INTO product (product_id, member_id, category_id, region_id, product_name, content, price, type, status, hitCount, likeCount, reg_date, thumbnail )
+		VALUES (#{product_id}, #{member_id}, #{category_id}, #{region_id}, #{product_name}, #{content}, #{price}, #{type}, '판매중', 0, 0, SYSDATE, #{thumbnail})	
+	</insert>
+	
+	  
+	<!-- 추가 이미지 등록 -->
+	<insert id="insertProductFile" parameterType="com.sp.app.model.ProductImage">
+		INSERT INTO product_image (image_id, product_id, filename, filesize, image_order )
+		VALUES (productimage_seq.NEXTVAL, #{product_id}, #{filename}, #{filesize}, #{image_order})	
+	</insert>
+	
+	
+	<!-- 중고상품 수정 -->
+	<update id="updateProduct" parameterType="com.sp.app.model.Product">
+		UPDATE product SET category_id = #{category_id}, region_id = #{region_id}, product_name = #{product_name}, content = #{content}, price = #{price}, type = #{type}, thumbnail = #{thumbnail}
+		WHERE product_id = #{product_id} 
+	</update>
+
+	<!-- 중고상품 삭제 -->
+	<delete id="deleteProduct" parameterType="Long">
+		DELETE FROM product 
+		WHERE product_id = #{product_id}
+	</delete>
+	
+	<!-- 이미지 id로 이미지 조회 -->
+	<select id="findImageById" parameterType="Long" resultType="com.sp.app.model.ProductImage">
+		SELECT image_id, product_id, filename, image_order
+		FROM product_image
+		WHERE image_id = #{image_id}
+	</select>
+	
+	<!-- 추가 이미지 선택 삭제 -->
+	<delete id="deleteProductImage" parameterType="Long">
+		DELETE FROM product_image
+		WHERE image_id = #{image_id}		
+	</delete>
+	
+	<!-- 추가 이미지 전체 삭제 -->
+	<delete id="deleteProductAllImages" parameterType="Long">
+		DELETE FROM product_image 
+		WHERE product_id = #{product_id}
+	</delete>
+	
+	<!-- 상품 개수 -->
+	<select id="dataCount" parameterType="com.sp.app.model.SearchCondition" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM product p		
+		<where>
+			<include refid="where-list"/>
+		</where>
+	</select>
+	
+	<!-- 검색 조건 결정 후 수정하기!(hShop 그대로임) -->
+	<sql id="sch-list">
+		<if test="schType=='all' ">
+			<![CDATA[
+				(
+					INSTR(subject, #{kwd}) > 0
+					OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+				)
+			]]>
+		</if>
+		<if test="schType=='productNum' ">
+			INSTR(p.productNum, #{kwd}) = 1
+		</if>
+		<if test="schType=='productName' ">
+			INSTR(productName, #{kwd}) &gt; 0
+		</if>
+		<if test="schType=='content' ">
+			<![CDATA[
+				DBMS_LOB.INSTR(REGEXP_REPLACE(content, '<[^>]+>', ''), #{kwd}) > 0
+			]]>
+		</if>
+	</sql>
+
+
+	<!-- where 절 반복 모음 -->
+	<sql id="where-list">
+        
+		<!-- 1. 지역 필터 -->
+        <if test="region_id != null and region_id != ''">
+            AND p.region_id = #{region_id}
+        </if>
+        
+        <!-- 2. 카테고리 필터 -->
+        <if test="category_id != null and category_id != ''">
+            AND p.category_id = #{category_id}
+        </if>
+
+        <!-- 3. 거래 유형 필터 (경매/일반) -->
+        <if test="type != null and type != ''">
+            AND p.type = #{type}
+        </if>
+
+        <!-- 4. 거래 상태 필터 (판매중/예약중 등) -->
+        <if test="status != null and status != ''">
+            AND p.status = #{status}
+        </if>
+        
+        <!-- 5. 검색 필터 -->
+        <if test="kwd != null and kwd != '' ">
+			AND INSTR(product_name, #{kwd}) &gt; 0
+		</if>
+	</sql>
+
+	<!-- 상품 리스트 -->
+	<select id="listProduct" parameterType="com.sp.app.model.SearchCondition" resultType="com.sp.app.model.Product">
+		SELECT product_id, p.category_id, category_name, p.region_id, region_name, product_name, price, 
+			type, status, hitCount, likeCount, reg_date, thumbnail
+		FROM product p
+		JOIN product_category c ON p.category_id = c.category_id
+		JOIN region r ON p.region_id = r.region_id
+		<where>	
+			<include refid="where-list"/>
+		</where>
+			ORDER BY p.reg_date DESC
+			OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 상품 상세 정보 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Product">
+		SELECT p.product_id, p.member_id, m.nickname, m.profile_photo sellerAvatar, p.category_id, c.category_name, p.region_id, r.region_name,
+		    p.product_name, p.price, p.type, p.status, p.hitCount, p.likeCount, p.thumbnail, p.content, p.reg_date
+		FROM product p
+		JOIN product_category c ON p.category_id = c.category_id
+		JOIN member m ON p.member_id = m.member_id 
+		JOIN region r ON p.region_id = r.region_id
+		WHERE p.product_id = #{product_id}
+	</select>
+	
+	<!-- 상세 페이지 추가 이미지 -->
+	<select id="listProductImages" parameterType="Long" resultType="com.sp.app.model.ProductImage">
+		SELECT image_id, product_id, filename, image_order 
+		FROM product_image
+		WHERE product_id = #{product_id}
+		ORDER BY image_order ASC
+	</select>
+	
+	
+	<!-- 카테고리 목록 -->
+	<select id="listCategory" resultType="com.sp.app.model.Category">
+		SELECT category_id, category_name
+		FROM product_category
+		ORDER BY category_id
+	</select>
+	
+	<!-- 지역 목록 -->	
+	<select id="listRegion" resultType="com.sp.app.model.Region">
+		SELECT region_id, region_name 	
+		FROM region
+		ORDER BY region_name
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE product SET hitCount = hitCount + 1
+		WHERE product_id = #{product_id}
+	</update>
+
+</mapper>
+	

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sp.app.common.MyUtil;
 import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.AuctionMapper;
-import com.sp.app.mapper.ProductMapper;
+import com.sp.app.mapper.TradeMapper;
 import com.sp.app.model.Auction;
 import com.sp.app.model.Category;
 import com.sp.app.model.Product;
@@ -29,14 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductServiceImpl implements ProductService {
 
     private final PaginateUtil paginateUtil;
-	private final ProductMapper productMapper;
+	private final TradeMapper tradeMapper;
 	private final AuctionMapper auctionMapper;
 	private final StorageService storageService;
+	private final MyUtil myUtil;
 
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void insertProduct(Product dto, List<MultipartFile> addFiles, Integer thumbnailIndex, String path) throws Exception {
+	public Map<String, Long> insertProduct(Product dto, List<MultipartFile> addFiles, Integer thumbnailIndex, String path) throws Exception {
+		Map<String, Long> idMap = new HashMap<>();
 		
 		try {
 			String thumbnailFilename = null;
@@ -52,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
 				}
 			}
 			
-			productMapper.insertProduct(dto);
+			tradeMapper.insertProduct(dto);
+			idMap.put("product_id", dto.getProduct_id());
 			
 			if(addFiles != null && addFiles.size() > 1) {
 				int cnt = 1;
@@ -70,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 					imageDto.setFilesize(mf.getSize());
 					imageDto.setImage_order(cnt++);
 					
-					productMapper.insertProductFile(imageDto);
+					tradeMapper.insertProductFile(imageDto);
 				}
 			}
 			
@@ -80,18 +84,16 @@ public class ProductServiceImpl implements ProductService {
 				auctionDto.setCurrent_price(dto.getStart_price());
 				auctionDto.setEnd_time(dto.getEnd_time());
 				auctionDto.setStatus("IN_PROGRESS");
-				auctionDto.setBidCount(0);
 				auctionDto.setProduct_id(dto.getProduct_id());
-				auctionDto.setProduct_name(dto.getProduct_name());
-				auctionDto.setThumbnail(dto.getThumbnail());
-				auctionDto.setSeller_id(dto.getMember_id());
-				auctionDto.setSeller_nickname(dto.getNickName());
-				
+						
 				auctionMapper.insertAuction(auctionDto);
+				idMap.put("auction_id", auctionDto.getAuction_id());
 			}
 			
+			return idMap;
 		} catch (Exception e) {
 			log.info("insertProduct : ", e);
+			throw e;
 		}
 		
 	}
@@ -102,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
 	public void updateProduct(Product dto, List<MultipartFile> addFiles, List<Long> deleteImageIds, List<String> deleteFilename, String oldThumbnailToMove, Long imageIdToPromote, String path, int thumbnailIndex) throws Exception {
 		
 		try {
-			Product oldDto = productMapper.findById(dto.getProduct_id());
+			Product oldDto = tradeMapper.findById(dto.getProduct_id());
 			if(oldDto == null) {
 				throw new RuntimeException("수정할 상품이 존재하지 않습니다.");
 			}
@@ -134,19 +136,19 @@ public class ProductServiceImpl implements ProductService {
 					imageDto.setFilesize(mf.getSize());
 					imageDto.setImage_order(i);	
 					
-					productMapper.insertProductFile(imageDto);
+					tradeMapper.insertProductFile(imageDto);
 				}
 			}
 			
 			
 			if(imageIdToPromote != null) {
 				
-				ProductImage promotedImage = productMapper.findImageById(imageIdToPromote);
+				ProductImage promotedImage = tradeMapper.findImageById(imageIdToPromote);
 				
 				if(promotedImage != null) {
 					newThumbnail = promotedImage.getFilename();
 					
-					productMapper.deleteProductImage(imageIdToPromote);
+					tradeMapper.deleteProductImage(imageIdToPromote);
 					
 					if(oldThumbnailToMove != null && !oldThumbnailToMove.isEmpty()) {
 						
@@ -156,7 +158,7 @@ public class ProductServiceImpl implements ProductService {
 						oldThumbnailImage.setFilesize(0L);
 						oldThumbnailImage.setImage_order(99);
 						
-						productMapper.insertProductFile(oldThumbnailImage);
+						tradeMapper.insertProductFile(oldThumbnailImage);
 					}
 					
 				}
@@ -168,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
 				oldThumbnailImage.setFilesize(0L);
 				oldThumbnailImage.setImage_order(99);
 				
-				productMapper.insertProductFile(oldThumbnailImage);
+				tradeMapper.insertProductFile(oldThumbnailImage);
 		
 			}
 			
@@ -186,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
 					
 					storageService.deleteFile(path, filename);
 					
-					productMapper.deleteProductImage(image_id);
+					tradeMapper.deleteProductImage(image_id);
 				}
 				
 			}
@@ -215,7 +217,7 @@ public class ProductServiceImpl implements ProductService {
 			}
 			
 			dto.setThumbnail(newThumbnail);
-			productMapper.updateProduct(dto);
+			tradeMapper.updateProduct(dto);
 			
 				
 		} catch (Exception e) {
@@ -230,7 +232,7 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteProduct(long product_id, long member_id, String pathname) throws Exception {
 		
 		try {
-			Product dto = productMapper.findById(product_id);
+			Product dto = tradeMapper.findById(product_id);
 			
 			if(dto == null) {
 				throw new RuntimeException("존재하지 않는 상품입니다.");
@@ -240,7 +242,7 @@ public class ProductServiceImpl implements ProductService {
 				throw new RuntimeException("삭제 권한이 없습니다.");
 			}
 			
-			List<ProductImage> imageList = productMapper.listProductImages(product_id);
+			List<ProductImage> imageList = tradeMapper.listProductImages(product_id);
 			
 			// 썸네일을 서버에서 삭제
 			if(dto.getThumbnail() != null && !dto.getThumbnail().isEmpty()) {
@@ -254,8 +256,8 @@ public class ProductServiceImpl implements ProductService {
 				}
 			}
 			
-			productMapper.deleteProductAllImages(product_id);
-			productMapper.deleteProduct(product_id);
+			tradeMapper.deleteProductAllImages(product_id);
+			tradeMapper.deleteProduct(product_id);
 			
 		} catch (Exception e) {
 			log.info("deleteProduct : ", e);
@@ -272,7 +274,7 @@ public class ProductServiceImpl implements ProductService {
 				storageService.deleteFile(path);
 			}
 
-			productMapper.deleteProductImage(image_id);
+			tradeMapper.deleteProductImage(image_id);
 		} catch (Exception e) {
 			log.info("deleteProductFile : ", e);
 			
@@ -304,7 +306,7 @@ public class ProductServiceImpl implements ProductService {
 			String listUrl = "/product/list";
 			String paging = paginateUtil.paging(current_page, total_page, listUrl);
 					
-			List<Product> list = productMapper.listProduct(cond);
+			List<Product> list = tradeMapper.listProduct(cond);
 			
 			map.put("list", list);
 			map.put("paging", paging);
@@ -326,11 +328,9 @@ public class ProductServiceImpl implements ProductService {
 		
 		try {
 			
-			dto = Objects.requireNonNull(productMapper.findById(product_id));
+			dto = Objects.requireNonNull(tradeMapper.findById(product_id));
 			
-			if(dto != null && dto.getContent() != null) {
-				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-			}
+			dto.setContent(myUtil.htmlSymbols(dto.getContent()));
 			
 			
 		} catch (NullPointerException e) {
@@ -344,7 +344,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public int dataCount(SearchCondition cond) {
-		return productMapper.dataCount(cond);
+		return tradeMapper.dataCount(cond);
 	}
 
 
@@ -353,7 +353,7 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductImage> list = null;
 		
 		try {
-			list = productMapper.listProductImages(product_id);
+			list = tradeMapper.listProductImages(product_id);
 		} catch (Exception e) {
 			log.info("listProductImage : ", e);
 		}
@@ -364,13 +364,13 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Category> listCategories() {
-		return productMapper.listCategory();
+		return tradeMapper.listCategory();
 	}
 
 
 	@Override
 	public List<Region> listRegion() {
-		return productMapper.listRegion();
+		return tradeMapper.listRegion();
 	}
 
 
@@ -378,7 +378,7 @@ public class ProductServiceImpl implements ProductService {
 	public void updateHitCount(long product_id) {
 		
 		try {
-			productMapper.updateHitCount(product_id);
+			tradeMapper.updateHitCount(product_id);
 			
 		} catch (Exception e) {
 			log.info("updateHitCount : ", e);
