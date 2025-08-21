@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.ProductLikeMapper">
+	<!-- 찜추가 -->
+	<insert id="insertProductLike" parameterType="map">
+		INSERT INTO product_like(member_id, product_id, liked_date)
+		VALUES (#{member_id}, #{product_id}, SYSDATE)
+	</insert>
+	
+	<!-- 찜 삭제 -->
+	<delete id="deleteProductLike" parameterType="map">
+		DELETE FROM product_like
+		WHERE member_id = #{member_id} AND product_id = #{product_id}
+	</delete>
+	
+	<!-- 찜확인 -->
+	<select id="isLiked" parameterType="map" resultType="Integer">
+		SELECT COUNT(*) FROM product_like
+		WHERE member_id = #{member_id} AND product_id = #{product_id}
+	</select>
+	
+	<!-- 찜한상품 조회 -->
+	<select id="findById" parameterType="map" resultType="com.sp.app.model.ProductLike">
+		SELECT p1.member_id, p1.product_id, p1.liked_date, p.thumbnail, p.product_name, 
+			p.status, p.price, p.likecount
+		FROM product_like p1
+		JOIN product p ON p1.product_id = p.product_id
+		WHERE p1.member_id = #{member_id}
+	</select>
+
+	
+</mapper>

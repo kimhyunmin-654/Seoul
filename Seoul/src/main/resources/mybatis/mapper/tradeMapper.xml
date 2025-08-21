@@ -166,6 +166,13 @@
 		UPDATE product SET hitCount = hitCount + 1
 		WHERE product_id = #{product_id}
 	</update>
+	
+	<!-- 상품 찜 수 업데이트 -->
+    <update id="updateLikeCount" parameterType="map">
+        UPDATE product 
+        SET likeCount = (SELECT COUNT(*) FROM product_like WHERE product_id = #{product_id})
+        WHERE product_id = #{product_id}
+    </update>
 
 </mapper>
 	

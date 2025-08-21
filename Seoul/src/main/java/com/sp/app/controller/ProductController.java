@@ -23,6 +23,7 @@ import com.sp.app.model.ProductImage;
 import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.service.ProductLikeService;
 import com.sp.app.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +38,7 @@ public class ProductController {
 
 	private final ProductService productService;
 	private final StorageService storageService;
+	private final ProductLikeService productLikeService;
 	
 	@GetMapping("write")
 	public String insertForm(HttpSession session, Model model) {
@@ -224,12 +226,21 @@ public class ProductController {
 			productService.updateHitCount(product_id);
 			
 			// 찜 여부(미완성)
+			boolean isLiked = false;
+			if (info != null) {
+				Map<String, Object> Map = new HashMap<>();
+				Map.put("product_id", product_id);
+				Map.put("member_id", info.getMember_id());
+				isLiked = productLikeService.isLiked(Map);
+				
+			}
 			
 			List<ProductImage> listFile = productService.listProductImage(product_id);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("listFile", listFile);
 			model.addAttribute("currentMenu", "product/list");
+			model.addAttribute("isLiked", isLiked);
 			
 			return "product/detail";
 			

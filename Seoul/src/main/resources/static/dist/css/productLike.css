@@ -1,0 +1,55 @@
+﻿@charset "UTF-8";
+
+/*----------------------------------
+# productLike
+----------------------------------*/
+body {
+	font-family: 'Arial', sans-serif;
+	background-color: #f4f7f6;
+	color: #333;
+	margin: 0;
+	padding: 20px;
+}
+
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+	text-align: center;
+	color: #2c3e50;
+	margin-bottom: 20px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+th, td {
+	text-align: left;
+	padding: 12px;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background-color: #3498db;
+	color: white;
+	font-weight: bold;
+}
+
+tr:hover {
+	background-color: #f1f1f1;
+}
+
+.empty-message {
+	text-align: center;
+	padding: 50px;
+	color: #7f8c8d;
+}

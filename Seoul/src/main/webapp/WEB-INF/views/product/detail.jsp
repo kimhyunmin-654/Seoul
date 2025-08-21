@@ -176,9 +176,20 @@ body {
 							</div>
 							<%-- 액션 버튼 --%>
 							<div class="mt-auto space-y-3">
-								<button type="button"
-									class="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold text-lg py-4 rounded-lg border-2 border-orange-500 transition-colors">
-									🤍 찜하기</button>
+								<c:choose>
+								    <c:when test="${isLiked}">
+								        <button type="button" id="like-btn" 
+								                class="w-full bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-colors">
+								            ❤️ 찜취소
+								        </button>
+								    </c:when>
+								    <c:otherwise>
+								        <button type="button" id="like-btn" 
+								                class="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold text-lg py-4 rounded-lg border-2 border-orange-500 transition-colors">
+								            🤍 찜하기
+								        </button>
+								    </c:otherwise>
+								</c:choose>
 							<c:if test="${empty sessionScope.member or sessionScope.member.member_id != dto.member_id}">
 							  <button type="button"
 							          class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-all duration-300 transform hover:scale-105 glow-button btn-open-chat"
@@ -261,6 +272,61 @@ body {
                  if (!moreMenuDropdown.hasClass('hidden')) {
                      moreMenuDropdown.addClass('hidden');
                  }
+             });
+             
+             // 찜하기 버튼 클릭 이벤트
+             const likeBtn = $('#like-btn');
+             const productId = "${dto.product_id}";
+             const likeCountSpan = $('#like-count');
+             
+             let isLiked = '${isLiked}' === 'true';
+
+             
+             
+             function updateLikeButtonUI() {
+                 if (isLiked) {
+                     likeBtn.html('❤️ 찜취소');
+                     likeBtn.removeClass('bg-white text-orange-600 border-orange-500').addClass('bg-orange-600 text-white');
+                 } else {
+                     likeBtn.html('🤍 찜하기');
+                     likeBtn.removeClass('bg-orange-600 text-white').addClass('bg-white text-orange-600 border-orange-500');
+                 }
+             }
+
+             updateLikeButtonUI();
+
+             likeBtn.on('click', function() {
+                 const url = isLiked ? '${pageContext.request.contextPath}/productLike/deleteProductLike' : '${pageContext.request.contextPath}/productLike/insertProductLike';
+                 
+                 $.ajax({
+                     url: url,
+                     type: 'POST',
+                     data: {
+                         product_id: productId
+                     },
+                     dataType: 'json',
+                     success: function(data) {
+                         if (data.state === 'login_required') {
+                             alert('찜하기는 로그인 후 이용 가능합니다.');
+                             return;
+                         }
+
+                         if (data.state === 'true') {
+                             isLiked = !isLiked;
+                             const currentCount = parseInt(likeCountSpan.text());
+                             if (isLiked) {
+                                 likeCountSpan.text(currentCount + 1);
+                             } else {
+                                 likeCountSpan.text(currentCount > 0 ? currentCount - 1 : 0);
+                             }
+                             updateLikeButtonUI();
+                         }
+                     },
+                     error: function(xhr, status, error) {
+                         console.error("찜하기 요청 실패: " + status, error);
+                         alert("찜하기 기능에 오류가 발생했습니다.");
+                     }
+                 });
              });
         	
         });     
