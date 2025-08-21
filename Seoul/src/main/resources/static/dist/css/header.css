@@ -11,9 +11,20 @@
 .brand .brand-title { font-weight:800; font-size:22px; color:#111; letter-spacing:-0.5px; }
 .brand .brand-sub { font-size:12px; color:#666; }
 
-/* 가운데 */
-.center-box { flex:1 1 auto; min-width:560px; }
-.top-controls { display:flex; align-items:center; gap:14px; }
+/* 가운데 (오직 위치만 오른쪽으로 이동하도록 변경) */
+/* 기존에 min-width:560px 혹은 absolute/transform 규칙이 있으면 삭제하고 이 블록으로 대체하세요. */
+.center-box {
+  position: static;       /* 절대 배치 제거 — 플렉스 흐름 유지 */
+  margin-left: auto;      /* 핵심: 왼쪽 여백 자동으로 채워 오른쪽으로 이동 */
+  margin-right: 20px;     /* 오른쪽 여유 — 필요 시 숫자 조정 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;  /* 내부 요소(검색바, 탭)를 오른쪽 정렬 */
+  min-width: 0;           /* 내부 콘텐츠 축소 시 오버플로우 방지 */
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+.top-controls { display:flex; align-items:center; gap:14px; width:100%; justify-content: flex-end; }
 .region-label {
   min-width:120px; padding:6px 12px; border-radius:8px; background:#efefef;
   font-weight:800; color:#333; border:1px solid #ddd; text-align:center;
@@ -56,7 +67,7 @@
 }
 .searchbar i { font-size:20px; }
 
-/* 하단 2차 메뉴 */
+/* 하단 2차 메뉴 (오른쪽 정렬 유지) */
 .subnav { 
   display:flex; 
   align-items:center; 
@@ -64,6 +75,7 @@
   padding-top:10px; 
   padding-left:2px; 
   flex-wrap: nowrap;
+  justify-content: flex-end; /* 오른쪽 정렬 */
 }
 .subnav a { 
   text-decoration:none; 
@@ -82,17 +94,26 @@
 
 /* 우측 */
 .right-box { display:flex; align-items:center; gap:20px; }
-.icon-btn { color:#111; font-size:22px; text-decoration:none; }
-.link-text { text-decoration:none; color:#111; font-weight:700; }
+.icon-btn { color:#111; font-size:22px; text-decoration:none; display:inline-flex; align-items:center; }
+.link-text { text-decoration:none; color:#111; font-weight:700; display:inline-flex; align-items:center; gap:8px; }
 .btn-sell { 
   color:#333; font-weight:800; text-decoration:none; 
   border:1px solid #cfcfcf; padding:6px 12px; border-radius:8px; background:#fff;
 }
 .avatar-sm { width:34px; height:34px; border-radius:50%; border:1px solid #ddd; object-fit:cover; cursor:pointer; }
 
+/* 반응형: 작은 화면에서는 원래 흐름(가운데/아래로 내려감)으로 복귀 */
 @media (max-width:992px){
   .header-line { flex-wrap:wrap; }
-  .center-box { min-width:100%; order:3; }
+  .center-box { 
+    margin-left: 0;
+    margin-right: 0;
+    align-items: center;
+    width: 100%;
+    order: 3;
+  }
+  .top-controls { justify-content: center; }
+  .subnav { justify-content: center; flex-wrap: wrap; }
   .right-box { order:2; margin-left:auto; }
 }
 
@@ -108,10 +129,11 @@
 }
 
 /* 배지: 아이콘의 오른쪽 상단, 텍스트를 가리지 않음 */
+/* 기존 배지 크기/패딩/색상 등은 변경하지 않습니다 — 위치만 보정하세요. */
 .chat-link .chat-icon .chat-badge {
   position: absolute;
-  top: -6px;          /* 수직 위치: 음수로 더 위로 올림 */
-  right: -6px;        /* 수평 위치: 음수로 아이콘 위쪽으로 붙임 */
+  top: -6px;          /* 기본 위치 (필요시 아래 추가 규칙으로 미세조정) */
+  right: -6px;
   transform: none;
   min-width: 20px;
   height: 20px;
@@ -140,44 +162,23 @@
   right: 2px;
 }
 
-/* 강제 적용용 — specificity 높이고 !important 사용 */
-.header-wrap .chat-link-wrap {
-  position: relative !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-/* 배지: 텍스트 오른쪽 위 (스크린샷과 유사한 위치) */
+/* 기존에 우선순위 문제로 덮어써질 경우만 아래 블록을 사용하세요(위치만 수직 중앙 정렬) */
+/* (이 블록을 사용하면 top이 부모 높이의 50%로 정렬됩니다) */
+/*
 .header-wrap .chat-link-wrap .chat-badge {
-  position: absolute !important;
-  top: 6px !important;        /* 위/아래 미세조정: +값이면 아래로, -값이면 위로 */
-  right: -8px !important;     /* 왼/오 미세조정: 음수면 더 왼쪽으로 이동 */
-  transform: translateY(-50%) !important; /* 수직 중앙 정렬 보정 */
-  min-width: 20px !important;
-  height: 20px !important;
-  padding: 0 6px !important;
-  border-radius: 999px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: #ffffff !important;
-  background-color: #37c36a !important;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
-  line-height: 1 !important;
-  z-index: 9999 !important;
-  pointer-events: none !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  right: -6px !important;
 }
+*/
 
 /* 작은 화면용 */
 @media (max-width: 576px) {
   .header-wrap .chat-link-wrap .chat-badge {
-    top: 4px !important;
-    right: -6px !important;
-    min-width: 18px !important;
-    height: 18px !important;
-    font-size: 11px !important;
+    top: -4px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 11px;
   }
 }
-
