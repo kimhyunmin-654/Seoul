@@ -21,7 +21,7 @@
       <li><a href="${pageContext.request.contextPath}/mypage/shipping">배송 현황</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/posts">내가 쓴 글</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/recent">최근 본 상품</a></li>
-      <li><a href="${pageContext.request.contextPath}/mypage/likes">찜한 상품</a></li>
+      <li><a href="${pageContext.request.contextPath}/productLike/list">찜한 상품</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/cart">장바구니</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/calendar">캘린더</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/events">이벤트 참여 내역</a></li>
