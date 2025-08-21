@@ -17,7 +17,7 @@
 		<div class="header-right d-flex align-items-center">
 			<div class="header-account-links">
 				<a href="#" title="알림"><i class="bi bi-bell"></i></a>
-				<a href="<c:url value='/' />" title="나가기"><i class="bi bi-box-arrow-right"></i></a>
+				<a href="<c:url value='/product/list' />" title="나가기"><i class="bi bi-box-arrow-right"></i></a>
 			</div>
 		
 			<div class="header-avatar">
@@ -32,10 +32,6 @@
 					</c:otherwise>
 				</c:choose>
 				<ul class="dropdown-menu">
-					<li><a href="#" class="dropdown-item">메일</a></li>
-					<li><a href="#" class="dropdown-item">일정관리</a></li>
-					<li><a href="#" class="dropdown-item">환경설정</a></li>
-					<li><hr class="dropdown-divider"></li>
 					<li><a href="${pageContext.request.contextPath}/member/pwd" class="dropdown-item">정보수정</a></li>
 				</ul>
 			</div>

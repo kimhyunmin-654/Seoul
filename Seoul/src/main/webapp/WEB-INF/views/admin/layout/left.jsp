@@ -8,12 +8,6 @@
 	</div>
 	
 	<ul class="nav-menu">
-		<li>
-			<a class="menu-link" href="<c:url value='/admin' />" title="홈">
-				<i class="menu-icon bi bi-h-square"></i>
-				<span class="menu-label">홈</span>
-			</a>
-		</li>
 		
 		<li>
 			<a class="menu-link" href="<c:url value='/admin/celler/main' />" title="관리자 판매">
