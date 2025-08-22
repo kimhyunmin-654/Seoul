@@ -29,7 +29,7 @@
             	
             	<aside class="col-span-1 sidebar">
 			        <div class="sidebar-sticky">
-			          <jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+			          <jsp:include page="/WEB-INF/views/layout/leftmypage.jsp"/>
 			        </div>
 			    </aside>
             

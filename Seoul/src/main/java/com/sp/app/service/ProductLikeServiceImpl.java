@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.sp.app.mapper.ProductLikeMapper;
-import com.sp.app.mapper.ProductMapper;
+import com.sp.app.mapper.TradeMapper;
 import com.sp.app.model.ProductLike;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductLikeServiceImpl implements ProductLikeService {
 	private final ProductLikeMapper mapper;
-	private final ProductMapper productMapper;
+	private final TradeMapper tradeMapper;
 
 	@Override
 	public List<ProductLike> listProductLike(Map<String, Object> map) {
@@ -46,6 +46,10 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 				result = true;
 			}
 			
+			if(map.containsKey("product_id")) {
+				tradeMapper.updateLikeCount(map);
+			}
+			
 		} catch (Exception e) {
 			log.info("insertProductLike : ", e);
 			throw e;
@@ -58,7 +62,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
 	public void deleteProductLike(Map<String, Object> map) throws Exception {
 		try {
 			mapper.deleteProductLike(map);
-			productMapper.updateLikeCount(map);
+			tradeMapper.updateLikeCount(map);
 		} catch (Exception e) {
 			log.info("deleteProductLike : ", e);
 			throw e;

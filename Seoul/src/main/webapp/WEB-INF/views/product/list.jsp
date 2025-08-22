@@ -53,11 +53,11 @@
                                 <fmt:formatNumber value="${dto.price}" pattern="#,##0"/>원
                             </p>
                             <p class="text-sm text-gray-500 truncate" style="margin-bottom: 12px;">${dto.region_name}</p>
-                            <div class="flex items-center text-sm text-gray-500 border-t pt-3 mt-3">
+                             <div class="flex items-center text-sm text-gray-500 border-t pt-3 mt-3 like-button" data-product-id="${dto.product_id}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                                 </svg>
-                                <span>${dto.likeCount}</span>
+                                <span class="like-count">${dto.likeCount}</span>
                             </div>
                         </div>
                     </a>
@@ -245,6 +245,34 @@
         	applyFilter();
         	
         });
+        
+        // 좋아요 버튼 클릭 이벤트 리스너 추가 (수정된 부분)
+        $(document).on('click', '.like-button', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const productId = $(this).data('product-id');
+            const likeCountSpan = $(this).find('.like-count');
+            
+            $.ajax({
+                url: '/product/like',
+                type: 'POST',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+                    if (response.result) {
+                        // 좋아요가 성공적으로 처리되었을 때, 좋아요 수 업데이트
+                        likeCountSpan.text(response.likeCount);
+                    }
+                },
+                error: function(error) {
+                    console.log("좋아요 처리 실패: ", error);
+                    alert("좋아요 처리 중 오류가 발생했습니다.");
+                }
+            });
+        });
+
                 
     });
 

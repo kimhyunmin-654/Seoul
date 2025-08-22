@@ -1,6 +1,7 @@
 package com.sp.app.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,5 +31,6 @@ public interface TradeMapper {
 	public List<Region> listRegion();
 	
 	public void updateHitCount(long product_id);
+	public void updateLikeCount(Map<String, Object> map);
 	
 }
