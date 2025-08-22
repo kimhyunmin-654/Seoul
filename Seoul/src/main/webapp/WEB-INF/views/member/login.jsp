@@ -35,7 +35,7 @@
 	        </div>
 	
 	        <div class="d-grid mb-2">
-	            <button type="button" class="btn btn-accent" onclick="sendLogin()">로그인</button>
+	            <button type="submit" class="btn btn-accent" onclick="sendLogin()">로그인</button>
 	        </div>
 	        <div class="d-grid mb-3">
 	            <button type="button" class="btn btn-kakao" onclick="loginWithKakao()">카카오 로그인</button>
@@ -68,7 +68,9 @@ $(function(){
     }
 });
 
-function sendLogin() {
+function sendLogin(event) {
+	if (event && event.preventDefault) event.preventDefault();
+	
     const f = document.loginForm;
     const saveId = document.getElementById("rememberMe").checked;
     
