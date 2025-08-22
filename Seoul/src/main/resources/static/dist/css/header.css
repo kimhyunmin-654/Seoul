@@ -1,165 +1,329 @@
 @charset "UTF-8";
 
-/* ===== Header ===== */
-.header-wrap { border-bottom:1px solid #eee; background:#fff; }
-.header-line { display:flex; align-items:center; gap:22px; padding:12px 0; }
+.header-wrap {
+	border-bottom: 1px solid #eee;
+	background: #fff;
+}
 
-/* 좌측 로고 */
-.brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
-.brand .logo { width:64px; height:64px; border-radius:6px; object-fit:cover; border:1px solid #ddd; background:#fafafa; }
-.brand .brand-text { line-height:1.1; }
-.brand .brand-title { font-weight:800; font-size:22px; color:#111; letter-spacing:-0.5px; }
-.brand .brand-sub { font-size:12px; color:#666; }
+.header-line {
+	display: flex;
+	align-items: center;
+	gap: 22px;
+	padding: 12px 0;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	text-decoration: none;
+}
+
+.brand .logo {
+	width: 64px;
+	height: 64px;
+	border-radius: 6px;
+	object-fit: cover;
+	border: 1px solid #ddd;
+	background: #fafafa;
+}
+
+.brand .brand-text {
+	line-height: 1.1;
+}
+
+.brand .brand-title {
+	font-weight: 800;
+	font-size: 22px;
+	color: #111;
+	letter-spacing: -0.5px;
+}
+
+.brand .brand-sub {
+	font-size: 12px;
+	color: #666;
+}
 
 /* 가운데 (오직 위치만 오른쪽으로 이동하도록 변경) */
 /* 기존에 min-width:560px 혹은 absolute/transform 규칙이 있으면 삭제하고 이 블록으로 대체하세요. */
 .center-box {
-  position: static;       /* 절대 배치 제거 — 플렉스 흐름 유지 */
-  margin-left: auto;      /* 핵심: 왼쪽 여백 자동으로 채워 오른쪽으로 이동 */
-  margin-right: 20px;     /* 오른쪽 여유 — 필요 시 숫자 조정 */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;  /* 내부 요소(검색바, 탭)를 오른쪽 정렬 */
-  min-width: 0;           /* 내부 콘텐츠 축소 시 오버플로우 방지 */
-  box-sizing: border-box;
-  pointer-events: auto;
+	position: static; /* 절대 배치 제거 — 플렉스 흐름 유지 */
+	margin-left: auto; /* 핵심: 왼쪽 여백 자동으로 채워 오른쪽으로 이동 */
+	margin-right: 20px; /* 오른쪽 여유 — 필요 시 숫자 조정 */
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end; /* 내부 요소(검색바, 탭)를 오른쪽 정렬 */
+	min-width: 0; /* 내부 콘텐츠 축소 시 오버플로우 방지 */ 
+	position : static;
+	margin-left: auto;
+	margin-right: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	min-width: 0;
+	box-sizing: border-box;
+	pointer-events: auto;
 }
-.top-controls { display:flex; align-items:center; gap:14px; width:100%; justify-content: flex-end; }
+
+.top-controls {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	width: 100%;
+	justify-content: flex-end;
+}
+
 .region-label {
-  min-width:120px; padding:6px 12px; border-radius:8px; background:#efefef;
-  font-weight:800; color:#333; border:1px solid #ddd; text-align:center;
+	min-width: 120px;
+	padding: 6px 12px;
+	border-radius: 8px;
+	background: #efefef;
+	font-weight: 800;
+	color: #333;
+	border: 1px solid #ddd;
+	text-align: center;
 }
 
-/* 세그먼트 메뉴 */
-.segment { display:flex; border-radius:10px; overflow:hidden; border:1px solid #dcdcdc; background:#f3f3f3; }
-.segment a { padding:8px 18px; text-decoration:none; color:#333; border-right:1px solid #dcdcdc; font-weight:800; }
-.segment a:last-child { border-right:none; }
-.segment a.active { background:#d9d9d9; color:#111; }
+.segment {
+	display: flex;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 1px solid #dcdcdc;
+	background: #f3f3f3;
+}
 
-/* 검색 바 */
-.searchbar{
-  display:flex; align-items:center; gap:12px;
-  border:1px solid #d0d0d0; background:#e5e5e5;
-  border-radius:8px; padding:8px 10px;
-  height: 44px;
+.segment a {
+	padding: 8px 18px;
+	text-decoration: none;
+	color: #333;
+	border-right: 1px solid #dcdcdc;
+	font-weight: 800;
 }
-.search-label{
-  white-space:nowrap;
-  word-break: keep-all;
-  font-weight:800; color:#222;
-  padding-right:12px; margin-right:8px;
-  border-right:1px solid #bfbfbf;
-  display: inline-flex; align-items: center; height: 44px;
+
+.segment a:last-child {
+	border-right: none;
 }
-.search-select{
-  border:none; background:transparent; outline:none;
-  padding:4px 6px; min-width:110px;
-  height: 36px;
+
+.segment a.active {
+	background: #d9d9d9;
+	color: #111;
 }
-.search-input{
-  flex:1; border:none; background:transparent; outline:none;
-  font-weight:700;
+
+.searchbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	border: 1px solid #d0d0d0;
+	background: #e5e5e5;
+	border-radius: 8px;
+	padding: 8px 10px;
+	height: 44px;
 }
-.search-btn{
-  background:#f5f5f5; border:1px solid #d0d0d0;
-  border-radius:8px; padding:6px 10px; font-size:18px;
-  height: 36px; display: inline-flex; align-items: center;
+
+.search-label {
+	white-space: nowrap;
+	word-break: keep-all;
+	font-weight: 800;
+	color: #222;
+	padding-right: 12px;
+	margin-right: 8px;
+	border-right: 1px solid #bfbfbf;
+	display: inline-flex;
+	align-items: center;
+	height: 44px;
 }
-.searchbar i { font-size:20px; }
+
+.search-select {
+	border: none;
+	background: transparent;
+	outline: none;
+	padding: 4px 6px;
+	min-width: 110px;
+	height: 36px;
+}
+
+.search-input {
+	flex: 1;
+	border: none;
+	background: transparent;
+	outline: none;
+	font-weight: 700;
+}
+
+.search-btn {
+	background: #f5f5f5;
+	border: 1px solid #d0d0d0;
+	border-radius: 8px;
+	padding: 6px 10px;
+	font-size: 18px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.searchbar i {
+	font-size: 20px;
+}
 
 /* 하단 2차 메뉴 (오른쪽 정렬 유지) */
-.subnav { 
-  display:flex; 
-  align-items:center; 
-  gap:28px; 
-  padding-top:10px; 
-  padding-left:2px; 
-  flex-wrap: nowrap;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+.subnav {
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	padding-top: 10px;
+	padding-left: 2px;
+	flex-wrap: nowrap;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+	justify-content: flex-end; 
+	text-decoration : none;
+	color: #111;
+	font-size: 20px;
+	font-weight: 800;
+	letter-spacing: -0.2px;
+	white-space: nowrap;
+	word-break: keep-all !important;
 }
-.subnav a { 
-  text-decoration:none; 
-  color:#111; 
-  font-size:20px; 
-  font-weight:800; 
-  letter-spacing:-0.2px; 
-  white-space: nowrap; 
-  word-break: keep-all !important;
-}
-.subnav a.accent { color:#111; }
-.subnav .with-icon { display:flex; align-items:center; gap:10px; }
-.subnav .with-icon i { font-size:22px; }
-.subnav .dropdown .subnav-dropdown-toggle::after { margin-left: 6px; }
-.subnav .dropdown-menu { min-width: 160px; }
 
-/* 우측 */
-.right-box { display:flex; align-items:center; gap:20px; }
-.icon-btn { color:#111; font-size:22px; text-decoration:none; display:inline-flex; align-items:center; }
-.link-text { text-decoration:none; color:#111; font-weight:700; display:inline-flex; align-items:center; gap:8px; }
-.btn-sell { 
-  color:#333; font-weight:800; text-decoration:none; 
-  border:1px solid #cfcfcf; padding:6px 12px; border-radius:8px; background:#fff;
+.subnav a.accent {
+	color: #111;
 }
-.avatar-sm { width:34px; height:34px; border-radius:50%; border:1px solid #ddd; object-fit:cover; cursor:pointer; }
+
+.subnav .with-icon {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.subnav .with-icon i {
+	font-size: 22px;
+}
+
+.subnav .dropdown .subnav-dropdown-toggle::after {
+	margin-left: 6px;
+}
+
+.subnav .dropdown-menu {
+	min-width: 160px;
+}
+
+.right-box {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.icon-btn {
+	color: #111;
+	font-size: 22px;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+}
+
+.link-text {
+	text-decoration: none;
+	color: #111;
+	font-weight: 700;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.btn-sell {
+	color: #333;
+	font-weight: 800;
+	text-decoration: none;
+	border: 1px solid #cfcfcf;
+	padding: 6px 12px;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.avatar-sm {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 1px solid #ddd;
+	object-fit: cover;
+	cursor: pointer;
+}
 
 /* 반응형: 작은 화면에서는 원래 흐름(가운데/아래로 내려감)으로 복귀 */
-@media (max-width:992px){
-  .header-line { flex-wrap:wrap; }
-  .center-box { 
-    margin-left: 0;
-    margin-right: 0;
-    align-items: center;
-    width: 100%;
-    order: 3;
-  }
-  .top-controls { justify-content: center; }
-  .subnav { justify-content: center; flex-wrap: wrap; }
-  .right-box { order:2; margin-left:auto; }
+@media ( max-width :992px) {
+	.header-line {
+		flex-wrap: wrap;
+	}
+	.center-box {
+		margin-left: 0;
+		margin-right: 0;
+		align-items: center;
+		width: 100%;
+		order: 3;
+	}
+	.top-controls {
+		justify-content: center;
+	}
+	.subnav {
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	.right-box {
+		order: 2;
+		margin-left: auto;
+	}
 }
 
-/* wrapper는 이미 position:relative 여야 함 */
-.chat-link-wrap { position: relative; display:inline-flex; align-items:center; }
+.chat-link-wrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
 .chat-link .chat-icon {
-  position: relative;
-  display: inline-block;
-  width: 28px;   /* 아이콘 크기에 맞춰 조정 */
-  height: 28px;
-  line-height: 28px;
-  vertical-align: middle;
+	position: relative;
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	line-height: 28px;
+	vertical-align: middle;
 }
 
 /* 배지: 아이콘의 오른쪽 상단, 텍스트를 가리지 않음 */
 /* 기존 배지 크기/패딩/색상 등은 변경하지 않습니다 — 위치만 보정하세요. */
 .chat-link .chat-icon .chat-badge {
-  position: absolute;
-  top: -6px;          /* 기본 위치 (필요시 아래 추가 규칙으로 미세조정) */
-  right: -6px;
-  transform: none;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  background: #37c36a;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-  pointer-events: none;
-  z-index: 999;
+	position: absolute;
+	top: -6px; /* 기본 위치 (필요시 아래 추가 규칙으로 미세조정) */
+	top: -6px;
+	right: -6px;
+	transform: none;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 600;
+	color: #fff;
+	background: #37c36a;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	pointer-events: none;
+	z-index: 999;
 }
-/* 숨김 유틸 */
-.d-none { display: none !important; }
 
-/* 큰 숫자에 대한 축소 */
-.chat-badge.overflow { padding: 0 4px; min-width: 18px; }
+.d-none {
+	display: none !important;
+}
 
-/* 만약 아이콘 왼쪽 위에 정확히 붙이고 싶다면 이런 값으로 더 미세 조정 */
+.chat-badge.overflow {
+	padding: 0 4px;
+	min-width: 18px;
+}
+
 .chat-link-wrap.badge-on-icon .chat-badge {
-  top: -8px;
-  right: 2px;
+	top: -8px;
+	right: 2px;
 }
 
 /* 기존에 우선순위 문제로 덮어써질 경우만 아래 블록을 사용하세요(위치만 수직 중앙 정렬) */
@@ -173,12 +337,12 @@
 */
 
 /* 작은 화면용 */
-@media (max-width: 576px) {
-  .header-wrap .chat-link-wrap .chat-badge {
-    top: -4px;
-    right: -6px;
-    min-width: 18px;
-    height: 18px;
-    font-size: 11px;
-  }
+@media ( max-width : 576px) {
+.header-wrap .chat-link-wrap .chat-badge {
+		top: -4px;
+		right: -6px;
+		min-width: 18px;
+		height: 18px;
+		font-size: 11px;
+	}
 }
