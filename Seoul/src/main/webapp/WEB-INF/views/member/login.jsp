@@ -13,13 +13,17 @@
 </head>
 <body>
 
+<header>
+  <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+</header>
+
 	<div class="login-container">
 	    <h3>회원 로그인</h3>
 	    
 	    <form name="loginForm" method="post">
 	        <div class="mb-3">
 	            <label class="form-label">아이디</label>
-	            <input type="text" name="login_id" class="form-control" placeholder="아이디">
+	            <input type="text" id="login_id" name="login_id" class="form-control" placeholder="아이디">
 	        </div>
 	        <div class="mb-3">
 	            <label class="form-label">패스워드</label>
@@ -31,7 +35,7 @@
 	        </div>
 	
 	        <div class="d-grid mb-2">
-	            <button type="button" class="btn btn-accent" onclick="sendLogin()">로그인</button>
+	            <button type="submit" class="btn btn-accent" onclick="sendLogin()">로그인</button>
 	        </div>
 	        <div class="d-grid mb-3">
 	            <button type="button" class="btn btn-kakao" onclick="loginWithKakao()">카카오 로그인</button>
@@ -50,7 +54,23 @@
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js" integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-function sendLogin() {
+$(function(){
+    try {
+        const saved = localStorage.getItem("savedLoginId");
+        if (saved) {
+            const loginInput = document.getElementById("login_id");
+            if (loginInput) loginInput.value = saved;
+            const remember = document.getElementById("rememberMe"); 
+            if (remember) remember.checked = true;
+        }
+    } catch (e) {
+        console.warn("읽기 실패:", e);
+    }
+});
+
+function sendLogin(event) {
+	if (event && event.preventDefault) event.preventDefault();
+	
     const f = document.loginForm;
     const saveId = document.getElementById("rememberMe").checked;
     
