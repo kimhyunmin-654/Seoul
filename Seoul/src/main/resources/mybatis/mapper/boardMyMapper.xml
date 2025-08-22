@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.BoardMyMapper">
+	<select id="MyBoardCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community
+		<where>
+			<if test="member_id != null and member_id != '' ">
+				member_id = #{member_id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="listMyBoard" parameterType="map" resultType="com.sp.app.model.Board">
+		SELECT b.num, b.subject, b.reg_date, b.hit_count, m.nickname
+		FROM community b
+		JOIN member m ON b.member_id = m.member_id
+		<where>
+			<if test="member_id != null and member_id != ''">
+				b.member_id = #{member_id}
+			</if>
+		</where>
+		ORDER BY b.num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+</mapper>

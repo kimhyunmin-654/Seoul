@@ -1,0 +1,144 @@
+﻿@charset "UTF-8";
+
+/*----------------------------------
+/* my-board.css */
+----------------------------------*/
+/* 전체 레이아웃 */
+.page-title {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.page-title-underline-accent {
+    width: 50px;
+    height: 3px;
+    background-color: #007bff; /* Accent color */
+    margin: 0 auto;
+}
+
+.section {
+    padding: 20px 0;
+}
+
+.board-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 게시판 목록 테이블 */
+.board-list {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+.board-list thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px;
+    font-weight: 600;
+    color: #495057;
+    text-align: center;
+}
+
+.board-list tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.board-list tbody tr:hover {
+    background-color: #f1f3f5;
+    cursor: pointer;
+}
+
+.board-list .num {
+    width: 50px;
+    text-align: center;
+}
+
+.board-list .subject {
+    text-align: left;
+}
+
+.board-list .name,
+.board-list .date,
+.board-list .hit,
+.board-list .like {
+    width: 80px;
+    text-align: center;
+}
+
+.board-list .left {
+    text-align: left;
+}
+
+.text-wrap a {
+    text-decoration: none;
+    color: #333;
+}
+
+.text-wrap a:hover {
+    text-decoration: underline;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px 0;
+    color: #6c757d;
+}
+
+/* 데이터 및 페이징 영역 */
+.dataCount {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-left: 10px;
+}
+
+.page-navigation {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 검색 폼 */
+.form-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-search select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+.form-search input[type="text"] {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+.btn-default {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #495057;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-default:hover {
+    background-color: #dee2e6;
+}
+
