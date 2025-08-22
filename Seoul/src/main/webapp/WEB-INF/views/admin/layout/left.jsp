@@ -52,7 +52,6 @@
 			</label>
 			<ul>
 				<li><a class="sub-menu-link" href="<c:url value='/admin' />">이벤트</a></li>
-				<li><a class="sub-menu-link" href="<c:url value='/admin' />">쿠폰</a></li>
 			</ul>
 		</li>
 		
