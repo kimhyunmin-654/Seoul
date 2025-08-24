@@ -79,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
 			}
 			
 			if(dto.getType().equalsIgnoreCase("auction")) {
+				
 				Auction auctionDto = new Auction();
 				auctionDto.setStart_price(dto.getStart_price());
 				auctionDto.setCurrent_price(dto.getStart_price());
@@ -244,6 +245,9 @@ public class ProductServiceImpl implements ProductService {
 			
 			List<ProductImage> imageList = tradeMapper.listProductImages(product_id);
 			
+			tradeMapper.deleteProductAllImages(product_id);
+			tradeMapper.deleteProduct(product_id);
+
 			// 썸네일을 서버에서 삭제
 			if(dto.getThumbnail() != null && !dto.getThumbnail().isEmpty()) {
 				storageService.deleteFile(pathname, dto.getThumbnail());
@@ -256,8 +260,6 @@ public class ProductServiceImpl implements ProductService {
 				}
 			}
 			
-			tradeMapper.deleteProductAllImages(product_id);
-			tradeMapper.deleteProduct(product_id);
 			
 		} catch (Exception e) {
 			log.info("deleteProduct : ", e);
@@ -297,6 +299,7 @@ public class ProductServiceImpl implements ProductService {
 			int total_page = paginateUtil.pageCount(dataCount, size);
 			int current_page = cond.getPage();
 			
+			if (total_page == 0) total_page = 1;
 			if(current_page > total_page) current_page = total_page;
 
 			int offset = (current_page - 1) * size;

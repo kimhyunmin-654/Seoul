@@ -11,10 +11,11 @@ public class SearchCondition {
 	private String kwd;
 	private String category_id;
 	private String region_id;
+	private String sort;
 	private int page = 1;
 	private String type;
 	private String status;
 	
 	private int offset;
-	private int size = 8;
+	private int size = 6;
 }

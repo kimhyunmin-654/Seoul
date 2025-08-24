@@ -10,8 +10,9 @@ import lombok.Setter;
 public class Bid {
 	
 	private long bid_id;
+	private long auction_id;
 	private long bidder_id;
-	private String bidder_nickName;
+	private String bidder_nickname;
 	private int bid_amount;
 	private String created_at;
 	

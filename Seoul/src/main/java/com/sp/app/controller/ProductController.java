@@ -17,12 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.common.StorageService;
+import com.sp.app.model.Auction;
 import com.sp.app.model.Category;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductImage;
 import com.sp.app.model.Region;
 import com.sp.app.model.SearchCondition;
 import com.sp.app.model.SessionInfo;
+import com.sp.app.service.AuctionService;
 import com.sp.app.service.ProductLikeService;
 import com.sp.app.service.ProductService;
 
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 
 	private final ProductService productService;
+	private final AuctionService auctionService;
 	private final StorageService storageService;
 	private final ProductLikeService productLikeService;
 	
@@ -110,7 +113,7 @@ public class ProductController {
 			
 			if(info.getMember_id() != dto.getMember_id()) {
 				ra.addFlashAttribute("message", "수정 권한이 없습니다.");
-				
+				ra.addFlashAttribute("messageId", System.currentTimeMillis());
 				return "redirect:/product/detail?product_id=" + product_id;
 			}
 			
@@ -128,6 +131,8 @@ public class ProductController {
 			
 		} catch (Exception e) {
 			log.info("updateForm : ", e);
+			ra.addFlashAttribute("message", "오류가 발생했습니다. 다시 시도해주세요.");
+			ra.addFlashAttribute("messageId", System.currentTimeMillis());
 			return "redirect:/product/detail?product_id=" + product_id;
 		}
 		
@@ -162,13 +167,26 @@ public class ProductController {
 			
 			productService.updateProduct(dto, addFiles, deleteImageIds, deleteFilename, oldThumbnailToMove, imageIdToPromote, path, thumbnailIndex);
 			
+			Auction aDto = new Auction();
+			aDto.setAuction_id(dto.getAuction_id());
+			aDto.setStart_price(dto.getStart_price());
+			aDto.setEnd_time(dto.getEnd_time());
+
+			auctionService.updateAuction(aDto);
+			
+			if(dto.getType().equalsIgnoreCase("AUCTION")) {
+				return "redirect:/auction/detail/" + dto.getAuction_id();
+			} else {			
+				return "redirect:/product/detail?product_id=" + dto.getProduct_id();
+			}
+			
 		} catch (Exception e) {
 			log.info("updateSubmit : ", e);
 			ra.addFlashAttribute("message", "상품 수정에 실패했습니다.");
+			ra.addFlashAttribute("messageId", System.currentTimeMillis());
 			return "redirect:/product/update?product_id=" + dto.getProduct_id();
 		}
 		
-		return "redirect:/product/detail?product_id=" + dto.getProduct_id();
 		
 	}
 	
@@ -200,18 +218,17 @@ public class ProductController {
 	@GetMapping("list/ajax")
 	@ResponseBody
 	public Map<String, Object> loadAjaxRequest( SearchCondition cond) throws Exception {
+		Map<String, Object> map = new HashMap<>();
 		
 		try {
 			
-			Map<String, Object> map = productService.listProduct(cond);
-			
-			return map;
+			map = productService.listProduct(cond);
 			
 		} catch (Exception e) {
 			log.info("loadMoreProducts : ", e);
 		}
 		
-		return null;
+		return map;
 	}
 	
 	@GetMapping("detail")
@@ -225,7 +242,6 @@ public class ProductController {
 			
 			productService.updateHitCount(product_id);
 			
-			// 찜 여부(미완성)
 			boolean isLiked = false;
 			if (info != null) {
 				Map<String, Object> Map = new HashMap<>();

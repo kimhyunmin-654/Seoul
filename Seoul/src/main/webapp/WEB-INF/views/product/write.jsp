@@ -107,9 +107,13 @@
               action="<c:url value='/product/${not empty mode and mode == "update" ? "update" : "write"}'/>" 
               method="post" enctype="multipart/form-data">
 
-            <%-- 수정 모드일 때만 productId를 함께 전송 --%>
+            
             <c:if test="${mode == 'update'}">
                 <input type="hidden" name="product_id" value="${dto.product_id}">
+                <c:if test="${dto.type == 'AUCTION'}">
+                	<input type="hidden" name="auction_id" value="${dto.auction_id}">
+                </c:if>
+                <input type="hidden" name="type" value="${dto.type}">
             </c:if>
 
             <!-- 1. 이미지 영역 -->
@@ -179,9 +183,9 @@
             <div class="mb-3">
                 <label class="form-label">판매 방식</label>
                 <div>
-                    <input type="radio" name="type" id="typeNormal" value="NORMAL" class="form-check-input" ${empty dto.type || dto.type == 'NORMAL' ? 'checked' : ''}>
+                    <input type="radio" name="type" id="typeNormal" value="NORMAL" class="form-check-input" ${empty dto.type || dto.type == 'NORMAL' ? 'checked' : ''} <c:if test="${mode == 'update'}">disabled</c:if>>
                     <label for="typeNormal" class="form-check-label me-3">일반 판매</label>
-                    <input type="radio" name="type" id="typeAuction" value="AUCTION" class="form-check-input" ${dto.type == 'AUCTION' ? 'checked' : ''}>
+                    <input type="radio" name="type" id="typeAuction" value="AUCTION" class="form-check-input" ${dto.type == 'AUCTION' ? 'checked' : ''} <c:if test="${mode == 'update'}">disabled</c:if>>
                     <label for="typeAuction" class="form-check-label">경매 진행</label>
                 </div>
             </div>
@@ -193,7 +197,7 @@
                 </div>
                 <div class="col-md-6 mb-3" id="start-price-field">
                     <label for="start_price" class="form-label">경매 시작가</label>
-                    <input type="number" name="start_price" id="start_price" class="form-control" value="${dto.start_price}">
+                    <input type="text" name="start_price" id="start_price" class="form-control" value="${dto.start_price}" pattern="^[0-9]+$">
                 </div>
                 <div class="col-md-6 mb-3" id="end-time-field">
                     <label for="end_time" class="form-label">경매 마감일</label>
@@ -321,6 +325,12 @@ $(function() {
 
     // 1. 새 파일 선택 시: 미리보기 생성
     fileInput.on('change', function(e) {
+    	if(e.target.files.length > 5) {
+    		alert('이미지는 최대 5장까지만 등록할 수 있습니다.');
+    		$(this).val('');
+    		imageContainer.find('.new-preview').remove();
+    		return;
+    	}
         imageContainer.find('.new-preview').remove();
         sel_files = Array.from(e.target.files || []);
         
@@ -402,7 +412,7 @@ $(function() {
         }
     });
     
-    // 4. 폼 제출 직전: 최종 썸네일 인덱스 계산
+    // 4. 폼 제출 직전: 최종 썸네일 인덱스 계산 및 유효성 검사
     form.on('submit', function(e) {
     	
     	// 이미지 유효성 검사
@@ -440,6 +450,43 @@ $(function() {
         	
         }
         
+       
+        const isAuction = document.getElementById('typeAuction').checked;
+
+        if (!isAuction) {
+            // --- 일반 판매 유효성 검사 ---
+            const priceInput = document.getElementById('price');
+            if (!priceInput.value || parseInt(priceInput.value) <= 0) {
+                alert('올바른 가격을 입력해주세요');
+                priceInput.focus();
+                return false;
+            }
+        } else {
+            // --- 경매 유효성 검사 ---
+            const startPriceInput = document.getElementById('start_price');
+            if (!startPriceInput.value || parseInt(startPriceInput.value) < 0) {
+                alert('경매 시작가를 입력해주세요');
+                startPriceInput.focus();
+                return false;
+            }
+
+            const endTimeInput = document.getElementById('end_time');
+            if (!endTimeInput.value) {
+                alert('경매 마감시간을 입력해주세요.');
+                endTimeInput.focus();
+                return false;
+            }
+            
+            const endTime = new Date(endTimeInput.value);
+            const now = new Date();
+            if (endTime <= now) {
+                alert('마감시간은 현재시간 이후만 입력 가능합니다.');
+                endTimeInput.value = '';
+                endTimeInput.focus();
+                return false;
+            }
+        }
+
     });
 
    

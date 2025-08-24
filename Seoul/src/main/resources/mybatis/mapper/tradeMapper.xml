@@ -22,7 +22,7 @@
 	
 	<!-- 중고상품 수정 -->
 	<update id="updateProduct" parameterType="com.sp.app.model.Product">
-		UPDATE product SET category_id = #{category_id}, region_id = #{region_id}, product_name = #{product_name}, content = #{content}, price = #{price}, type = #{type}, thumbnail = #{thumbnail}
+		UPDATE product SET category_id = #{category_id}, region_id = #{region_id}, product_name = #{product_name}, content = #{content}, price = #{price}, thumbnail = #{thumbnail}
 		WHERE product_id = #{product_id} 
 	</update>
 
@@ -129,12 +129,13 @@
 	
 	<!-- 상품 상세 정보 -->
 	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Product">
-		SELECT p.product_id, p.member_id, m.nickname, m.profile_photo sellerAvatar, p.category_id, c.category_name, p.region_id, r.region_name,
-		    p.product_name, p.price, p.type, p.status, p.hitCount, p.likeCount, p.thumbnail, p.content, p.reg_date
+		SELECT p.product_id, a.auction_id, p.member_id, m.nickname, m.profile_photo sellerAvatar, p.category_id, c.category_name, p.region_id, r.region_name,
+		    p.product_name, p.price, p.type, p.status, p.hitCount, p.likeCount, p.thumbnail, p.content, p.reg_date, a.start_price, a.end_time
 		FROM product p
 		JOIN product_category c ON p.category_id = c.category_id
 		JOIN member m ON p.member_id = m.member_id 
 		JOIN region r ON p.region_id = r.region_id
+		LEFT JOIN auction a ON p.product_id = a.product_id
 		WHERE p.product_id = #{product_id}
 	</select>
 	
@@ -173,6 +174,5 @@
         SET likeCount = (SELECT COUNT(*) FROM product_like WHERE product_id = #{product_id})
         WHERE product_id = #{product_id}
     </update>
-
 </mapper>
 	

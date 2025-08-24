@@ -5,26 +5,59 @@
 	
 	<!-- 상품판매를 경매로 등록 -->
 	<insert id="insertAuction" parameterType="com.sp.app.model.Auction">
+	<selectKey keyProperty="auction_id" resultType="long" order="BEFORE">
+		SELECT auction_seq.NEXTVAL FROM dual
+	</selectKey>
 		INSERT INTO auction	(auction_id, product_id, start_price, current_price, end_time, status)
-		VALUES (auction_seq.NEXTVAL, #{product_id}, #{start_price}, #{start_price}, TO_DATE(#{end_time}, 'YYYY-MM-DD"T"HH24:MI:SS'), #{status})		
+		VALUES (#{auction_id}, #{product_id}, #{start_price}, #{start_price}, TO_DATE(#{end_time}, 'YYYY-MM-DD"T"HH24:MI:SS'), #{status})		
 	</insert>
 	
 	<!-- 경매정보 수정 -->
 	<update id="updateAuction" parameterType="com.sp.app.model.Auction">
-		UPDATE auction SET start_price = #{start_price}, current_price = #{current_price}, end_time = #{end_time}, status = #{status}
-		WHERE auction_id = #{auction_id} 
+		UPDATE auction
+	    <set>
+	        <if test="start_price != null">
+	            start_price = #{start_price},
+	            current_price = #{start_price},
+	        </if>
+	        <if test="end_time != null and end_time != ''">
+	            end_time = TO_DATE(#{end_time}, 'YYYY-MM-DD"T"HH24:MI:SS'),
+	        </if>
+	        <if test="status != null and status != ''">
+	            status = #{status},
+	        </if>
+	    </set>
+	    WHERE auction_id = #{auction_id} 
 	</update>
 	
 	<!-- 경매 입찰신청 -->
 	<insert id="insertBid" parameterType="com.sp.app.model.Bid">
+	<selectKey keyProperty="bid_id" resultType="long" order="BEFORE">
+		SELECT bid_seq.NEXTVAL FROM dual
+	</selectKey>
         INSERT INTO bid (bid_id, auction_id, member_id, bid_amount, created_at)
-        VALUES (bid_seq.NEXTVAL, #{auction_id}, #{member_id}, #{bid_amount}, SYSDATE)
+        VALUES (#{bid_id}, #{auction_id}, #{bidder_id}, #{bid_amount}, SYSDATE)
     </insert>
-
+    
+	<!-- 현재최고가 갱신 -->
+	<update id="updateCurrentPrice" parameterType="com.sp.app.model.Auction">
+	    UPDATE auction
+	    SET current_price = #{current_price}
+	    WHERE auction_id = #{auction_id}
+	</update>
+	
+	<!-- 종료시간 연장 -->
+	<update id="extendEndTime" parameterType="com.sp.app.model.Auction">
+	    UPDATE auction
+	    SET end_time = TO_DATE(#{end_time}, 'YYYY-MM-DD"T"HH24:MI:SS')
+	    WHERE auction_id = #{auction_id}
+	</update>
+	
+	
 	<!-- 경매상품 리스트 -->
 	<select id="listAuctionProduct" parameterType="com.sp.app.model.SearchCondition" resultType="com.sp.app.model.Auction">
 		SELECT p.product_id, c.category_name, r.region_name, p.product_name, a.current_price, 
-			 a.status, p.thumbnail, a.auction_id, a.end_time, COUNT(b.bid_id) bidCount
+			 a.status, p.thumbnail, a.auction_id, a.end_time, p.reg_date, COUNT(b.bid_id) bidCount
 		FROM product p
 		JOIN auction a ON p.product_id = a.product_id
 		LEFT JOIN bid b ON a.auction_id = b.auction_id
@@ -35,10 +68,31 @@
 			<include refid="where-list"/>
 		</where>
 			GROUP BY
-				p.product_id, p.product_name, p.thumbnail,
+				p.product_id, p.product_name, p.thumbnail, p.reg_date,
 				a.auction_id, a.current_price, a.end_time, a.status,
 				c.category_name, r.region_name
-			ORDER BY a.end_time ASC
+			ORDER BY
+		        CASE 
+		            WHEN a.status = 'IN_PROGRESS' THEN 1
+		            ELSE 2 
+		        END,
+			 <choose>
+		        <when test="sort == 'bid_desc'">
+		            bidCount DESC
+		        </when>
+		        <when test="sort == 'latest_desc'">
+		            p.reg_date DESC
+		        </when>
+		        <when test="sort == 'price_desc'">
+		            a.current_price DESC
+		        </when>
+		        <when test="sort == 'price_asc'">
+		            a.current_price ASC
+		        </when>
+		        <otherwise>
+		            a.end_time ASC
+		        </otherwise>
+		    </choose>
 			OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
@@ -46,13 +100,26 @@
 	<select id="findAuctionById" parameterType="Long" resultType="com.sp.app.model.Auction">
 		    SELECT
 		        p.product_id, p.content, p.product_name, p.hitCount, p.likeCount, p.thumbnail,
-		        p.member_id, nickname, a.auction_id, a.current_price, a.end_time, a.status
+		        p.member_id seller_id, m.nickname seller_nickname, m.profile_photo sellerAvatar, a.auction_id, a.current_price, a.end_time, a.status,
+		        (SELECT COUNT(*) FROM bid b WHERE b.auction_id = a.auction_id) bidCount,
+		        top_bidder.nickname current_winner 
 		    FROM
 		        product p
 		    JOIN
 		        auction a ON p.product_id = a.product_id
 		    JOIN
-		        member m ON p.member_id = m.member_id      	    
+		        member m ON p.member_id = m.member_id
+		    
+		    LEFT JOIN (
+		    	SELECT 
+		    		b.auction_id, m.nickname,
+		    		ROW_NUMBER() OVER(PARTITION BY b.auction_id ORDER BY b.created_at DESC) as rn
+				FROM 
+					bid b
+				JOIN
+					member m ON b.member_id = m.member_id		    
+		    ) top_bidder ON a.auction_id = top_bidder.auction_id AND top_bidder.rn = 1
+		          	    
 		    WHERE
 		        a.auction_id = #{auction_id}
 		     
@@ -75,20 +142,61 @@
 			
 			GROUP BY p.product_id, p.product_name, p.thumbnail,
 			 		 a.auction_id, a.current_price, a.end_time, a.status
-			ORDER BY bidCount DESC
+			ORDER BY bidCount DESC, a.end_time ASC
 			FETCH FIRST 1 ROWS ONLY 
 	</select>
+	
+	<!-- 실시간 처리할 새로운 입찰 기록 조회 -->
+	<select id="findNewBid" parameterType="Long" resultType="com.sp.app.model.Bid">
+		SELECT m.nickname bidder_nickname, b.bid_amount, b.created_at
+		FROM bid b
+		JOIN member m ON b.member_id = m.member_id
+		WHERE bid_id = #{bid_id}	
+	</select>
+	
 	
 	<!-- 경매 입찰 내역 리스트 -->
 	
 	<select id="findBidsByAuctionId" parameterType="Long" resultType="com.sp.app.model.Bid">
-			SELECT bid_id, member_id bidder_id, nickname bidder_nickName, bid_amount, created_at 
+			SELECT bid_id, auction_id, b.member_id bidder_id, nickname bidder_nickname, bid_amount, b.created_at 
 			FROM bid b
 			JOIN member m ON b.member_id = m.member_id
 			WHERE auction_id = #{auction_id}
 			ORDER BY created_at DESC
 	</select>
 	
+	<!-- 경매 마감여부 조회 -->
+	<select id="findEndedAuction" resultType="Long">
+	    <![CDATA[
+	        SELECT auction_id
+	        FROM auction
+	        WHERE end_time <= SYSDATE AND status = 'IN_PROGRESS'
+	    ]]>
+	</select>
+	
+	<!-- 마감된 경매 정보 조회 -->
+	<select id="getEndAuction" parameterType="Long" resultType="com.sp.app.model.Auction">
+		SELECT start_price, current_price, end_time
+		FROM auction
+		WHERE auction_id = #{auction_id}
+	</select>
+	
+	<!-- 경매 마감 처리 -->	
+	<update id="updateAuctionStatus" parameterType="com.sp.app.model.Auction">
+	    UPDATE auction
+	    SET status = #{status}, winner_id = #{winner_id, jdbcType=NUMERIC}
+	    WHERE auction_id = #{auction_id}
+	</update>
+	
+	<!-- 최고 입찰자 조회 -->
+	<select id="findTopBid" parameterType="Long" resultType="com.sp.app.model.Bid">
+		SELECT bid_id, auction_id, b.member_id bidder_id, m.nickname bidder_nickname, bid_amount, b.created_at
+		FROM bid b
+		JOIN member m ON m.member_id = b.member_id
+		WHERE auction_id = #{auction_id}
+		ORDER BY b.created_at DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>	
 
 	<!-- where 절 반복 모음 -->
 	<sql id="where-list">
