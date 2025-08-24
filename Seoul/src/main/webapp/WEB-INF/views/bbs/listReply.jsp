@@ -35,7 +35,7 @@
 								<div class="blockManagerReply reply-menu-item" data-replyNum="${vo.reply_num}" data-pageNo="${pageNo}">${vo.managerBlocked ? '차단해제' : '차단'}</div>
 							</c:when>
 							<c:otherwise>
-								<div class="notifyReply reply-menu-item" data-targetNum="${vo.reply_num}" data-targetType=2 data-targetTable="community_reply" data-targetContent="${vo.content}">신고</div>
+								<div class="notifyReply reply-menu-item" data-targetNum="${vo.reply_num}" data-targetTitle="동네한바퀴 댓글" data-targetTable="community_reply" data-targetType="reply">신고</div>
 								<div class="blockReply reply-menu-item" data-blockedId="${vo.member_id}" data-pageNo="${pageNo}">${vo.userBlocked ? '차단해제' : '차단'}</div>
 							</c:otherwise>
 						</c:choose>
@@ -44,7 +44,6 @@
 			</td>
 		</tr>
 		<tr>
-			<!-- 다른 사용자 : 숨김이면 텍스트 표시. 해당 사용자 : 숨김이면 원래 댓글 확인 가능. -->
 			<td colspan="2" valign="top" class=" ${ vo.managerBlocked ? 'text-secondary' : (vo.userBlocked ? 'text-secondary' : ( vo.show_reply==0 ? '' : 'text-primary text-opacity-50' ))}">
 				<c:choose>
 					<c:when test="${vo.managerBlocked}">

@@ -145,7 +145,8 @@
 	<update id="updateBoard" parameterType="com.sp.app.model.Board">
 		UPDATE community SET subject = #{subject}, content = #{content},
 			save_filename = #{saveFilename, jdbcType=VARCHAR},
-			original_filename = #{originalFilename, jdbcType=VARCHAR}
+			original_filename = #{originalFilename, jdbcType=VARCHAR},
+			filesize = #{filesize}
 		WHERE num = #{num}
 	</update>
 	
@@ -236,7 +237,7 @@
 		<if test="userLevel neq 9">
 			AND ( show_reply = 0 OR r.member_id = #{member_id} )
 		</if>
-		ORDER BY reply_num DESC
+		ORDER BY reply_num ASC
 	</select>
 	
 	<select id="replyAnswerCount" parameterType="map" resultType="Integer">
@@ -304,9 +305,9 @@
 	
 	<!-- 신고 -->
 	<insert id="insertCommunityReports" parameterType="com.sp.app.model.Reports">
-		INSERT INTO reports(report_num, reported_by, target_num, target_table, target_type, target_content,
+		INSERT INTO reports(report_num, reported_by, target_num, target_table, target_title, target_type,
 			reason_code, reason_detail, report_ip, report_date, report_status)
-		VALUES(reports_seq.NEXTVAL, #{reported_by}, #{target_num}, #{target_table}, #{target_type}, #{target_content},
+		VALUES(reports_seq.NEXTVAL, #{reported_by}, #{target_num}, #{target_table}, #{target_title}, #{target_type},
 			#{reason_code}, #{reason_detail}, #{report_ip}, SYSDATE, 1)
 	</insert>
 	

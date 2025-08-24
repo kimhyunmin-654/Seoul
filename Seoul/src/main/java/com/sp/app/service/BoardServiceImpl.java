@@ -446,11 +446,12 @@ public class BoardServiceImpl implements BoardService {
 
 	// 신고
 	@Override
-	public void insertCommunityReports(Reports dto) {
+	public void insertCommunityReports(Reports dto) throws Exception {
 		try {
 			mapper.insertCommunityReports(dto);
 		} catch (Exception e) {
 			log.info("insertCommunityReports : ", e);
+			throw e;
 		}
 	}
 

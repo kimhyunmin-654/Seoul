@@ -62,6 +62,6 @@ public interface BoardService {
 	public void updateReplyBlockByManager(Map<String, Object> map, int userLevel);
 	
 	// 신고
-	public void insertCommunityReports(Reports dto);
+	public void insertCommunityReports(Reports dto) throws Exception;
 
 }

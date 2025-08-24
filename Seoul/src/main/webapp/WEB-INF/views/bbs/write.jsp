@@ -69,7 +69,7 @@
 							</tr>
 							
 							<tr>
-								<td class="col-md-2 bg-light">파일</td>
+								<td class="col-md-2 bg-light">파 일</td>
 								<td>
 									<input type="file" class="form-control" name="selectFile">
 								</td>
@@ -95,7 +95,7 @@
 							<button type="button" class="btn-accent btn-md" onclick="sendOk();">${mode=='update'?'수정완료':'등록완료'}</button>
 							<button type="reset" class="btn-default btn-md">다시입력</button>
 							<button type="button" class="btn-default btn-md" onclick="location.href='${pageContext.request.contextPath}/bbs/list?region=${region_code}';">${mode=='update'?'수정취소':'등록취소'}</button>
-							<input type="hidden" name="region_id" value="${region_code}"> <!-- 지역 넘겨주기 -->
+							<input type="hidden" name="region_id" value="${region_code}">
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="num" value="${dto.num}">
 								<input type="hidden" name="saveFilename" value="${dto.saveFilename}">

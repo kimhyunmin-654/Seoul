@@ -772,6 +772,9 @@ public class BoardController {
 			dto.setReport_ip(req.getRemoteAddr());
 			
 			service.insertCommunityReports(dto);
+			
+		} catch (DuplicateKeyException e) {
+			state = "reported";
 		} catch (Exception e) {
 			state = "false";
 		}

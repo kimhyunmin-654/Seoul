@@ -30,7 +30,7 @@
 								<div class="blockManagerReplyAnswer reply-menu-item" data-replyNum="${vo.reply_num}" data-parentNum="${vo.parent_num}" data-pageNo="${pageNo}">${vo.managerBlocked ? '차단해제' : '차단'}</div>
 							</c:when>
 							<c:otherwise>
-								<div class="notifyReplyAnswer reply-menu-item"  data-targetNum="${vo.reply_num}" data-targetType=2 data-targetTable="community_reply(answer)" data-targetContent="${vo.content}">신고</div>
+								<div class="notifyReplyAnswer reply-menu-item"  data-targetNum="${vo.reply_num}" data-targetTitle="동네한바퀴 댓글의 답글" data-targetTable="community_reply" data-targetType="replyAnswer">신고</div>
 								<div class="blockReplyAnswer reply-menu-item" data-blockedId="${vo.member_id}" data-parentNum="${vo.parent_num}" data-pageNo="${pageNo}">${vo.userBlocked ? '차단해제' : '차단'}</div>
 							</c:otherwise>
 						</c:choose>

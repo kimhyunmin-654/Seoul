@@ -107,7 +107,7 @@
 									<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" class="notifyCommunity btn-default" data-targetNum="${dto.num}" data-targetType=1 data-targetTable="community" data-targetContent="${dto.content}">신고</button>
+									<button type="button" class="notifyCommunity btn-default" data-targetNum="${dto.num}" data-targetTitle="동네한바퀴 게시글" data-targetTable="community" data-targetType="posts">신고</button>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -152,20 +152,20 @@
 					<div class="modal-body">
 						
 						<input type="hidden" name="target_num" id="target_num">
-						<input type="hidden" name="target_type" id="target_type">
 						<input type="hidden" name="target_table" id="target_table">
-						<input type="hidden" name="target_content" id="target_content">
+						<input type="hidden" name="target_title" id="target_title">
+						<input type="hidden" name="target_type" id="target_type">
 						 
 						<div class="mb-3">
 							<label for="reason_code" class="form-label">신고 사유</label>
 							<select name="reason_code" id="reason_code" class="form-select" required>
 								<option value="">선택하세요</option>
-								<option value="1">스팸/광고</option>
-								<option value="2">음란물</option>
-								<option value="3">욕설/비방/차별적 표현</option>
-								<option value="4">개인정보 노출</option>
-								<option value="5">불법거래</option>
-								<option value="6">기타</option>
+								<option value="스팸/광고">스팸/광고</option>
+								<option value="욕설/비방/차별적 표현">욕설/비방/차별적 표현</option>
+								<option value="음란물">음란물</option>
+								<option value="개인정보 노출">개인정보 노출</option>
+								<option value="불법거래">불법거래</option>
+								<option value="기타">기타</option>
 							</select>
 						</div>
 						
@@ -372,7 +372,7 @@ $(function() {
 			ajaxRequest(url, 'post', params, 'json', fn);
 		}
 		
-		// 표시 되어있지 않음
+		// 공감 여부 표시 되어있지 않음
 		if(userLiked === '-1') {
 			let url = '${pageContext.request.contextPath}/bbs/insertReplyLike';
 			let params = {reply_num:replyNum, reply_like:replyLike};
@@ -538,7 +538,7 @@ $(function() {
 		const fn = function(data) {
 			let state = data.state;
 			if(state === 'true') {
-				let $item = $($menu).closest('tr').next('tr').find('td');
+				let $item = $menu.closest('tr').next('tr').find('td');
 				if(showReply === '0') {
 					$item.removeClass('text-primary').removeClass('text-opacity-50');
 					$menu.attr('data-showReply', '0');
@@ -577,7 +577,7 @@ $(function() {
 		const fn = function(data) {
 			let state = data.state;
 			if(state === 'true') {
-				let $item = $($menu).closest('.row').next('div');
+				let $item = $menu.closest('.row').next('div');
 				if(showReply === '0') {
 					$item.removeClass('text-primary').removeClass('text-opacity-50');
 					$menu.attr('data-showReply', '0');
@@ -737,16 +737,17 @@ $(function(){
 		
 		// 신고 대상 댓글 정보
 		let targetNum = $menu.attr('data-targetNum');
-		let targetType = $menu.attr('data-targetType');
+		let targetTitle = $menu.attr('data-targetTitle');
 		let targetTable = $menu.attr('data-targetTable');
-		let targetContent = $menu.attr('data-targetContent');
+		let targetType = $menu.attr('data-targetType');
 		
 		$('#target_num').val(targetNum);
-		$('#target_type').val(targetType);
-		$('#target_table').val(targetTable);
-		$('#target_content').val(targetContent);
+		$('#target_title').val(targetTitle); // String : 동네한바퀴 게시판, 동네한바퀴 댓글, 답글, 중고거래..
+		$('#target_table').val(targetTable); // 실제 테이블명
+		$('#target_type').val(targetType); // posts, reply, replyAnswer
 		
 		$('#reason_code').val('');
+		$('#reason_detail').val('');
 		reportModal.show();
 	});
 	
@@ -760,8 +761,10 @@ $(function(){
 			let state = data.state;
 			if(state === 'true') {
 				alert('신고가 접수되었습니다.');
+			} else if(state === 'reported') {
+				alert('신고는 한번만 가능합니다.');
 			} else {
-				alert('신고가 접수 처리 중 오류가 발생했습니다.');
+				alert('신고접수 처리 중 오류가 발생했습니다.');
 			}
 			
 			reportModal.hide();
