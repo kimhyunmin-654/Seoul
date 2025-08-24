@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.ReportsManageMapper">
+
+	<select id="getRegionnameById" parameterType="String" resultType="String">
+		SELECT region_name FROM region WHERE region_id = #{region_id}
+	</select>
+
+	<!-- 검색조건 -->
+	<sql id="where-list">
+		<choose>
+			<when test="schType == 'all'">
+				(
+					INSTR(reason_code, #{kwd}) &gt; 0
+					OR INSTR(reason_detail, #{kwd}) &gt; 0
+				)
+			</when>
+			<when test="schType == 'report_date'">
+				(
+					INSTR(TO_CHAR(report_date, 'YYYYMMDD'), #{kwd}) &gt; 0
+					OR TO_CHAR(report_date, 'YYYY-MM-DD') = #{kwd}
+				)
+			</when>
+			<otherwise>
+				INSTR(${schType}, #{kwd}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM reports r
+		JOIN member m ON r.reported_by = m.member_id
+		<where>
+			<if test="status != null and status != 0">
+				r.report_status = #{status}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listReports" parameterType="map" resultType="com.sp.app.admin.model.ReportsManage">
+		SELECT report_num, reported_by, target_title, target_table, target_num, target_type,
+			reason_code, TO_CHAR(report_date, 'YYYY-MM-DD') report_date, report_status,
+			m.nickname, handled_by
+		FROM reports r
+		JOIN member m ON r.reported_by = m.member_id
+		<where>
+			<if test="status != null and status != 0">
+				r.report_status = #{status}
+			</if>
+			<if test="kwd != null and kwd != ''">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+		ORDER BY report_num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	
+	<select id="dataGroupCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM (
+			SELECT target_num, target_title, target_table, target_type
+			FROM reports
+			<where>
+				<if test="status != null and status != 0">
+					report_status = #{status}
+				</if>
+			</where>
+			GROUP BY target_num, target_title, target_table, target_type
+		)
+	</select>
+	
+	<select id="listGroupReports" parameterType="map" resultType="com.sp.app.admin.model.ReportsManage">
+		SELECT target_num, target_title, target_table, target_type, NVL(COUNT(*), 0) reportsCount 
+		FROM reports
+		<where>
+			<if test="status != null and status != 0">
+				report_status = #{status}
+			</if>
+		</where>
+		GROUP BY target_num, target_title, target_table, target_type
+		ORDER BY reportsCount DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.ReportsManage">
+		SELECT report_num, reported_by, target_title, target_table, target_num, target_type,
+			reason_code, reason_detail, report_date, report_ip, report_status,
+			handled_by, handling_note, handled_date,
+			rm.nickname AS reporter_name, hm.nickname AS processor_name
+		FROM reports r
+		JOIN member rm ON r.reported_by = rm.member_id
+		LEFT JOIN member hm ON r.handled_by = hm.member_id
+		WHERE r.report_num = #{report_num}
+	</select>
+	
+	<select id="dataRelatedCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM reports r
+		<where>
+			<if test="report_num != null">
+				report_num != #{report_num} AND
+			</if>
+			target_table = #{target_table} AND target_num = #{target_num}
+		</where>
+	</select>
+	
+	
+	<select id="listRelatedReports" parameterType="map" resultType="com.sp.app.admin.model.ReportsManage">
+		SELECT report_num, reported_by, target_title, target_table, target_num, target_type,
+			reason_code, TO_CHAR(report_date, 'YYYY-MM-DD') report_date, report_status,
+			m.nickname AS reporter_name
+		FROM reports r
+		JOIN member m ON r.reported_by = m.member_id
+		<where>
+			<if test="report_num != null">
+				report_num != #{report_num} AND
+			</if>
+			target_table = #{target_table} AND target_num = #{target_num}
+		</where>
+		ORDER BY report_num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	
+	<!-- 신고사항 조치 -->
+	<update id="updateReports" parameterType="com.sp.app.admin.model.ReportsManage">
+		UPDATE reports
+		SET report_status = #{report_status}, handled_by = #{handled_by},
+			handling_note = #{handling_note}, handled_date = SYSDATE
+		<where>
+			<choose>
+				<when test="mode == 'all'">
+					target_table = #{target_table} AND target_num = #{target_num}
+				</when>
+				<otherwise>
+					report_num = #{report_num}
+				</otherwise>
+			</choose>
+		</where>
+	</update>
+	
+	<update id="updateBlockContent" parameterType="map">
+		UPDATE ${target_table} SET block = #{block} WHERE ${field_name} = #{num}
+	</update>
+	
+	<delete id="deleteContent" parameterType="map">
+		DELETE FROM ${target_table}
+		WHERE ${field_name} = #{num}
+		<if test="target_type != null and target_type == 'reply'">
+			OR parent_num = #{reply_num}
+		</if>
+	</delete>
+	
+	
+	<sql id="field-list">
+		<choose>
+			<when test="target_type == 'posts'">
+				'${target_table}' AS target_table, p.num AS target_num, region_id, p.member_id AS writer_id,
+				subject, content, m.nickname AS writer, block
+			</when>
+			<when test="target_type == 'reply' or target_type == 'replyAnswer'">
+				'${target_table}' AS target_table, reply_num AS target_num, p.member_id AS writer_id,
+				content, m.nickname AS writer, block
+			</when>
+		</choose>
+	</sql>
+	
+	<select id="findContentByTypeId" parameterType="map" resultType="com.sp.app.admin.model.ReportsManage">
+		SELECT <include refid="field-list"/>
+		FROM ${target_table} p
+		JOIN member m ON p.member_id = m.member_id
+		WHERE ${field_name} = #{num}
+	</select>
+	
+</mapper>
