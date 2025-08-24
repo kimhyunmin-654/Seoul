@@ -31,17 +31,21 @@
 	</select>
 	
 	<select id="listInquiry" parameterType="map" resultType="com.sp.app.admin.model.InquiryManage">
-		SELECT i.inquiry_id, i.member_id, m.name, i.title, TO_CHAR(i.created_at, 'YYYY-MM-DD') created_at, 
-		i.answered_at, i.answer_id
-		FROM inquiry i
-		JOIN member m ON i.member_id = m.member_id
-		<where>
-			<if test="kwd != null and kwd != '' ">
-				<include refid="where-list"/>
-			</if>
-		</where>
-		ORDER BY inquiry_id DESC
-		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	    SELECT inquiry_id, member_id, name, title, created_at, answered_at, answer_id,
+	           ROW_NUMBER() OVER (ORDER BY inquiry_id DESC) listnum
+	    FROM (
+	        SELECT i.inquiry_id, i.member_id, m.name, i.title, TO_CHAR(i.created_at, 'YYYY-MM-DD') created_at, 
+	               i.answered_at, i.answer_id
+	        FROM inquiry i
+	        JOIN member m ON i.member_id = m.member_id
+	        <where>
+	            <if test="kwd != null and kwd != '' ">
+	                <include refid="where-list"/>
+	            </if>
+	        </where>
+	    )
+	    ORDER BY listnum DESC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
 	<!-- 글보기 -->

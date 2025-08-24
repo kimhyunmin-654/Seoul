@@ -38,17 +38,21 @@
 
 	<!-- 글 리스트 -->
 	<select id="listInquiry" parameterType="map" resultType="com.sp.app.model.Inquiry">
-		SELECT i.inquiry_id, i.member_id, m.name, i.title, TO_CHAR(i.created_at, 'YYYY-MM-DD') created_at, i.answered_at
-		FROM inquiry i
-		JOIN member m ON i.member_id = m.member_id
-		<where>
-			i.member_id = #{member_id}
-			<if test="kwd != null and kwd != '' ">
-				AND <include refid="where-list"/>
-			</if>
-		</where>
-		ORDER BY i.inquiry_id DESC
-		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	    SELECT inquiry_id, member_id, name, title, created_at, answered_at,
+	           ROW_NUMBER() OVER (ORDER BY inquiry_id DESC) AS listnum
+	    FROM (
+	        SELECT i.inquiry_id, i.member_id, m.name, i.title, TO_CHAR(i.created_at, 'YYYY-MM-DD') created_at, i.answered_at
+	        FROM inquiry i
+	        JOIN member m ON i.member_id = m.member_id
+	        <where>
+	            i.member_id = #{member_id}
+	            <if test="kwd != null and kwd != '' ">
+	                AND <include refid="where-list"/>
+	            </if>
+	        </where>
+	    )
+	    ORDER BY listnum ASC
+	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	
 	<!-- 글보기 -->

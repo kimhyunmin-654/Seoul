@@ -20,7 +20,6 @@
 	<!-- Page Title -->
 	<div class="page-title">
 		<div class="container align-items-center" data-aos="fade-up">
-			<h1>1:1 문의</h1>
 			<div class="page-title-underline-accent"></div>
 		</div>
 	</div>
@@ -52,7 +51,7 @@
 						<tbody>
 							<c:forEach var="dto" items="${list}">
 								<tr>
-									<td>${dto.inquiry_id}</td>
+									<td>${dto.listnum}</td>
 									<td class="left">
 										<div class="text-wrap">
 											<a href="${articleUrl}&inquiry_id=${dto.inquiry_id}">${dto.title}</a>

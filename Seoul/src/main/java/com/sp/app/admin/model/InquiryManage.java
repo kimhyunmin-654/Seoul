@@ -20,4 +20,5 @@ public class InquiryManage {
 	private String answer;
 	private String answerName;
 	private String answered_at;
+	private int listnum;
 }

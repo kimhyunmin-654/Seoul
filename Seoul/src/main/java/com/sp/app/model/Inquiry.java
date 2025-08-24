@@ -17,6 +17,7 @@ public class Inquiry {
 	private String answerName;
 	private String answer;
 	private String answered_at;
+	private int listnum;
 	
 
 }

@@ -51,7 +51,7 @@
 							<tbody>
 								<c:forEach var="dto" items="${list}">
 									<tr> 
-										<td>${dto.inquiry_id}</td> <!-- category 필드가 없으므로 임시로 빈 칸 처리 -->
+										<td>${dto.listnum}</td> <!-- category 필드가 없으므로 임시로 빈 칸 처리 -->
 										<td class="left">
 											<div class="text-wrap"><a href="${articleUrl}&inquiry_id=${dto.inquiry_id}">${dto.title}</a></div>
 										</td>
