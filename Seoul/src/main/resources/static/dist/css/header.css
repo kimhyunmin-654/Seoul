@@ -346,3 +346,30 @@
 		font-size: 11px;
 	}
 }
+
+.header-wrap a,
+.header-wrap a:link,
+.header-wrap a:visited {
+  color: inherit !important;         
+  text-decoration: none !important;  
+  outline: none;                    
+}
+
+.header-wrap a:hover,
+.header-wrap a:focus,
+.header-wrap a:active {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.subnav a,
+.subnav a:link,
+.subnav a:visited {
+  color: #111 !important;
+  text-decoration: none !important;
+}
+
+.header-wrap a:focus {
+  outline: 2px solid rgba(51,102,255,0.2);
+  outline-offset: 2px;
+}
