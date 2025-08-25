@@ -453,4 +453,35 @@ public class MemberController {
 	    model.put("message", message);
 	    return model;
 	}
+
+	@GetMapping("idFind")
+	public String idFindForm() throws Exception {
+		
+		return "member/idFind";
+	}
+	
+	
+	@PostMapping("idFind")
+	public String idFindSubmit(
+			@RequestParam(name = "name") String name, 
+			@RequestParam(name = "email") String email,
+			HttpServletRequest request,
+			Model model,
+			Member dto) throws Exception {
+		try {
+			dto.setName(name);
+			dto.setEmail(email);
+			Member login_id = service.findMemberId(dto);
+			
+			model.addAttribute("findId", login_id);
+			
+			return "member/complete2";
+		} catch (Exception e) {
+			log.info("idFindSubmit", e);
+			model.addAttribute("message", "오류가 발생되었습니다");
+			
+		}
+		return "member/idFind";
+	}	
+	
 }

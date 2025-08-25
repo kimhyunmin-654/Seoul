@@ -100,30 +100,6 @@
     WHERE member_id = #{member_id} AND is_read = 0
 </update>
 
-<!--  Transaction Review -->
-
-<insert id="insertReview" parameterType="com.sp.app.chat.model.TransactionReview" >
-    INSERT INTO transaction_review (review_id, chat_id, product_id, rating, content, created_at) 
-    	VALUES (transactionreview_seq.NEXTVAL, #{chat_id}, #{product_id}, #{rating}, #{content}, SYSDATE)
-</insert>
-
-<select id="findReviewByChatId" parameterType="long" resultType="com.sp.app.chat.model.TransactionReview">
-    SELECT * FROM transaction_review
-    WHERE chat_id = #{chat_id}
-</select>
-
-<select id="existsReviewByChatId" parameterType="long" resultType="int">
-    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM transaction_review
-    WHERE chat_id = #{chat_id}
-</select>
-
-<select id="listReviewByProductId" parameterType="long" resultType="com.sp.app.chat.model.TransactionReview">
-    SELECT * FROM transaction_review
-    WHERE product_id = #{product_id}
-    ORDER BY created_at DESC
-</select>
-
 <select id="findById" parameterType="long" resultType="com.sp.app.model.Member">
   SELECT member_id, nickname, profile_photo
   FROM member

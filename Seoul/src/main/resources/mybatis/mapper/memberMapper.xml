@@ -54,7 +54,7 @@
 		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 
 			userLevel, created_at, update_at, profile_photo, enabled, last_login, failure_cnt
 		FROM member
-		WHERE member_id = #{member_id}
+		WHERE member_id = #{member_id} 
 	</select>
 	
 	<select id="findByLoginId" parameterType="String" resultType="com.sp.app.model.Member">
@@ -117,9 +117,17 @@
 		</where>
 	</select>
 	
-	<update id="deleteMember" parameterType="com.sp.app.model.Member">
+	<update id="deleteMember" parameterType="com.sp.app.model.Member" >
 		UPDATE member SET enabled = 0, name = '탈퇴한회원'
 		WHERE member_id = #{member_id}
 	</update>
+	
+	<select id="findMemberId" parameterType="com.sp.app.model.Member" resultType="com.sp.app.model.Member">
+  		SELECT member_id, login_id, email, name, nickname, created_at, enabled
+  		FROM member
+  		WHERE name = #{name}
+    		AND LOWER(email) = LOWER(#{email}) AND enabled != 0
+	</select>
+
 
 </mapper>

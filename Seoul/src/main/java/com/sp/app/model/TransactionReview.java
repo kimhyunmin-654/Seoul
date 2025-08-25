@@ -1,4 +1,4 @@
-package com.sp.app.chat.model;
+package com.sp.app.model;
 
 import java.util.Date;
 
@@ -17,7 +17,9 @@ public class TransactionReview {
 	private Long review_id;
 	private Long chat_id;
 	private Long product_id;
-	private int rating;
+	private Integer rating;
 	private String content;
 	private Date created_at;
+	
+	private Long writer_id;
 }

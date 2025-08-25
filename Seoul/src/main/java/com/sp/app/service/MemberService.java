@@ -26,4 +26,6 @@ public interface MemberService {
 	public void generatePwd(Member dto) throws Exception;
 	
 	public List<Member> listFindMember(Map<String, Object> map);	
+	
+	public Member findMemberId(Member dto);
 }

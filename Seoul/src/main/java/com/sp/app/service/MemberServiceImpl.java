@@ -273,4 +273,9 @@ public class MemberServiceImpl implements MemberService {
 
 		return null;
 	}
+
+	@Override
+	public Member findMemberId(Member dto) {
+		return mapper.findMemberId(dto);
+	}
 }

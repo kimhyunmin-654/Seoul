@@ -31,4 +31,6 @@ public interface MemberMapper {
 	public Member findByNickName(String nickName);
 		
 	public List<Member> listFindMember(Map<String, Object> map);
+	
+	public Member findMemberId(Member dto);
 }

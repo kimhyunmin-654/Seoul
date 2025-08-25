@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/chat.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/myRooms.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/login.css" type="text/css">
 
 <div class="container-fluid header-wrap px-3 px-md-4">
   <div class="container">
@@ -124,7 +125,7 @@
 		        </c:when>
 		       
 		        <c:otherwise>
-		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/mypage">마이페이지</a></li>
+		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/transaction/salelist">마이페이지</a></li>
 		        </c:otherwise>
 		      </c:choose>
 		

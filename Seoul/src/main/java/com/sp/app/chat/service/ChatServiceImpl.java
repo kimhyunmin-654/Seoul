@@ -11,7 +11,6 @@ import com.sp.app.chat.model.ChatMessage;
 import com.sp.app.chat.model.ChatNotification;
 import com.sp.app.chat.model.ChatRoom;
 import com.sp.app.chat.model.ChatRoomQuery;
-import com.sp.app.chat.model.TransactionReview;
 import com.sp.app.model.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -208,58 +207,7 @@ public class ChatServiceImpl implements ChatService {
     	
         return result;
     }
-    
-    @Transactional(rollbackFor = {Exception.class})
-    @Override
-    public int writeReview(TransactionReview dto) {
-    	int result = 0;
-    	try {
-    		if(chatMapper.existsReviewByChatId(dto.getChat_id())) {
-    			log.info("이미 작성된 리뷰: chat_id={}", dto.getChat_id());
-    			return 0;
-    		}
-    		result = chatMapper.insertReview(dto);
-		} catch (Exception e) {
-			log.info("writeReview : ", e);
-		}
-    	return result;
-        
-    }
-
-    @Override
-    public TransactionReview getReviewByChatId(Long chat_id) {
-    	TransactionReview review = null;
-    	try {
-			review = chatMapper.findReviewByChatId(chat_id);
-		} catch (Exception e) {
-			log.info("getReviewByChatId : ", e);
-		}
-    	return review;
-    }
-
-    @Override
-    public int hasReview(Long chat_id) {
-    	int count = 0;
-    	try {
-    		count = chatMapper.existsReviewByChatId(chat_id) ? 1 : 0;
-		} catch (Exception e) {
-			log.info("hasReview : ", e);
-		}
-    	return count;
-    }
-
-    @Override
-    public List<TransactionReview> getReviewsByProductId(Long product_id) {
-    	List<TransactionReview> list = null;
-    	try {
-    		list = chatMapper.listReviewByProductId(product_id);
-		} catch (Exception e) {
-			log.info("getReviewsByProductId : ", e);
-
-		}
-    	return list;
-    }
-
+      
 	@Override
 	public Member getMemberById(Long member_id) {
 		Member dto = null;

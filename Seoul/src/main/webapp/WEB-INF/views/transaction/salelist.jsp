@@ -65,14 +65,16 @@
                   <tbody>
                     <c:if test="${empty list}">
                       <tr>
-                        <td colspan="5" class="no-data">등록한 상품이 없습니다.</td>
+                        <td colspan="5" class="no-data">판매한 상품이 없습니다.</td>
                       </tr>
                     </c:if>
 
                     <c:if test="${not empty list}">
                       <c:forEach var="p" items="${list}" varStatus="status">
                         <tr data-product-row="${p.product_id}">
-                          <td class="align-middle">${dataCount - (page - 1) * size - status.index}</td>
+                         <td class="align-middle num">
+					  	    <span class="index-chip">${dataCount - (page - 1) * size - status.index}</span>
+					     </td>
 
                           <td class="align-middle">
                             <div class="product-thumb">
@@ -132,7 +134,7 @@
               </form>
 
               <div class="page-navigation text-center my-4">
-                <c:out value="${dataCount == 0 ? '등록한 상품이 없습니다.' : paging}" escapeXml="false"/>
+                <c:out value="${dataCount == 0 ? '판매한 상품이 없습니다.' : paging}" escapeXml="false"/>
               </div>
 
             </div>

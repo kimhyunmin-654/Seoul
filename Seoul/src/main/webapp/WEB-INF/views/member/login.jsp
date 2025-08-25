@@ -44,7 +44,7 @@
 	        <div class="text-center text-danger mb-2">${message}</div>
 	
 	        <div class="text-center login-links">
-	            <a href="#">아이디 찾기</a> |
+	            <a href="${pageContext.request.contextPath}/member/idFind">아이디 찾기</a> |
 	            <a href="${pageContext.request.contextPath}/member/pwdFind">비밀번호 찾기</a> |
 	            <a href="${pageContext.request.contextPath}/member/account">회원가입</a>
 	        </div>
@@ -99,7 +99,7 @@ function loginWithKakao() {
     // $('#loginModal').modal('hide');
 
     // 카카오 JavaScript 앱 키 (카카오 개발자 콘솔에서 발급받은 키로 교체 필요)
-    const JAVASCRIPT_KEY = 'dd8a0b6d45f3d1101ba6cc7f92b70ac5'; 
+    const JAVASCRIPT_KEY = ''; 
 
     // 로그인 완료 후 인가 코드를 받을 리다이렉트 URI
     const REDIRECT_URI = 'http://localhost:9090/oauth/kakao/callback';

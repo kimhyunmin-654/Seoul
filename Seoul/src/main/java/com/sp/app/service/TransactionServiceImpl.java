@@ -13,6 +13,9 @@ import com.sp.app.mapper.TransactionMapper;
 import com.sp.app.model.BuyerCandidate;
 import com.sp.app.model.Product;
 import com.sp.app.model.ProductTransaction;
+import com.sp.app.model.PurchaseItem;
+import com.sp.app.model.ReviewView;
+import com.sp.app.model.TransactionReview;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -145,5 +148,134 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		return dto;
 	}
+
+	@Override
+	public List<PurchaseItem> listPurchasesByBuyer(Map<String, Object> map) {
+		List<PurchaseItem> list = null;
+		try {
+			list = transactionMapper.listPurchasesByBuyer(map);
+		} catch (Exception e) {
+			log.info("listPurchasesByBuyer", e);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int dataCount2(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = transactionMapper.dataCount2(map);
+		} catch (Exception e) {
+			log.info("dataCount2", e);
+		}
+		
+		return result;
+	}
+	
+	
+	@Transactional(rollbackFor = {Exception.class})
+	@Override
+	public int writeReview(TransactionReview dto) {
+	    int result = 0;
+	    try {
+	        if (dto == null || dto.getChat_id() == null) {
+	            log.info("writeReview: invalid dto or missing chat_id");
+	            return 0;
+	        }
+
+	        if (transactionMapper.existsReviewByChatId(dto.getChat_id()) > 0) {
+	            log.info("이미 작성된 리뷰: chat_id={}", dto.getChat_id());
+	            return 0;
+	        }
+
+	        result = transactionMapper.insertReview(dto);
+	    } catch (Exception e) {
+	        log.info("writeReview : ", e);
+	    }
+	    return result;
+	}
+
+    @Override
+    public TransactionReview getReviewByChatId(Long chat_id) {
+    	TransactionReview review = null;
+    	try {
+			review = transactionMapper.findReviewByChatId(chat_id);
+		} catch (Exception e) {
+			log.info("getReviewByChatId : ", e);
+		}
+    	return review;
+    }
+
+    @Override
+    public int hasReview(Long chat_id) {
+    	int count = 0;
+    	try {
+    		count = transactionMapper.existsReviewByChatId(chat_id);
+		} catch (Exception e) {
+			log.info("hasReview : ", e);
+		}
+    	return count;
+    }
+
+    @Override
+    public List<TransactionReview> getReviewsByProductId(Long product_id) {
+    	List<TransactionReview> list = null;
+    	try {
+    		list = transactionMapper.listReviewByProductId(product_id);
+		} catch (Exception e) {
+			log.info("getReviewsByProductId : ", e);
+
+		}
+    	return list;
+    }
+
+	@Override
+	public int countReviewByWriter(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = transactionMapper.countReviewByWriter(map);
+		} catch (Exception e) {
+			log.info("countReviewByWriter : ", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<ReviewView> listReviewByWriter(Map<String, Object> map) {
+		List<ReviewView> list = null;
+		try {
+			list = transactionMapper.listReviewByWriter(map);
+		} catch (Exception e) {
+			log.info("listReviewByWriter : ", e);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int countReviewBySeller(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = transactionMapper.countReviewBySeller(map);
+		} catch (Exception e) {
+			log.info("countReviewBySeller : ", e);
+		}
+		return result;
+	}
+
+	@Override
+	public List<ReviewView> listReviewBySeller(Map<String, Object> map) {
+			List<ReviewView> list = null;
+			try {
+				list = transactionMapper.listReviewBySeller(map);
+			} catch (Exception e) {
+				log.info("listReviewBySeller : ", e);
+			}
+		return list;
+	}
+	
+	
 
 }

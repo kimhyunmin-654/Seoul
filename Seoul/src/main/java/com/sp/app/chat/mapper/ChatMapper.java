@@ -9,7 +9,6 @@ import com.sp.app.chat.model.ChatMessage;
 import com.sp.app.chat.model.ChatNotification;
 import com.sp.app.chat.model.ChatRoom;
 import com.sp.app.chat.model.ChatRoomQuery;
-import com.sp.app.chat.model.TransactionReview;
 import com.sp.app.model.Member;
 
 @Mapper
@@ -34,11 +33,6 @@ public interface ChatMapper {
 	public List<ChatNotification> listUnreadByMemberId(Long member_id);
 	public int markAllAsRead(Long member_id);
 	
-	// Transaction Review
-	public int insertReview(TransactionReview dto);
-	public TransactionReview findReviewByChatId(Long chat_id);
-	public boolean existsReviewByChatId(Long chat_id);
-	public List<TransactionReview> listReviewByProductId(Long product_id);
 	
 	public Member findById(Long member_id);
 	

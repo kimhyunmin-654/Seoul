@@ -51,4 +51,80 @@
 	WHERE product_id = #{product_id}
 </select>
 
+<!-- 구매자 구매 목록 -->
+<select id="listPurchasesByBuyer" parameterType="map" resultType="com.sp.app.model.PurchaseItem">
+	SELECT t.transaction_id, t.product_id, p.product_name, p.thumbnail, t.room_id,
+		seller.nickname AS seller_nickname, buyer.nickname AS buyer_nickname, TO_CHAR(t.created_at, 'YYYY-MM-DD HH24:MI') AS created_at
+	FROM product_transaction t
+	JOIN product p ON p.product_id = t.product_id
+	LEFT JOIN member seller ON seller.member_id = p.member_id
+	LEFT JOIN member buyer ON buyer.member_id = t.buyer_id
+	WHERE t.buyer_id = #{buyer_id}
+	ORDER BY t.created_at DESC
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+</select>
+
+<select id="dataCount2" parameterType="map" resultType="Integer">
+	SELECT NVL(COUNT(*),0)
+	FROM product_transaction
+	WHERE buyer_id = #{buyer_id}
+</select>
+
+
+<!--  Transaction Review -->
+
+<insert id="insertReview" parameterType="com.sp.app.model.TransactionReview" >
+    INSERT INTO transaction_review (review_id, chat_id, product_id, rating, content, created_at, writer_id) 
+    	VALUES (transactionreview_seq.NEXTVAL, #{chat_id}, #{product_id}, #{rating}, #{content}, SYSDATE, #{writer_id})
+</insert>
+
+<select id="findReviewByChatId" parameterType="long" resultType="com.sp.app.model.TransactionReview">
+    SELECT * FROM transaction_review
+    WHERE chat_id = #{chat_id}
+</select>
+
+<select id="existsReviewByChatId" parameterType="long" resultType="int">
+    SELECT NVL(COUNT(*),0)
+    FROM transaction_review
+    WHERE chat_id = #{chat_id}
+</select>
+
+<select id="listReviewByProductId" parameterType="long" resultType="com.sp.app.model.TransactionReview">
+    SELECT * FROM transaction_review
+    WHERE product_id = #{product_id}
+    ORDER BY created_at DESC
+</select>
+
+<select id="countReviewByWriter" parameterType="map" resultType="int">
+	SELECT NVL(COUNT(*),0)
+	FROM transaction_review
+	WHERE writer_id = #{writer_id}
+</select>
+
+<select id="listReviewByWriter" parameterType="map" resultType="com.sp.app.model.ReviewView">
+	SELECT tr.review_id, tr.chat_id, tr.product_id, tr.rating, tr.content, tr.created_at, m.member_id AS writer_id, m.nickname, m.profile_photo
+	FROM transaction_review tr
+	LEFT JOIN member m ON m.member_id = tr.writer_id
+	WHERE tr.writer_id = #{writer_id}
+	ORDER BY tr.created_at DESC
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+</select>
+
+<select id="countReviewBySeller" parameterType="map" resultType="int">
+	SELECT NVL(COUNT(*),0)
+	FROM transaction_review tr
+	JOIN product p ON p.product_id = tr.product_id
+	WHERE p.member_id = #{seller_id}
+</select>
+
+<select id="listReviewBySeller" parameterType="map" resultType="com.sp.app.model.ReviewView">
+	SELECT tr.review_id, tr.chat_id, tr.product_id, tr.rating, tr.content, tr.created_at, tr.writer_id, m.nickname, m.profile_photo
+	FROM transaction_review tr
+	JOIN product p ON p.product_id = tr.product_id
+	LEFT JOIN member m ON m.member_id = tr.writer_id
+	WHERE p.member_id = #{seller_id}
+	ORDER BY tr.created_at DESC
+	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+</select>
+
 </mapper>

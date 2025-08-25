@@ -6,7 +6,6 @@ import com.sp.app.chat.model.ChatMessage;
 import com.sp.app.chat.model.ChatNotification;
 import com.sp.app.chat.model.ChatRoom;
 import com.sp.app.chat.model.ChatRoomQuery;
-import com.sp.app.chat.model.TransactionReview;
 import com.sp.app.model.Member;
 
 public interface ChatService {
@@ -30,13 +29,7 @@ public interface ChatService {
     public List<ChatNotification> getUnreadNotifications(Long member_id);
     public int markAllAsRead(Long member_id);
 
-    // ===== 리뷰 =====
-    public int writeReview(TransactionReview dto);
-    public TransactionReview getReviewByChatId(Long chat_id);
-    public int hasReview(Long chat_id);
-    public List<TransactionReview> getReviewsByProductId(Long product_id);	
-    
-    
+      
     public Member getMemberById(Long member_id);
     
 }

@@ -16,7 +16,9 @@ public class PurchaseItem {
 	private Long product_id;
 	private String product_name;
 	private String thumbnail;
+	private Long room_id;
 	private String seller_nickname;
 	private String buyer_nickname;
+	private String created_at;
 	
 }

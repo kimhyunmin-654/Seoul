@@ -1,4 +1,5 @@
-﻿
+﻿@charset "UTF-8";
+
 .wrap {
   max-width: 1180px;      
   margin: 0 auto;
@@ -108,7 +109,7 @@
 
 
 .wrap {
-  max-width: 1400px; 
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -117,7 +118,7 @@
 .board-list {
   width:100%;
   border-collapse:collapse;
-  table-layout: auto; 
+  table-layout: auto;
   font-family: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 }
 
@@ -127,7 +128,7 @@
 
 .status-cell {
   white-space: normal;   
-  min-width: 140px;      
+  min-width: 140px;     
 }
 
 .status-actions {
@@ -158,7 +159,7 @@
 
 .left-column {
   position: sticky !important;
-  top: 72px;           
+  top: 72px;            
   height: auto !important;
   max-height: calc(100vh - 84px); 
   overflow-y: auto;
@@ -166,7 +167,7 @@
 }
 
 .wrap {
-  max-width: 1400px; 
+  max-width: 1400px;  
   margin: 0 auto;
 }
 
@@ -180,7 +181,7 @@
 }
 
 .status-cell {
-  min-width: 160px;        
+  min-width: 160px;         
   white-space: normal;
 }
 
@@ -213,7 +214,7 @@
   padding: 4px 10px;
   font-size: 0.92rem;
   font-weight: 700;
-  color: #1f3bb3;                
+  color: #1f3bb3;
   background: linear-gradient(180deg, #f6f8ff 0%, #eef2ff 100%);
   border: 1px solid rgba(31,59,179,0.12);
   border-radius: 14px;
@@ -238,7 +239,7 @@
   color: #6a3e00;                 
   background: #fff6ea;
   border: 1px solid #ffe4b5;
-  border-radius: 999px;            
+  border-radius: 999px;           
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   vertical-align: middle;
 }
@@ -322,7 +323,7 @@
   justify-content: center;
   gap: 12px;
   padding: 14px 0;
-  min-height: 56px;               
+  min-height: 56px;                
   background: transparent;
   color: #555;
   font-weight: 700;
@@ -387,8 +388,8 @@
 
 .board-section .small-title {
   font-weight: 800;            
-  font-size: 1.02rem;          
-  color: #111;                 
+  font-size: 1.02rem;       
+  color: #111;               
   letter-spacing: -0.2px;
   line-height: 1.1;
 }
@@ -397,5 +398,39 @@
   .board-section .small-title {
     font-size: 0.98rem;
     font-weight: 800;
+  }
+}
+
+.board-list td .btn-write-review {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  transform: none !important;
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  white-space: nowrap;
+  padding: 6px 10px;
+  line-height: 1;
+  font-size: 0.95rem;
+
+  min-width: 84px;
+
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.board-list th.review,
+.board-list td.review {
+  text-align: center;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .board-list td .btn-write-review {
+    padding: 5px 8px;
+    min-width: 64px;
+    font-size: 0.9rem;
   }
 }

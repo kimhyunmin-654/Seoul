@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.chat.model.ChatMessage;
 import com.sp.app.chat.model.ChatRoom;
 import com.sp.app.chat.model.ChatRoomQuery;
-import com.sp.app.chat.model.TransactionReview;
 import com.sp.app.chat.service.ChatService;
 import com.sp.app.model.Member;
 import com.sp.app.model.SessionInfo;
@@ -103,30 +101,6 @@ public class ChatController {
 		return "chat/messages";
 	}
 	
-	// 리뷰 작성
-	@PostMapping("review")
-	public String writeReview(TransactionReview dto, RedirectAttributes reAttr) {
-		try {
-			int result = chatService.writeReview(dto);
-			reAttr.addFlashAttribute("result", result);
-		} catch (Exception e) {
-			log.info("writeReview", e);
-		}
-		return "redirect:/chat/review?chat_id=" + dto.getChat_id();
-	}
-	
-	// 리뷰 조회
-	@GetMapping("review")
-	public String review(@RequestParam("chat_id") Long chatId, Model model) {
-		try {
-			TransactionReview review = chatService.getReviewByChatId(chatId);
-			model.addAttribute("review", review);
-		} catch (Exception e) {
-			log.info("review", e);
-		}
-		return "chat/review";
-	}
-	
 	@GetMapping("list")
 	public String chatList(HttpSession session, Model model) {
 		try {
@@ -142,22 +116,7 @@ public class ChatController {
 		}
 		return "chat/myRooms"; 
 			
-	}
-	
-	@GetMapping("message")
-	public String messagePage(
-	        @RequestParam("room_id") Long roomId,
-	        @RequestParam("product_id") Long productId,
-	        @RequestParam("buyer_id") Long buyerId,
-	        Model model) {
-
-	    model.addAttribute("room_id", roomId);
-	    model.addAttribute("product_id", productId);
-	    model.addAttribute("buyer_id", buyerId);
-
-	    return "chat/message";  
-	}
-	
+	}	
 	
     // 읽음 처리
     @PostMapping("/markAllAsRead")
