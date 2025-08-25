@@ -218,7 +218,7 @@ public class MemberController {
 	@GetMapping("complete")
 	public String complete(@ModelAttribute("message") String message) throws Exception {
 		if(message == null || message.isBlank()) {
-			return "redirect:/";
+			return "redirect:/product/list";
 		}
 		return "member/complete";
 	}
@@ -272,7 +272,7 @@ public class MemberController {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		if(info != null) {
-			return "redirect:/";
+			return "redirect:/product/list";
 		}
 		
 		return "member/pwdFind";
