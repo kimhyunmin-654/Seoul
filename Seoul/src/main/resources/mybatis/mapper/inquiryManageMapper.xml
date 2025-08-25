@@ -44,7 +44,7 @@
 	            </if>
 	        </where>
 	    )
-	    ORDER BY listnum DESC
+	    ORDER BY listnum ASC
 	    OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 	</select>
 	

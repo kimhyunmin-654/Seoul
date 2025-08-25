@@ -21,11 +21,11 @@
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
 	<div class="right-panel">
-		<div class="page-title" data-aos="fade-up" data-aos-delay="200">
+		<div class="page-title" >
 			<h2>1:1 문의</h2>
 		</div>
 
-		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">
+		<div class="section p-1">
 			<div class="section-body p-5">
 				<div class="row gy-4 m-0">
 					<div class="col-lg-12 board-section p-5 m-2" data-aos="fade-up" data-aos-delay="200">

@@ -8,8 +8,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항</title>
+    <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         .aspect-square { aspect-ratio: 1 / 1; }
     </style>
@@ -23,27 +23,21 @@
 <main>
 	<!-- Page Title -->
 	<div class="page-title">
-		<div class="container align-items-center" data-aos="fade-up">
+		<div class="container align-items-center">
 			<h1>공지사항</h1>
 			<div class="page-title-underline-accent"></div>
 		</div>
 	</div>
     
 	<!-- Page Content -->    
-	<div class="section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
+		<div class="section" >
 			<div class="row justify-content-center">
-				<div class="col-md-10 board-section my-4 p-5">
-
-					<div class="pb-2">
-						<span class="small-title">상세정보</span>
-					</div>
-									
+				<div class="col-md-8 board-section my-1 p-1">
 					<table class="table board-article">
 						<thead>
 							<tr>
-								<td colspan="2" class="text-center">
-									${dto.subject}
+								<td colspan="5" class="text-center" style="font-size: 24px;">
+								    ${dto.subject}
 								</td>
 							</tr>
 						</thead>
@@ -116,7 +110,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </main>
 
 </body>

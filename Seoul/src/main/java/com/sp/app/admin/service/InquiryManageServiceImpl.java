@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sp.app.admin.mapper.InquiryManageMapper;
 import com.sp.app.admin.model.InquiryManage;
@@ -100,7 +101,8 @@ public class InquiryManageServiceImpl implements InquiryManageService {
 		}
 		
 	}
-
+	
+	@Transactional
 	@Override
 	public void deleteInquiry(long inquiry_id) throws Exception {
 		try {

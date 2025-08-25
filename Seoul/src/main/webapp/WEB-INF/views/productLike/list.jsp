@@ -16,6 +16,14 @@
         .like-icon {
             color: #ff6b6b;
         }
+        @layer base {
+		    a:link,
+		    a:visited,
+		    a:hover,
+		    a:active {
+		      text-decoration: none !important;
+		    }
+  }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -48,14 +56,19 @@
                                 </div>
                                 <div class="flex-grow">
                                     <h2 class="text-lg font-semibold text-gray-800 truncate">${dto.product_name}</h2>
-                                    <div class="flex items-center mt-2">
-                                        <c:if test="${dto.status}">
-                                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-gray-200 text-gray-700 mr-2">거래완료</span>
-                                        </c:if>
-                                        <p class="text-xl font-bold text-gray-900">
-                                            <fmt:formatNumber value="${dto.price}" pattern="#,##0"/>원
-                                        </p>
-                                    </div>
+										<div class="flex items-center mt-2">
+										    <p class="text-xl font-bold text-gray-900">
+										        <fmt:formatNumber value="${dto.price}" pattern="#,##0"/>원
+										    </p>
+										</div>
+										<div>    
+										    <c:if test="${dto.status eq '판매완료'}">
+										        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-gray-200 text-gray-700 mr-2">판매완료</span>
+										    </c:if>
+										    <c:if test="${dto.status ne '판매완료'}">
+										        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-200 text-blue-700 mr-2">거래중</span>
+										    </c:if>
+										</div>    
                                     <div class="flex items-center text-sm text-gray-500 mt-3">
                                         <span class="mr-3">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1 like-icon" viewBox="0 0 20 20" fill="currentColor">

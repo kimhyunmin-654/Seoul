@@ -16,6 +16,13 @@
         .like-icon {
             color: #ff6b6b;
         }
+        @layer base {
+		    a:link,
+		    a:visited,
+		    a:hover,
+		    a:active {
+		      text-decoration: none !important;
+		    }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -42,7 +49,7 @@
                <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6" id="myboard-list">
 				    <c:forEach var="dto" items="${list}">
 				        <div class="flex bg-white rounded-lg shadow-md overflow-hidden transform hover:shadow-xl transition-all duration-300">
-				            <a href="<c:url value='/bbs/article?num=${dto.num}&page=${page}'/>" class="flex items-center w-full p-4">
+				            <a href="<c:url value='/bbs/article?num=${dto.num}&page=1&region=${dto.region_id}'/>" class="flex items-center w-full p-4">
 				                <div class="flex-grow">
 				                    <h2 class="text-lg font-semibold text-gray-800 truncate">${dto.subject}</h2>
 				                    <div class="flex items-center text-sm text-gray-500 mt-3">

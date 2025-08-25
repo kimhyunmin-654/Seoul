@@ -8,15 +8,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seoul</title>
 
+<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>	
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/noticeList.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 
 </head>
 <body>
-
 <header>
 	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
+
+
+
 <main>
 	<div class="row justify-content-center">
 	    <div class="col-md-10 board-section mt-4 p-2">
@@ -26,7 +29,7 @@
     
 	<!-- Page Content -->    
 	<div class="section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
+		<div class="container">
 			<div class="row justify-content-center mt-4">
 				<div class="col-md-10 board-section my-4 p-4"style="background: #fff; border: 1px solid #e9ecef; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
 					<div class="row py-1 mb-2">

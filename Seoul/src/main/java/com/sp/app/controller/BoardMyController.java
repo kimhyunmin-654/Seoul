@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -33,6 +34,8 @@ public class BoardMyController {
 	
 	@GetMapping("list")
 	public String list(@RequestParam(name = "page", defaultValue = "1") int current_page,
+				@ModelAttribute("region_name")String region_name,
+				@RequestParam(name = "region", defaultValue = "gangname") String region,
 				@RequestParam(name = "schType", defaultValue = "all") String schType,
 				@RequestParam(name = "kwd", defaultValue = "") String kwd,
 				HttpServletRequest req,
@@ -53,6 +56,7 @@ public class BoardMyController {
 			map.put("member_id", info.getMember_id());
 			map.put("schType", schType);
 			map.put("kwd", kwd);
+			map.put("region_id", region);
 			
 			dataCount = service.MyBoardCount(map);
 			
@@ -73,13 +77,14 @@ public class BoardMyController {
 			
 			String cp = req.getContextPath();
 			String query = "size=" + size;
+			String listUrl = cp + "/myBoard/list?" + query; 
 			
 			if(!kwd.isBlank()) {
 				query += "&schType=" + schType + "&kwd=" + myUtil.encodeUrl(kwd);
+				
+				listUrl += "&" + query;
 			}
 			
-			String listUrl = cp + "/myBoard/list?" + query; 
-			String articleUrl = cp + "/bbs/article?page=" + current_page + "&" + query;
 			
 			String paging = paginateUtil.paging(current_page, total_page, listUrl);
 			
@@ -89,7 +94,6 @@ public class BoardMyController {
 			model.addAttribute("total_page", total_page);
 			model.addAttribute("page", current_page);
 			model.addAttribute("paging", paging);
-			model.addAttribute("articleUrl", articleUrl);
 			model.addAttribute("schType", schType);
 			model.addAttribute("kwd", kwd);
 			
@@ -97,6 +101,9 @@ public class BoardMyController {
 		} catch (Exception e) {
 			log.info("list : ", e);
 		}
+		
+		model.addAttribute("region_name", region_name);
+		model.addAttribute("region_code", region);
 		
 		return "myBoard/list";
 		

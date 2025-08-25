@@ -18,7 +18,7 @@
         </ul>
       </li>
 
-      <li><a href="${pageContext.request.contextPath}/mypage/posts">내가 쓴 글</a></li>
+      <li><a href="${pageContext.request.contextPath}/myBoard/list">내가 쓴 글</a></li>
       <li><a href="${pageContext.request.contextPath}/productLike/list">찜한 상품</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/cart">장바구니</a></li>
       <li><a href="${pageContext.request.contextPath}/mypage/events">이벤트 참여 내역</a></li>

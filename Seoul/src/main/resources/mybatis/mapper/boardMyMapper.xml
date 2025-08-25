@@ -13,7 +13,7 @@
 	</select>
 	
 	<select id="listMyBoard" parameterType="map" resultType="com.sp.app.model.Board">
-		SELECT b.num, b.subject, b.reg_date, b.hit_count, m.nickname
+		SELECT b.num, b.subject, b.reg_date, b.hit_count, m.nickname, region_id
 		FROM community b
 		JOIN member m ON b.member_id = m.member_id
 		<where>
