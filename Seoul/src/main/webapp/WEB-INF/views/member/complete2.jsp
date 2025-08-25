@@ -29,7 +29,7 @@
       </div>
 
       <div class="actions">
-        <a href="${pageContext.request.contextPath}/" class="btn btn-primary" role="button">메인화면</a>
+        <a href="${pageContext.request.contextPath}/product/list" class="btn btn-primary" role="button">메인화면</a>
       </div>
 
     </div>
