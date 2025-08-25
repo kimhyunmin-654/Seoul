@@ -45,13 +45,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
         session.getAttributes().put("room_id", roomId);
 
-        // 멤버아이디 확보: attributes, member 객체, query param, principal 순서로 시도
         Long memberId = extractMemberId(session);
         if (memberId != null) {
             session.getAttributes().put("member_id", memberId);
         } else {
             log.warn("연결된 세션에 member_id가 없음(sessionId={}, roomId={})", session.getId(), roomId);
-            // (선택) 이후 디버깅을 위해 attributes 전체를 찍어둡니다
             log.debug("session.attributes={}", session.getAttributes());
         }
 
@@ -59,9 +57,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         log.info("WS connected: room_id={}, session={}, member_id={}", roomId, session.getId(), memberId);
     }
 
-    /** 새 헬퍼: 세션에서 memberId를 여러 경로로 추출 */
     private Long extractMemberId(WebSocketSession session) {
-        // 1) attributes 직접 키 확인
         Object v = session.getAttributes().get("member_id");
         if (v == null) v = session.getAttributes().get("memberId");
         if (v instanceof Number) return ((Number) v).longValue();
@@ -73,7 +69,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if (memberObj instanceof Member) {
             return ((Member) memberObj).getMember_id();
         }
-        // 3) URI query 파라미터에서 member_id 또는 memberId 찾기
         URI uri = session.getUri();
         if (uri != null) {
             String q = uri.getQuery();
@@ -88,7 +83,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 }
             }
         }
-        // 4) Principal (스프링 시큐리티 사용 시)
         try {
             if (session.getPrincipal() != null) {
                 String name = session.getPrincipal().getName();
@@ -183,7 +177,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         log.info("WS closed: {}", session.getId());
     }
 
-    /* -------------------- helpers -------------------- */
 
     private void broadcast(Long roomId, String payload) {
         if (payload == null) return;
@@ -191,11 +184,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             Map<String, Object> map = mapper.readValue(payload, new com.fasterxml.jackson.core.type.TypeReference<>() {});
             Long receiverId = toLong(map.get("receiver_id"));
             Long senderId = toLong(map.get("sender_id"));
-            String senderSessionId = str(map.get("sender_session")); // 새 필드 읽기
+            String senderSessionId = str(map.get("sender_session")); 
 
             java.util.Set<String> sentSessions = new java.util.HashSet<>();
 
-            // 1) 동일 룸의 모든 세션에 전송하되, '오직' 발신 세션만 제외
             CopyOnWriteArrayList<WebSocketSession> roomList = roomSessions.get(roomId);
             if (roomList != null) {
                 for (WebSocketSession s : roomList) {
@@ -203,7 +195,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                         if (s == null || !s.isOpen()) continue;
                         String sid = s.getId();
                         if (senderSessionId != null && senderSessionId.equals(sid)) {
-                            // 오직 실제 발신 세션만 스킵
                             continue;
                         }
                         if (sentSessions.contains(sid)) continue;
@@ -215,7 +206,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 }
             }
 
-            // 2) 다른 룸에 있는 동일 멤버(알림용)에게 전달
             if (receiverId != null) {
                 for (CopyOnWriteArrayList<WebSocketSession> list : roomSessions.values()) {
                     for (WebSocketSession s : list) {
@@ -223,7 +213,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                             if (s == null || !s.isOpen()) continue;
                             String sid = s.getId();
                             if (sentSessions.contains(sid)) continue;
-                            if (senderSessionId != null && senderSessionId.equals(sid)) continue; // 발신 세션만 제외
+                            if (senderSessionId != null && senderSessionId.equals(sid)) continue; 
                             Long wsMemberId = toLong(s.getAttributes().get("member_id"));
                             if (wsMemberId == null) continue;
                             if (receiverId.equals(wsMemberId)) {

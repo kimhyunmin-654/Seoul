@@ -7,9 +7,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>서울 한바퀴</title>
-<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
-
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/faqlist.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 
 </head>
 <body>

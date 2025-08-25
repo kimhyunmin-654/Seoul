@@ -69,7 +69,7 @@ function loadContent(page) {
         dataType: 'json'
     })
     .done(function(data) {
-        console.log('reviewslist response:', data); // <-- 응답 구조 확인용
+        console.log('reviewslist response:', data); 
         addNewContent(data);
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

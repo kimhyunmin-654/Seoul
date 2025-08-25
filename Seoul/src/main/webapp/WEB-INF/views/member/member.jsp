@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>서울 한바퀴</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/member.css" type="text/css">
 <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
@@ -113,7 +114,7 @@
               <button type="button" name="sendButton" class="btn btn-acc" onclick="memberOk()">
                 ${mode=="update"?"정보수정":"회원가입"}
               </button>
-              <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';">
+              <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/product/list';">
                 ${mode=="update"?"수정취소":"가입취소"}
               </button>
             </div>
@@ -125,7 +126,6 @@
 </main>
 
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 window.addEventListener('DOMContentLoaded', () => {
 	  const img = '${dto.profile_photo}';
