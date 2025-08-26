@@ -22,8 +22,8 @@
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
 	<div class="right-panel">
-		<div class="page-title" data-aos="fade-up" data-aos-delay="200">
-			<h2>회원관리</h2>
+		<div class="page-title pb-0 mb-0" data-aos="fade-up" data-aos-delay="200">
+			<h2 class="fs-2">회원관리</h2>
 		</div>
 
 		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">

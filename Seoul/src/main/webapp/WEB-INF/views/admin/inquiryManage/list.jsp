@@ -21,8 +21,8 @@
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
 	<div class="right-panel">
-		<div class="page-title" >
-			<h2>1:1 문의</h2>
+		<div class="page-title  pb-0 mb-0" >
+			<h2 class="fs-2">1:1 문의</h2>
 		</div>
 
 		<div class="section p-1">

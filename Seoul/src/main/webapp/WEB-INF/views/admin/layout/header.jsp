@@ -2,10 +2,10 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<div class="header-top container-fluid d-flex align-items-center fixed-top">
+<div class="header-top container-fluid d-flex align-items-center fixed-top mt-0" style="background-color: #110D42 !important;">
 	<div class="container-fluid position-relative d-flex align-items-center">
 		<a href="<c:url value='/admin' />" class="header-left d-flex align-items-center me-auto">
-			<span class="header-title">관리자 페이지</span>
+			<span class="header-title" style="color: white">관리자 페이지</span>
 		</a>
 		
 		<div class="header-center d-flex align-items-center">
@@ -16,8 +16,8 @@
 		
 		<div class="header-right d-flex align-items-center">
 			<div class="header-account-links">
-				<a href="#" title="알림"><i class="bi bi-bell"></i></a>
-				<a href="<c:url value='/product/list' />" title="나가기"><i class="bi bi-box-arrow-right"></i></a>
+				<a href="#" title="알림" style="color: white;"><i class="bi bi-bell"></i></a>
+				<a href="<c:url value='/product/list' />" title="나가기" style="color: white;"><i class="bi bi-box-arrow-right"></i></a>
 			</div>
 		
 			<div class="header-avatar">

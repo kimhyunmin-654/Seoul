@@ -23,7 +23,7 @@
 		    a:active {
 		      text-decoration: none !important;
 		    }
-  }
+  		}
     </style>
 </head>
 <body class="bg-gray-100">
