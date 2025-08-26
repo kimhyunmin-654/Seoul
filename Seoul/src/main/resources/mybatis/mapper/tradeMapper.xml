@@ -174,5 +174,13 @@
         SET likeCount = (SELECT COUNT(*) FROM product_like WHERE product_id = #{product_id})
         WHERE product_id = #{product_id}
     </update>
+    
+    <select id="findByMemberId" parameterType="long" resultType="com.sp.app.model.Product">
+        SELECT 
+            p.product_id, p.member_id, p.product_name, p.price, p.thumbnail, p.status
+        FROM product p
+        WHERE p.member_id = #{member_id}
+        ORDER BY p.reg_date DESC
+    </select>
 </mapper>
 	

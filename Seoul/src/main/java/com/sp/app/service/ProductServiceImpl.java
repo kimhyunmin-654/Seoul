@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 	private final AuctionMapper auctionMapper;
 	private final StorageService storageService;
 	private final MyUtil myUtil;
+	private final TradeMapper mapper;
 
 	
 	@Override
@@ -388,6 +389,12 @@ public class ProductServiceImpl implements ProductService {
 		}
 		
 	}
+
+
+	@Override
+	public List<Product> findByMemberId(long member_id) {
+        return mapper.findByMemberId(member_id);
+    }
 
 
 	

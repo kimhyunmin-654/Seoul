@@ -23,4 +23,5 @@ public interface ProductService {
 	public List<Category> listCategories();
 	public List<Region> listRegion();
 	public void updateHitCount(long product_id);
+	public List<Product> findByMemberId(long member_id);
 }

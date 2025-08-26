@@ -32,5 +32,7 @@ public interface TradeMapper {
 	
 	public void updateHitCount(long product_id);
 	public void updateLikeCount(Map<String, Object> map);
+	public List<Product> findByMemberId(long member_id);
+	
 	
 }

@@ -1,6 +1,7 @@
 package com.sp.app.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,8 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.common.StorageService;
 import com.sp.app.model.Member;
+import com.sp.app.model.Product;
+import com.sp.app.model.ReviewView;
 import com.sp.app.model.SessionInfo;
 import com.sp.app.service.MemberService;
+import com.sp.app.service.ProductService;
+import com.sp.app.service.TransactionService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	private final MemberService service;
 	private final StorageService storageService;
+	private final ProductService productService;
+	private final TransactionService transactionService;
 	
 	private String uploadPath;
 	
@@ -484,4 +491,50 @@ public class MemberController {
 		return "member/idFind";
 	}	
 	
+	@GetMapping("prolist")
+	public String prolist(@RequestParam(name = "member_id", required = false) Long member_id, 
+			@RequestParam(name = "tab", required = false) String tab, Model model) {
+	    try {
+	        if (member_id == null) {
+	            return "redirect:/";
+	        }
+	        
+	        //판매자 정보 조회
+	        Member sellerInfo = service.findById(member_id);
+	        if (sellerInfo == null) {
+	            return "redirect:/product/list";
+	        }
+	        
+	        //후기 개수 조회
+	        Map<String, Object> reviewCntMap = new HashMap<>();
+	        reviewCntMap.put("seller_id", member_id);
+	        int reviewCount = transactionService.countReviewBySeller(reviewCntMap);
+	        
+	        model.addAttribute("member_id", member_id);
+	        model.addAttribute("seller_name", sellerInfo.getNickname());
+	        model.addAttribute("reviewCount", reviewCount);
+	        model.addAttribute("seller_photo", sellerInfo.getProfile_photo());
+	        
+	        if ("reviews".equals(tab)) {
+	            Map<String, Object> reviewMap = new HashMap<>();
+	            reviewMap.put("seller_id", member_id);
+	            reviewMap.put("offset", 0); 
+	            reviewMap.put("size", 100); 
+	            
+	            List<ReviewView> reviews = transactionService.listReviewBySeller(reviewMap); // transactionService 호출
+	            model.addAttribute("reviews", reviews);
+	        } else {
+	            List<Product> sellerProducts = productService.findByMemberId(member_id);
+	            model.addAttribute("sellerProducts", sellerProducts);
+	            model.addAttribute("dataCount", sellerProducts.size());
+	        }
+	        
+	    } catch (Exception e) {
+	        log.error("판매자 프로필 조회 중 오류 발생", e);
+	        return "redirect:/product/list";
+	    }
+	    
+	    return "member/prolist";
+	}
+
 }
