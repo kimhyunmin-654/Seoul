@@ -25,7 +25,7 @@
 		
 		<li class="has-sub-menu" aria-expanded="false">
 			<label class="menu-link" title="고객센터">
-				<i class="menu-icon bi bi-question-square"></i>
+				<i class="menu-icon bi bi-exclamation-square"></i>
 				<span class="menu-label">고객센터</span>
 			</label>
 			<ul>

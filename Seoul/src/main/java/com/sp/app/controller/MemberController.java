@@ -516,12 +516,12 @@ public class MemberController {
 	        model.addAttribute("seller_photo", sellerInfo.getProfile_photo());
 	        
 	        if ("reviews".equals(tab)) {
-	            Map<String, Object> reviewMap = new HashMap<>();
-	            reviewMap.put("seller_id", member_id);
-	            reviewMap.put("offset", 0); 
-	            reviewMap.put("size", 100); 
+	            Map<String, Object> Map = new HashMap<>();
+	            Map.put("seller_id", member_id);
+	            Map.put("offset", 0); 
+	            Map.put("size", 100); 
 	            
-	            List<ReviewView> reviews = transactionService.listReviewBySeller(reviewMap);
+	            List<ReviewView> reviews = transactionService.listReviewBySeller(Map);
 	            model.addAttribute("reviews", reviews);
 	        } else {
 	            List<Product> sellerProducts = productService.findByMemberId(member_id);

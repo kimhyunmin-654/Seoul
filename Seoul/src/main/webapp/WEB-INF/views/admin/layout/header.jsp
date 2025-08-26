@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<div class="header-top container-fluid d-flex align-items-center fixed-top mt-0" style="background-color: #110D42 !important;">
+<div class="header-top container-fluid d-flex align-items-center fixed-top mt-0" style="background-color: #110D42 !important; padding: 6px 20px;">
 	<div class="container-fluid position-relative d-flex align-items-center">
-		<a href="<c:url value='/admin' />" class="header-left d-flex align-items-center me-auto">
+		<a href="<c:url value='/admin/memberManage/main' />" class="header-left d-flex align-items-center me-auto">
 			<span class="header-title" style="color: white">관리자 페이지</span>
 		</a>
 		
