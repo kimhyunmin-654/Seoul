@@ -7,8 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1:1문의</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/faqlist.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/inquiry.css" type="text/css">
 </head>
 <body>
 

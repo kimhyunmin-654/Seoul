@@ -127,4 +127,19 @@
 	OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 </select>
 
+<select id="listProductImages" parameterType="long" resultType="com.sp.app.model.ProductImage">
+  SELECT image_id AS image_id, filename AS filename
+  FROM product_image
+  WHERE product_id = #{product_id}
+</select>
+
+<delete id="deleteProductImages" parameterType="long">
+  DELETE FROM product_image
+  WHERE product_id = #{product_id}
+</delete>
+
+<delete id="deleteProduct" parameterType="long">
+  DELETE FROM product
+  WHERE product_id = #{product_id}
+</delete>
 </mapper>

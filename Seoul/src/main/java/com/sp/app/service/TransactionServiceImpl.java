@@ -9,9 +9,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sp.app.common.StorageService;
 import com.sp.app.mapper.TransactionMapper;
 import com.sp.app.model.BuyerCandidate;
 import com.sp.app.model.Product;
+import com.sp.app.model.ProductImage;
 import com.sp.app.model.ProductTransaction;
 import com.sp.app.model.PurchaseItem;
 import com.sp.app.model.ReviewView;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
 	private final TransactionMapper transactionMapper;
+	private final StorageService storageService;
 		
 	@Override
 	public List<Product> listProductBySeller(Map<String, Object> map) {
@@ -275,7 +278,74 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 		return list;
 	}
-	
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteProductImages(long product_id, String pathString) throws Exception {
+	    try {
+	        List<ProductImage> imageList = transactionMapper.listProductImages(product_id);
+
+	        transactionMapper.deleteProductImages(product_id);
+
+	        if (imageList != null && !imageList.isEmpty() && pathString != null && !pathString.isBlank()) {
+	            for (ProductImage img : imageList) {
+	                if (img == null) continue;
+	                String fname = img.getFilename();
+	                if (fname == null || fname.isBlank()) continue;
+	                try {
+	                    storageService.deleteFile(pathString, fname);
+	                } catch (Exception e) {
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        log.info("deleteProductImages : ", e);
+	        throw e;
+	    }
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteProduct(long product_id, long member_id, String uploadPath) throws Exception {
+	    try {
+	        Product dto = transactionMapper.findProductById(product_id);
+	        if (dto == null) {
+	            throw new RuntimeException("존재하지 않는 상품입니다.");
+	        }
+	        if (!Objects.equals(dto.getMember_id(), member_id)) {
+	            throw new RuntimeException("삭제 권한이 없습니다.");
+	        }
+
+	        List<ProductImage> imageList = transactionMapper.listProductImages(product_id);
+
+	        transactionMapper.deleteProductImages(product_id);
+	        transactionMapper.deleteProduct(product_id);
+
+	        if (dto.getThumbnail() != null && !dto.getThumbnail().isEmpty()
+	                && uploadPath != null && !uploadPath.isBlank()) {
+	            try {
+	                storageService.deleteFile(uploadPath, dto.getThumbnail());
+	            } catch (Exception e) {
+	                log.error("deleteProduct - 썸네일 삭제 실패: product_id={}, file={}", product_id, dto.getThumbnail(), e);
+	            }
+	        }
+
+	        if (imageList != null && !imageList.isEmpty()
+	                && uploadPath != null && !uploadPath.isBlank()) {
+	            for (ProductImage image : imageList) {
+	                if (image == null) continue;
+	                try {
+	                    storageService.deleteFile(uploadPath, image.getFilename());
+	                } catch (Exception e) {
+	                }
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        log.info("deleteProduct : ", e);
+	        throw e;
+	    }
+	}
 	
 
 }

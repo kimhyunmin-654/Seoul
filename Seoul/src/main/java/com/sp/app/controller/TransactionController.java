@@ -1,5 +1,6 @@
 package com.sp.app.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.app.chat.model.ChatMessage;
 import com.sp.app.chat.service.ChatService;
@@ -505,8 +507,41 @@ public class TransactionController {
 	    return model;
 	}
 	
-	
-	
+
+	@PostMapping("deleteProduct")
+	@ResponseBody
+	public Map<String, Object> deleteProduct(
+	        @RequestParam("product_id") long product_id,
+	        HttpSession session) {
+
+	    Map<String, Object> resp = new HashMap<>();
+	    try {
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        if (info == null) {
+	            resp.put("success", false);
+	            resp.put("message", "로그인이 필요합니다.");
+	            return resp;
+	        }
+
+	        long member_id = info.getMember_id();
+
+	        transactionService.deleteProduct(product_id, member_id, uploadPath);
+
+	        resp.put("success", true);
+	        resp.put("message", "상품이 삭제되었습니다.");
+	        return resp;
+	    } catch (RuntimeException re) {
+	        log.warn("deleteProduct - business error", re);
+	        resp.put("success", false);
+	        resp.put("message", re.getMessage() == null ? "삭제 권한이 없거나 상품이 없습니다." : re.getMessage());
+	        return resp;
+	    } catch (Exception e) {
+	        log.error("deleteProduct error", e);
+	        resp.put("success", false);
+	        resp.put("message", "서버 오류가 발생했습니다.");
+	        return resp;
+	    }
+	}
 	
 }
 

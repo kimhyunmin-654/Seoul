@@ -96,10 +96,7 @@
 
                           <td class="subject align-middle">
                             <div class="text-wrap">
-                              <a href="<c:url value='/product/article?product_id=${p.product_id}'/>"
-                                 style="font-weight:700; color:#111; text-decoration:none;">
-                                <c:out value="${p.product_name}"/>
-                              </a>
+                                <c:out value="${p.product_name}"/>        
                             </div>
                           </td>
 

@@ -92,9 +92,8 @@
 
                           <td class="subject align-middle">
                             <div class="text-wrap">
-                              <a href="${articleUrl}&product_id=${p.product_id}" style="font-weight:700; color:#111; text-decoration:none;">
                                 <c:out value="${p.product_name}"/>
-                              </a>
+
                             </div>
                           </td>
 
@@ -124,8 +123,16 @@
 						  </c:choose>
 						</td>
 							
-
-                          <td class="align-middle date"><c:out value="${p.reg_date}"/></td>
+                          <td class="align-middle date">
+						  <div class="d-flex align-items-center justify-content-between gap-2">
+						    <span class="reg-date"><c:out value="${p.reg_date}"/></span>
+						    <button type="button"
+						            class="btn btn-sm btn-outline-danger btn-small btn-delete"
+						            data-product-id="${p.product_id}" >
+						      삭제
+						    </button>
+						  </div>
+						</td>
                         </tr>
                       </c:forEach>
                     </c:if>
@@ -343,7 +350,39 @@ $(function() {
     }
   });
 
+$(document).on('click', '.btn-delete', function () {
+    const productId = $(this).data('product-id');
+    if (!productId) return;
+
+    if (!confirm('해당 상품을 삭제하시겠습니까? 삭제 시 복구할 수 없습니다.')) {
+      return;
+    }
+
+    const $btn = $(this);
+    $btn.prop('disabled', true).text('삭제 중...');
+
+    $.ajax({
+      url: ctx + '/transaction/deleteProduct',
+      method: 'POST',
+      data: { product_id: productId },
+      dataType: 'json'
+    }).done(function (res) {
+      if (res && res.success) {
+        // 가장 간단하고 안전하게 새로고침하여 페이징/카운트/순번 갱신
+        location.reload();
+      } else {
+        alert('삭제 실패: ' + (res && res.message ? res.message : '서버 오류'));
+        $btn.prop('disabled', false).text('삭제');
+      }
+    }).fail(function (xhr) {
+      console.error('deleteProduct error', xhr.responseText);
+      alert('서버 오류가 발생했습니다.');
+      $btn.prop('disabled', false).text('삭제');
+    });
+  });
+  
 });
+
 </script>
 
 </body>

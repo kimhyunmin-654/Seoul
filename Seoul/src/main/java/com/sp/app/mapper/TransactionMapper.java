@@ -1,5 +1,6 @@
 package com.sp.app.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.sp.app.model.BuyerCandidate;
 import com.sp.app.model.Product;
+import com.sp.app.model.ProductImage;
 import com.sp.app.model.ProductTransaction;
 import com.sp.app.model.PurchaseItem;
 import com.sp.app.model.ReviewView;
@@ -37,4 +39,8 @@ public interface TransactionMapper {
 	 
 	public int countReviewBySeller(Map<String, Object> map);
 	public List<ReviewView> listReviewBySeller(Map<String, Object> map);
+	
+    public void deleteProduct(long product_id) throws Exception;
+    public void deleteProductImages(long product_id) throws Exception;
+    public List<ProductImage> listProductImages(long product_id) throws Exception;
 }

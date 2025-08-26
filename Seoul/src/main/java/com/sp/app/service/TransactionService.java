@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.sp.app.model.BuyerCandidate;
-import com.sp.app.model.Member;
 import com.sp.app.model.Product;
 import com.sp.app.model.PurchaseItem;
 import com.sp.app.model.ReviewView;
@@ -36,5 +35,7 @@ public interface TransactionService {
 	public int countReviewBySeller(Map<String, Object> map);
 	public List<ReviewView> listReviewBySeller(Map<String, Object> map);
 	
+	public void deleteProduct(long product_id, long member_id ,String uploadPath) throws Exception;
+	public void deleteProductImages(long product_id, String pathString) throws Exception;
 	
 }
