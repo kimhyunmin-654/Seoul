@@ -521,7 +521,7 @@ public class MemberController {
 	            reviewMap.put("offset", 0); 
 	            reviewMap.put("size", 100); 
 	            
-	            List<ReviewView> reviews = transactionService.listReviewBySeller(reviewMap); // transactionService 호출
+	            List<ReviewView> reviews = transactionService.listReviewBySeller(reviewMap);
 	            model.addAttribute("reviews", reviews);
 	        } else {
 	            List<Product> sellerProducts = productService.findByMemberId(member_id);
@@ -530,7 +530,7 @@ public class MemberController {
 	        }
 	        
 	    } catch (Exception e) {
-	        log.error("판매자 프로필 조회 중 오류 발생", e);
+	        log.info("reviewCntMap : ", e);
 	        return "redirect:/product/list";
 	    }
 	    
