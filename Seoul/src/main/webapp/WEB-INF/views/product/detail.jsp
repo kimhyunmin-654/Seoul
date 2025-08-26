@@ -10,7 +10,6 @@
 <title>${dto.product_name}-서울한바퀴</title>
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -20,24 +19,24 @@
 body {
 	font-family: 'Noto Sans KR', sans-serif;
 	background-color: #f3f4f6;
-} /* 밝은 회색 배경 */
+} 
 .glass-pane {
 	background: white;
-	border: 1px solid #e5e7eb; /* 연한 회색 테두리 */
+	border: 1px solid #e5e7eb; 
 }
 
 .glow-button {
 	box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3);
 }
-/* 이미지 캐러셀 버튼에 반투명 배경 추가 */
+
 #prev-btn, #next-btn {
-	background-color: rgba(0, 0, 0, 0.3); /* 30% 투명도의 검은색 배경 */
-	border-radius: 9999px; /* 완전한 원형 버튼 */
+	background-color: rgba(0, 0, 0, 0.3); 
+	border-radius: 9999px; 
 	color: white;
-	transition: background-color 0.2s; /* 부드러운 색상 전환 효과 */
+	transition: background-color 0.2s; 
 }
 
-/* 마우스를 올렸을 때 배경을 더 진하게 */
+
 #prev-btn:hover, #next-btn:hover {
 	background-color: rgba(0, 0, 0, 0.5);
 }
@@ -50,7 +49,7 @@ body {
 
 			<aside class="col-span-1">
 				<div class="sticky top-8">
-					<%-- 스크롤 따라다니는 효과 --%>
+					
 					<jsp:include page="/WEB-INF/views/layout/left.jsp" />
 				</div>
 			</aside>
@@ -63,12 +62,12 @@ body {
 							class="relative aspect-square bg-gray-200 rounded-2xl shadow-lg overflow-hidden group">
 							<div id="image-carousel"
 								class="flex transition-transform duration-500 ease-in-out h-full">
-								<%-- 썸네일 이미지를 첫 번째로 표시 --%>
+								
 								<img src="<c:url value='/uploads/product/${dto.thumbnail}'/>"
 									alt="${dto.product_name}"
 									class="w-full h-full object-cover flex-shrink-0">
 
-								<%-- 추가 이미지가 있다면 반복문으로 표시 --%>
+								
 								<c:forEach var="image" items="${listFile}">
 									<img src="<c:url value='/uploads/product/${image.filename}'/>"
 										alt="${dto.product_name} 추가 이미지"
@@ -106,9 +105,13 @@ body {
 							<div class="text-sm text-gray-500">${dto.category_name}・
 								${dto.region_name}</div>
 							<h1 class="text-3xl font-bold text-gray-900 leading-tight mt-2">${dto.product_name}</h1>
-							<div class="flex items-center mt-4 space-x-3">
+							<div class="flex items-center mt-4 space-x-3">							
+							<a href="<c:url value='/member/prolist?member_id=${dto.member_id}'/>">
 								<img src="<c:url value='/uploads/member/${dto.sellerAvatar}'/>"
 									alt="판매자 아바타" class="w-10 h-10 rounded-full">
+							</a>
+									
+									
 								<div>
 									<div class="font-semibold text-gray-800">${dto.nickName}</div>
 									<div class="text-sm text-gray-500">매너온도 등급</div>
@@ -122,7 +125,7 @@ body {
 						</div>
 
 						<div class="glass-pane p-6 rounded-2xl flex flex-col flex-grow">
-							<%-- 가격 표시 --%>
+							
 							<div class="relative">
 								<div class="mb-6">
 									<p class="text-sm font-medium text-gray-500">판매 가격</p>
@@ -131,7 +134,7 @@ body {
 										원
 									</p>
 								</div>
-								<%-- ★★★ '더보기' 메뉴 버튼 (케밥 아이콘) ★★★ --%>
+								
 								<div class="absolute top-0 right-0">
 									<button id="more-menu-btn"
 										class="p-2 rounded-full hover:bg-gray-100">
@@ -143,12 +146,12 @@ body {
                 						</svg>
 									</button>
 
-									<%-- ★★★ '더보기' 메뉴 드롭다운 (기본은 숨김) ★★★ --%>
+									
 									<div id="more-menu-dropdown"
 										class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20">
 										<div class="py-1">
 											<c:choose>
-												<%-- 글 작성자일 경우 --%>
+												
 												<c:when
 													test="${sessionScope.member.member_id == dto.member_id}">
 													<a href="<c:url value='/product/update?product_id=${dto.product_id}'/>"
@@ -164,7 +167,7 @@ body {
 													</form>
 												</c:when>
 
-												<%-- 다른 사용자일 경우 --%>
+												
 												<c:otherwise>
 													<a href="#"
 														class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">신고하기</a>
@@ -174,7 +177,7 @@ body {
 									</div>
 								</div>
 							</div>
-							<%-- 액션 버튼 --%>
+							
 							<div class="mt-auto space-y-3">
 								<c:choose>
 								    <c:when test="${isLiked}">
@@ -219,12 +222,18 @@ body {
 	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
 	
 	<script>
+		(function() {
+	        const message = "${message}";
+	        const messageId = "${messageId}";
 	
-	    const message = "${message}";
-	    if (message) {
-	        alert(message);
-	    }
-    
+	        if (message && messageId) {
+	            
+	            if (!sessionStorage.getItem(messageId)) {
+	                alert(message);
+	                sessionStorage.setItem(messageId, 'shown');
+	            }
+	        }
+	    })();
 	</script>
 	<script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -261,13 +270,13 @@ body {
         	 const moreMenuBtn = $('#more-menu-btn');
              const moreMenuDropdown = $('#more-menu-dropdown');
 
-             // '더보기' 버튼 클릭 시 드롭다운 메뉴 토글
+             
              moreMenuBtn.on('click', function(event) {
                  event.stopPropagation(); 
                  moreMenuDropdown.toggleClass('hidden');
              });
 
-             // 화면의 다른 곳을 클릭하면 드롭다운 메뉴 숨기기
+            
              $(document).on('click', function() {
                  if (!moreMenuDropdown.hasClass('hidden')) {
                      moreMenuDropdown.addClass('hidden');
@@ -328,6 +337,7 @@ body {
                      }
                  });
              });
+        	
         	
         });     
     </script>
