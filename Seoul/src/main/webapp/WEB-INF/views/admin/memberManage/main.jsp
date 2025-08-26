@@ -28,7 +28,6 @@
 
 		<div class="section p-5" data-aos="fade-up" data-aos-delay="200">
 			<div class="section-body p-5">
-						
 				<ul class="nav nav-tabs" id="myTab" role="tablist">
 					<li class="nav-item" role="presentation">
 						<button class="nav-link ${role == 1 ? 'active' : ''}" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-selected="${role == 1 ? 'true' : 'false'}" data-tab="1"> <i class="bi bi-person-fill"></i> 회원</button>
@@ -36,6 +35,9 @@
 					<li class="nav-item" role="presentation">
 						<button class="nav-link ${role == 2 ? 'active' : ''}" id="tab-2" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-selected="${role == 2 ? 'true' : 'false'}" data-tab="2"> <i class="bi bi-person-lines-fill"></i> 셀러</button>
 					</li>
+					<a href="${pageContext.request.contextPath}/member/account3" class="btn signup-btn btn-seller">
+						➕셀러등록
+					</a>
 				</ul>
 				
 				<div class="tab-content pt-3" id="nav-tabContent"></div>
