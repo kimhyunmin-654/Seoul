@@ -54,7 +54,7 @@
 								<td>
 									<div class="row">
 										<div class="col-md-6">
-											<input type="text" name="name" class="form-control" readonly tabindex="-1" value="${sessionScope.member.nickname}">
+											<input type="text" name="nickname" class="form-control" readonly tabindex="-1" value="${sessionScope.member.nickname}">
 										</div>
 									</div>
 								</td>
@@ -131,7 +131,7 @@ function hasContent(htmlContent) {
 }
 
 function checkFileSize(fileInput) {
-	const maxSize = 10 * 1024 * 1024;
+	const maxSize = 2 * 1024 * 1024;
 	
 	if (!fileInput.files || fileInput.files.length === 0) return true;
 	
@@ -155,7 +155,7 @@ function sendOk() {
 	}
 	
 	if(! checkFileSize(f.selectFile)) {
-		alert('최대 용량은 10MB 입니다.');
+		alert('최대 용량은 2MB 입니다.');
 		
 		f.selectFile.value = "";
 		f.selectFile.focus();
