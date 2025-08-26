@@ -13,14 +13,10 @@
 <body>
 
 <div class="signup-select-container">
-	<h2>회원가입 유형 선택</h2>
+	<h2>회원가입 유형</h2>
 
 	<a href="${pageContext.request.contextPath}/member/account2" class="btn signup-btn btn-user">
 		👤 일반회원 가입
-	</a>
-
-	<a href="${pageContext.request.contextPath}/member/account3" class="btn signup-btn btn-seller">
-		🛍️ 셀러회원 가입
 	</a>
 </div>
 
