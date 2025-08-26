@@ -7,8 +7,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>서울 한바퀴</title>
+<jsp:include page="/WEB-INF/views/admin/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/faqlist.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/header.css" type="text/css">
 
 </head>
 <body>
@@ -21,7 +21,7 @@
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 
 	<div class="section">
-		<div class="container" data-aos="fade-up" data-aos-delay="100">
+		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-10 board-section my-4 p-5">
 				
