@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.admin.mapper.EventManageMapper">
+
+	<sql id="period-list">
+		<choose>
+			<when test="category == 'progress' ">
+				( start_date &lt;= SYSDATE AND end_date &gt; SYSDATE )
+			</when>
+			<when test="category == 'upcoming' ">
+				( start_date &gt;= SYSDATE )
+			</when>
+			<when test="category == 'winner' ">
+				et.applyCount &gt; 0 AND e.winner_number &gt; 0 AND 
+				(
+					( winning_date &gt; SYSDATE )
+					OR
+					( winning_date &lt;= SYSDATE AND ADD_MONTHS(winning_date, 6) &gt;= SYSDATE )
+				) 
+			</when>
+			<when test="category == 'ended' ">
+				( end_date &lt; SYSDATE )
+			</when>
+		</choose>
+	</sql>
+	
+	<!-- 등록 -->
+	<insert id="insertEvent" parameterType="com.sp.app.admin.model.EventManage">
+		INSERT INTO event(event_num, member_id, title, content,
+			start_date, end_date, winning_date,
+			winner_number, show_event, event_type, hit_count, reg_date, update_date,
+			save_filename, original_filename, filesize)
+		VALUES(event_seq.NEXTVAL, #{member_id}, #{title}, #{content},
+			TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+			TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{winningDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{winner_number}, #{show_event}, #{event_type}, 0, SYSDATE, SYSDATE,
+			#{saveFilename, jdbcType=VARCHAR}, #{originalFilename, jdbcType=VARCHAR}, #{filesize})
+	</insert>
+
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM event e
+		LEFT OUTER JOIN (
+			SELECT event_num, COUNT(*) applyCount
+			FROM event_takers
+			GROUP BY event_num
+		) et ON e.event_num = et.event_num
+		<where>
+			<if test="show_event != null">
+				show_event = #{show_event}
+			</if>
+			<if test="category != 'all'">
+				AND <include refid="period-list"/>
+			</if>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 글 리스트 -->
+	<select id="listEvent" parameterType="map" resultType="com.sp.app.admin.model.EventManage">
+		SELECT e.event_num, title, hit_count, show_event, event_type,
+			TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI:SS') startDate,
+			TO_CHAR(end_date, 'YYYY-MM-DD HH24:MI:SS') endDate,
+			TO_CHAR(winning_date, 'YYYY-MM-DD HH24:MI:SS') winningDate,
+			NVL(applyCount, 0) applyCount , NVL(winnerCount, 0) winnerCount
+		FROM event e
+		LEFT OUTER JOIN (
+			SELECT event_num, COUNT(*) applyCount
+			FROM event_takers
+			GROUP BY event_num
+		) et ON e.event_num = et.event_num
+		LEFT OUTER JOIN (
+			SELECT event_num, COUNT(*) winnerCount
+			FROM event_winner
+			GROUP BY event_num
+		) ew ON e.event_num = ew.event_num
+		<where>
+			<if test="show_event != null">
+				show_event = #{show_event}
+			</if>
+			<if test="category != 'all' ">
+				AND <include refid="period-list"/>
+			</if>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+		</where>
+		ORDER BY e.event_num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 글 보기 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.admin.model.EventManage">
+		SELECT event_num, e.member_id,
+			m.nickname, NVL(m.login_id, m.sns_id) login_id,
+			title, content, TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI:SS') startDate, 
+			TO_CHAR(end_date, 'YYYY-MM-DD HH24:MI:SS') endDate,
+			TO_CHAR(winning_date, 'YYYY-MM-DD HH24:MI:SS') winningDate,
+			winner_number, show_event, event_type, hit_count, e.reg_date,
+			e.update_id, update_date, upm.nickname AS update_nickname, NVL(upm.login_id, upm.sns_id) login_update,
+			save_filename AS saveFilename, original_filename AS originalFilename, filesize
+		FROM event e
+		JOIN member m ON e.member_id = m.member_id
+		LEFT OUTER JOIN member upm ON e.member_id = upm.member_id
+		WHERE e.event_num = #{event_num}
+	</select>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.admin.model.EventManage">
+		SELECT e.event_num, title
+		FROM event e
+		LEFT OUTER JOIN (
+			SELECT event_num, COUNT(*) applyCount
+			FROM event_takers
+			GROUP BY event_num
+		) et ON e.event_num = et.event_num
+		<where>
+			<if test="show_event != null">
+				show_event = #{show_event}
+			</if>
+			<if test="category != 'all' ">
+				AND <include refid="period-list"/>
+			</if>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+			AND (e.event_num &gt; #{event_num})
+		</where>
+		ORDER BY e.event_num ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.admin.model.EventManage">
+		SELECT e.event_num, title
+		FROM event e
+		LEFT OUTER JOIN (
+			SELECT event_num, COUNT(*) applyCount
+			FROM event_takers
+			GROUP BY event_num
+		) et ON e.event_num = et.event_num
+		<where>
+			<if test="show_event != null">
+				show_event = #{show_event}
+			</if>
+			<if test="category != 'all' ">
+				AND <include refid="period-list"/>
+			</if>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+			AND (e.event_num &lt; #{event_num})
+		</where>
+		ORDER BY e.event_num DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+
+	<update id="updateEvent" parameterType="com.sp.app.admin.model.EventManage">
+		UPDATE event
+		SET title = #{title}, content = #{content},
+			start_date = TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			end_date = TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			winning_date = TO_DATE(#{winningDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS'),
+			winner_number = #{winner_number}, show_event = #{show_event},
+			update_id = #{update_id}, update_date = SYSDATE,
+			save_filename = #{saveFilename, jdbcType=VARCHAR},
+			original_filename = #{originalFilename, jdbcType=VARCHAR},
+			filesize = #{filesize}
+		WHERE event_num = #{event_num}
+	</update>
+
+	<delete id="deleteEvent" parameterType="Long">
+		DELETE FROM event WHERE event_num = #{event_num}
+	</delete>
+	
+	<!-- 이벤트 응모자 리스트 -->
+	<select id="listEventTakers" parameterType="Long" resultType="com.sp.app.admin.model.EventManage">
+		SELECT event_num, et.member_id, nickname, et.reg_date, NVL(login_id, sns_id) login_id
+		FROM event_takers et
+		JOIN member m ON et.member_id = m.member_id
+		WHERE event_num = #{event_num}
+		ORDER BY et.reg_date ASC
+	</select>
+	
+	<!-- 이벤트 당첨자 등록1(랜덤) -->
+	<insert id="insertEventWinner1" parameterType="com.sp.app.admin.model.EventManage">
+		INSERT INTO event_winner(event_num, member_id, rank, reg_date)
+			SELECT event_num, member_id, 0, SYSDATE
+			FROM (
+				SELECT * FROM event_takers WHERE event_num = #{event_num} ORDER BY DBMS_RANDOM.VALUE
+			) tb
+			WHERE ROWNUM &lt;= #{winner_number}
+	</insert>
+
+	<!-- 이벤트 당첨자 등록2(순위) -->
+	<insert id="insertEventWinner2" parameterType="com.sp.app.admin.model.EventManage">
+		INSERT INTO event_winner(event_num, member_id, rank, reg_date)
+			VALUES(#{event_num}, #{member_id}, #{rank}, SYSDATE)
+	</insert>
+
+	<!-- 이벤트 당첨자 리스트 -->
+	<select id="listEventWinner" parameterType="Long" resultType="com.sp.app.admin.model.EventManage">
+		SELECT event_num, ew.member_id, nickname, rank, ew.reg_date, NVL(login_id, sns_id) login_id
+		FROM event_winner ew
+		JOIN member m ON ew.member_id = m.member_id
+		WHERE event_num = #{event_num}
+		ORDER BY rank ASC
+	</select>
+	
+</mapper>

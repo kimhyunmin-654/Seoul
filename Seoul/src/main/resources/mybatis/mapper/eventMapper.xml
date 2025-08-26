@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.app.mapper.EventMapper">
+	
+	<sql id="period-list">
+		<choose>
+			<when test="category == 'progress'">
+				( start_date &lt;= SYSDATE AND end_date &gt; SYSDATE )
+			</when>
+			<when test="category == 'upcoming'">
+				( start_date &gt;= SYSDATE )
+			</when>
+			<when test="category == 'winner'">
+				( winner_number != 0 AND winning_date &lt;= SYSDATE AND ADD_MONTHS(winning_date, 6) &gt; SYSDATE )
+			</when>
+			<when test="category == 'ended'">
+				( end_date &lt; SYSDATE )
+			</when>
+		</choose>
+	</sql>
+
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM event
+		<where>
+			show_event = 1
+			AND <include refid="period-list"/>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 글 리스트 -->
+	<select id="listEvent" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT e.event_num, title, event_type, hit_count, show_event,
+			TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') startDate,
+			TO_CHAR(end_date, 'YYYY-MM-DD HH24:MI') endDate,
+			TO_CHAR(winning_date, 'YYYY-MM-DD HH24:MI') winningDate, winner_number, save_filename AS saveFilename
+			<if test="category != 'winner'">
+				,NVL(applyCount, 0) applyCount
+			</if>
+			<if test="category == 'winner'">
+				,NVL(winnerCount, 0) winnerCount
+			</if>
+		FROM event e
+		<if test="category != 'winner'">
+			LEFT OUTER JOIN (
+				SELECT event_num, COUNT(*) applyCount
+				FROM event_takers
+				GROUP BY event_num
+			) et ON e.event_num = et.event_num
+		</if>
+		<if test="category == 'winner'">
+			LEFT OUTER JOIN (
+				SELECT event_num, COUNT(*) winnerCount
+				FROM event_winner
+				GROUP BY event_num
+			) ew ON e.event_num = ew.event_num
+		</if>
+		<where>
+			show_event = 1
+			AND <include refid="period-list"/>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+		</where>
+		ORDER BY e.event_num DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<!-- 글 보기 -->
+	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Event">
+		SELECT event_num, title, content, event_type,
+			TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') startDate,
+			TO_CHAR(end_date, 'YYYY-MM-DD HH24:MI') endDate,
+			TO_CHAR(winning_date, 'YYYY-MM-DD HH24:MI') winningDate,
+			winner_number, show_event, hit_count
+		FROM event
+		WHERE event_num = #{event_num} AND show_event = 1
+	</select>
+	
+	<update id="updateHitCount" parameterType="Long">
+		UPDATE event SET hit_count = hit_count + 1 WHERE event_num = #{event_num}
+	</update>
+	
+	<select id="findByNext" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT event_num, title
+		FROM event
+		<where>
+			show_event = 1
+			AND <include refid="period-list"/>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+			AND (event_num &gt; #{event_num})
+		</where>
+		ORDER BY event_num ASC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="findByPrev" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT event_num, title
+		FROM event
+		<where>
+			show_event = 1
+			AND <include refid="period-list"/>
+			<if test="event_type != 'all'">
+				AND event_type = #{event_type}
+			</if>
+			AND (event_num &lt; #{event_num})
+		</where>
+		ORDER BY event_num DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	
+	<!-- 이벤트 응모 -->
+	<insert id="insertEventTakers" parameterType="com.sp.app.model.Event">
+		INSERT INTO event_takers(event_num, member_id, reg_date)
+		VALUES(#{event_num}, #{member_id}, SYSDATE)
+	</insert>
+	
+	<select id="findByEventTakers" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT event_num, et.member_id, nickname
+		FROM event_takers et
+		JOIN member m ON et.member_id = m.member_id
+		WHERE event_num = #{event_num} AND et.member_id = #{member_id}
+	</select>
+	
+	<select id="listEventTakers" parameterType="Long" resultType="com.sp.app.model.Event">
+		SELECT event_num, et.member_id, nickname, et.reg_date
+		FROM event_takers et
+		JOIN member m ON et.member_id = m.member_id
+		WHERE event_num = #{event_num}
+		ORDER BY reg_date ASC
+	</select>
+	
+	<!-- 이벤트 당첨 -->
+	<select id="findByEventWinner" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT event_num, member_id, rank, reg_date
+		FROM event_winner
+		WHERE event_num = #{event_num} AND member_id = #{member_id}
+	</select>
+	
+	<select id="listEventWinner" parameterType="Long" resultType="com.sp.app.model.Event">
+		SELECT event_num, ew.member_id, nickname, rank, ew.reg_date, NVL(login_id, sns_id) login_id
+		FROM event_winner ew
+		JOIN member m ON ew.member_id = m.member_id
+		WHERE event_num = #{event_num}
+		ORDER BY rank ASC
+	</select>
+
+</mapper>

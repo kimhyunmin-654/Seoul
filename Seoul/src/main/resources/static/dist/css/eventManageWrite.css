@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+.tab-pane { min-height: 300px; }
+
+.rank-plus, .rank-minus {
+  cursor: pointer;
+  padding: 7px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.rank-plus:hover, .rank-minus:hover {
+  color: blue;
+}
+
+.span-rank {
+  display: inline-block; width: 45px;
+}
+
+.winnerList-container {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(3, auto);
+}
+
+.winnerList-container .item {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+table.board-article th {
+	background-color: #f8f9fa;
+	text-align: left;
+	white-space: nowrap;
+	font-weight: 600;
+}
+
+/* 추첨 버튼 */
+.article-content-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px; /* 필요에 따라 조절 */
+  height: 100%;
+}
+
+.article-content-buttons {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
