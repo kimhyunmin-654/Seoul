@@ -41,7 +41,7 @@
 			</label>
 			<ul>
 				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/inquiryManage/list">1:1문의</a></li>
-				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/reportManage/list">신고</a></li>
+				<li><a class="sub-menu-link" href="${pageContext.request.contextPath}/admin/reportsManage/main">신고</a></li>
 			</ul>
 		</li>
 		
@@ -51,7 +51,7 @@
 				<span class="menu-label">혜택관리</span>
 			</label>
 			<ul>
-				<li><a class="sub-menu-link" href="<c:url value='/admin' />">이벤트</a></li>
+				<li><a class="sub-menu-link" href="<c:url value='/admin/eventManage/all/list'/>">이벤트</a></li>
 			</ul>
 		</li>
 		
