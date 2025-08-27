@@ -91,7 +91,7 @@
                           </td>
 
                           <td class="subject align-middle">
-                            <a href="${pageContext.request.contextPath}/product/detail?product_id=${p.product_id}">
+                            <a  href="${pageContext.request.contextPath}/product/detail?product_id=${p.product_id}">
 	                            <div class="text-wrap">
 	                                <c:out value="${p.product_name}"/>
 	                            </div>

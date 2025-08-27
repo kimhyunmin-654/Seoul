@@ -8,7 +8,7 @@
   SELECT product_id, member_id, product_name, thumbnail, status,
          TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI') AS reg_date
   FROM product
-  WHERE member_id = #{member_id}
+  WHERE member_id = #{member_id} AND type != 'AUCTION'
   ORDER BY reg_date DESC
   OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
 </select>

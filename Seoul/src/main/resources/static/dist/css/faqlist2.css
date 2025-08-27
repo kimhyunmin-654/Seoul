@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+.btn-accent {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+}
+.btn-accent:hover {
+    background-color: #3b5b9c;
+}
+.btn-default {
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ccc;
+}
+.btn-default:hover {
+    background-color: #ddd;
+}
+.table.board-list th {
+    background-color: #f8f9fa;
+    text-align: center;
+    border-bottom: 2px solid #dee2e6;
+}
+.table.board-list td {
+    text-align: center;
+    vertical-align: middle;
+}
+.table.board-list tr:hover {
+    background-color: #f1f1f1;
+}
+.table.board-list .subject {
+    text-align: left;
+    padding-left: 10px;
+}
+.text-wrap a {
+    text-decoration: none;
+    color: #333;
+}
+.text-wrap a:hover {
+    text-decoration: underline;
+    color: #4a69bd;
+}
+.main-container {
+    padding: 30px 0;
+    background-color: #fff;
+}
+
+.board-section {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.form-search select,
+.form-search input[type="text"] {
+    display: inline-block;
+    height: 36px;
+    padding: 0 10px;
+    margin-right: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.small-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 8px;
+}
+
+.dataCount {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.form-select-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.page-navigation {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 24px;
+}
+
+.page-navigation a, 
+.page-navigation span {
+    display: inline-block;
+    min-width: 34px;
+    padding: 6px 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #333;
+    background-color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.page-navigation a:hover {
+    background-color: #e8f0fe;
+    border-color: #4a69bd;
+    color: #4a69bd;
+}
+
+.page-navigation .active {
+    background-color: #4a69bd;
+    border-color: #4a69bd;
+    color: #fff;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+header {
+    height: 60px;
+}
+
+.main-container {
+    padding-top: 60px;
+}
