@@ -210,5 +210,33 @@ public class EventServiceImpl implements EventService {
 		
 		return result;
 	}
+
+	
+	// 마이페이지 이벤트 참여내역
+	@Override
+	public List<Event> myPageEventList(Map<String, Object> map) {
+		List<Event> list = null;
+		
+		try {
+			list = mapper.myPageEventList(map);
+		} catch (Exception e) {
+			log.info("myPageEventList", e);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int myPageDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = mapper.myPageDataCount(map);
+		} catch (Exception e) {
+			log.info("myPageDataCount : ", e);
+		}
+		
+		return result;
+	}
 	
 }

@@ -1,5 +1,6 @@
 package com.sp.app.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,7 +101,7 @@ public class EventController {
 	@GetMapping("{category}/article")
 	public String article(@PathVariable("category") String category,
 			@RequestParam(name = "num") long event_num,
-			@RequestParam(name = "page") String page,
+			@RequestParam(name = "page", defaultValue = "1") String page,
 			@RequestParam(name = "eventType", defaultValue = "all") String event_type,
 			Model model, HttpSession session) throws Exception {
 		
@@ -127,7 +128,6 @@ public class EventController {
 			if(category.equals("progress")) {
 				map.put("member_id", info.getMember_id());
 				isUserEventTakers = service.isuserEventTakers(map);
-				System.out.print("isusereventtakers : " + isUserEventTakers);
 			}
 			
 			// 이벤트 참여자
@@ -213,6 +213,78 @@ public class EventController {
 		
 		model.put("state", state);
 		return model;
+	}
+	
+	
+	// 마이페이지
+	@GetMapping("mypageList")
+	public String mypageList(@RequestParam(name = "page", defaultValue = "1") int current_page,
+			Model model, HttpSession session, HttpServletRequest req) {
+		
+		try {
+			// 페이징 처리
+			int size = 5;
+			int total_page = 0;
+			int dataCount = 0;
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("member_id", info.getMember_id());
+			
+			dataCount = service.myPageDataCount(map);
+			
+			if(dataCount != 0) {
+				total_page = paginateUtil.pageCount(dataCount, size);
+			}
+			
+			current_page = Math.min(current_page, total_page);
+			
+			int offset = (current_page - 1) * size;
+			if(offset < 0) offset = 0;
+			
+			map.put("offset", offset);
+			map.put("size", size);
+			
+			String cp = req.getContextPath();
+			String listUrl = cp + "/event/mypageList";
+			
+			String paging = paginateUtil.paging(current_page, total_page, listUrl);
+			
+			// 글 리스트
+			List<Event> eventList = null;
+			eventList = service.myPageEventList(map);
+			
+			// category
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date now = new Date();
+			
+			for(Event vo : eventList) {
+				Date startDate = sdf.parse(vo.getStartDate());
+				Date endDate = sdf.parse(vo.getEndDate());
+				
+				if(now.before(startDate)) {
+					vo.setCategory("upcoming");
+				} else if(now.after(endDate)) {
+					vo.setCategory("ended");
+				} else {
+					vo.setCategory("progress");
+				}
+			}
+			
+			model.addAttribute("eventList", eventList);
+			model.addAttribute("paging", paging);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("current_page", current_page);
+			model.addAttribute("total_page", total_page);
+			
+		} catch (ParseException e) {
+			log.info("mypageList : ", e);
+		} catch (Exception e) {
+			log.info("mypageList : ", e);
+		}
+		
+		return "event/mypageList";
 	}
 
 }

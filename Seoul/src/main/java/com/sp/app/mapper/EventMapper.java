@@ -26,4 +26,8 @@ public interface EventMapper {
 	// 이벤트 당첨
 	public Event findByEventWinner(Map<String, Object> map);
 	public List<Event> listEventWinner(long event_num);
+	
+	// 마이페이지 이벤트 참여내역
+	public List<Event> myPageEventList(Map<String, Object> map);
+	public int myPageDataCount(Map<String, Object> map);
 }

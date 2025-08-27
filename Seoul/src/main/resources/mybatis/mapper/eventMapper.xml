@@ -152,5 +152,24 @@
 		WHERE event_num = #{event_num}
 		ORDER BY rank ASC
 	</select>
+	
+	
+	<!-- 마이페이지 이벤트 참여내역 -->
+	<select id="myPageEventList" parameterType="map" resultType="com.sp.app.model.Event">
+		SELECT et.event_num, title, TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI') startDate,
+			TO_CHAR(end_date, 'YYYY-MM-DD HH24:MI') endDate, TO_CHAR(et.reg_date, 'YYYY-MM-DD') reg_date, save_filename AS saveFilename
+		FROM event e
+		JOIN event_takers et ON e.event_num = et.event_num
+		WHERE et.member_id = #{member_id}
+		ORDER BY reg_date DESC
+		OFFSET #{offset} ROWS FETCH FIRST #{size} ROWS ONLY
+	</select>
+	
+	<select id="myPageDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM event_takers
+		WHERE member_id = #{member_id}
+		ORDER BY reg_date DESC
+	</select>
 
 </mapper>

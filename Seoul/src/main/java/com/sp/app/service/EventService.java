@@ -26,4 +26,10 @@ public interface EventService {
 	
 	// 이벤트 마감기한
 	public String getDDayLabel(String strEndDate);
+
+	// 마이페이지 이벤트 참여내역
+	public List<Event> myPageEventList(Map<String, Object> map);
+	
+	// 이벤트 카테고리
+	public int myPageDataCount(Map<String, Object> map);
 }

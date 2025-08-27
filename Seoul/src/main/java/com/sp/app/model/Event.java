@@ -46,5 +46,8 @@ public class Event {
 	
 	// 마감기한
 	private String labelDDay;
+	
+	// 이벤트 카테고리
+	private String category;
 
 }
