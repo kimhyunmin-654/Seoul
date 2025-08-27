@@ -94,17 +94,13 @@
 </main>
 
 <c:if test="${sessionScope.member.member_id == dto.member_id || sessionScope.member.userLevel > 5}">
-	<script type="text/javascript">
-		function deleteOk() {
-			if(confirm('게시글을 삭제하시겠습니까 ? ')) {
-				let params = 'faq_id=${dto.faq_id}&page=${page}';
-				let url = '${pageContext.request.contextPath}/admin/faqManage/delete?' + params;
-				location.href = url;
-			}
-		}
+		<script>
+		  window.CTX = '${pageContext.request.contextPath}';
+		</script>
 		
-	</script>
+		<script src="${pageContext.request.contextPath}/dist/js/faqmanagearticle.js"></script>
 </c:if>
+
 <footer>
 	<jsp:include page="/WEB-INF/views/admin/layout/footer.jsp"/>
 </footer>
