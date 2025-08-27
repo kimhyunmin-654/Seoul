@@ -13,7 +13,7 @@
 /* 컨테이너 */
 .vertical-nav{
   position: sticky; top: 84px;        /* 헤더 높이에 맞게 조절 */
-  max-width: 240px;                    /* 사이드바 폭 */
+  max-width: 280px;                    /* 사이드바 폭 */
   margin: 0; padding: 0;
 }
 .vertical-nav .nav-menu{
@@ -24,12 +24,55 @@
   box-shadow: var(--sb-shadow);
   overflow: hidden;
 }
+ .region-list, .category-list {
+     list-style: none;
+     padding-left: 20px;
+ }
+ 
+ .region-list li, .category-list li {
+     margin: 5px 0;
+ }
+ 
+ .region-list a, .category-list a {
+     text-decoration: none;
+	 color: inherit;
+     padding: 5px 10px;
+     display: block;
+     border-radius: 4px;
+ }
+ 
+ .region-list a:hover, .category-list a:hover {
+     background-color: #f3f4f6;
+ }
+.text-orange-600 { color: #ea580c !important; }
+.sub-region-link.active,
+.sub-region-link2.active {
+    font-weight: bold;
+    color: #2563eb !important; 
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #e5e7eb;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+}
+.filter-chip button {
+    margin-left: 6px;
+    color: #6b7280;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 16px;
+}
 
 /* 섹션 타이틀(기존 label 그대로 활용) */
 .vertical-nav .region-link{
   display: flex; align-items: center; gap: .5rem;
   width: 100%;
-  padding: .8rem 1rem;
+  padding: .9rem 1rem;
   font-weight: 700;
   background: #f8f9fa;
   border-bottom: 1px solid var(--sb-border);
@@ -47,9 +90,12 @@
 }
 
 /* 내부 리스트 */
+.vertical-nav .has-sub-menu {
+  overflow: visible !important;
+}
 .vertical-nav .has-sub-menu > ul{
   list-style: none;
-  margin: 0; padding: .6rem .8rem;
+  margin: 0; padding: .75rem 1rem 1rem;
   display: grid; grid-template-columns: 1fr 1fr; /* 2열 그리드 */
   gap: .25rem .6rem;
   max-height: 420px; overflow: auto;
@@ -57,18 +103,21 @@
 
 /* 항목 */
 .vertical-nav .has-sub-menu > ul > li{ margin: 0; }
-.vertical-nav .sub-region-link{
-  display: block;
-  padding: .4rem .5rem;
+.vertical-nav .sub-region-link,
+.vertical-nav .sub-region-link2{
+  display: block !important;
+  pointer-events: auto !important;
+  padding: .42rem .55rem;
   border-radius: 8px;
-  text-decoration: none;
-  color: #212529;
+  text-decoration: none !important;
+  color: text-gray-700;
   transition: background .15s ease, color .15s ease, box-shadow .15s ease;
 }
-.vertical-nav .sub-region-link:hover{
-  background: var(--sb-hover);
-  color: var(--sb-active);
-  box-shadow: inset 0 0 0 1px rgba(13,110,253,.12);
+.vertical-nav .sub-region-link:hover,
+.vertical-nav .sub-region-link2:hover{
+  background: var(--sb-hover) !important;
+  color: var(--sb-active) !important;
+  box-shadow: inset 0 0 0 1px rgba(13,110,253,.12) !important;
 }
 
 /* 점(•) 불릿 제거용: 브라우저 기본 스타일 상쇄 */

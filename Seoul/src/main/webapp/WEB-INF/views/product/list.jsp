@@ -260,14 +260,32 @@
             labelSpan.html(chipHtml);
         }
         
-        
+		function updateRegion(selectedRegionId) {
+        	
+            const regionEl = $('.vertical-nav .sub-region-link');
+
+            regionEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
+
+            let target;
+            
+            if (!selectedRegionId) { 
+            	target = $('.vertical-nav .sub-region-link[data-region-id=""]');
+            } else {
+            	target = $('.vertical-nav .sub-region-link[data-region-id="' + selectedRegionId + '"]');
+            }
+
+            
+            if (target.length > 0) {
+            	target.removeClass('text-gray-700').addClass('font-bold text-orange-600');
+            }
+        }
         
         
         function updateCategory(selectedCategoryId) {
         	
-            const CategoryEl = $('.vertical-nav .category-link');
+            const categoryEl = $('.vertical-nav .category-link');
 
-            CategoryEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
+            categoryEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
 
             let target;
             
@@ -285,13 +303,17 @@
 		
         loadMoreBtn.on('click', loadMore);
         
-        $('.nav-menu').on('click', '.sub-region-link', function(e) {  
+        $('.nav-menu').on('click', '.sub-region-link[data-region-id]', function(e) {  
         	e.preventDefault();
+        	
+        	const selectedRegionId = $(this).data('region-id');
         	
         	currentKwd = '';
         	searchEl.val('');
         	
-        	currentRegionId = $(this).data('region-id');
+        	updateRegion(selectedRegionId);
+        	
+        	currentRegionId = selectedRegionId;
         	
         	const regionLabel = $('.region-select').find('.region-label');
             setChip(regionLabel, $(this).text().trim(), 'region');
@@ -306,8 +328,8 @@
         	const selectedCategoryId = $(this).data('category-id');
 
         	currentKwd = '';
-        	currentCategoryId = '';
         	searchEl.val('');
+        	currentCategoryId = '';
         	
         	updateCategory(selectedCategoryId);
         	
@@ -330,7 +352,8 @@
 
            
             if (filterType === 'region') {
-                currentRegionId = ''; 
+                currentRegionId = '';
+                updateRegion('')
             } else if (filterType === 'category') {
                 currentCategoryId = '';
                 updateCategory('');
