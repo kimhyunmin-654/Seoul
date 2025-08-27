@@ -377,12 +377,11 @@ $(function(){
 });
 </script>
 
-
 <footer>
 	<jsp:include page="/WEB-INF/views/admin/product/layout/footer.jsp"/>
 </footer>
 
-<jsp:include page="/WEB-INF/views/admin/product/layout/footerResources2.jsp"/>
+<jsp:include page="/WEB-INF/views/admin/product/layout/footerResources.jsp"/>
 
 </body>
 </html>
