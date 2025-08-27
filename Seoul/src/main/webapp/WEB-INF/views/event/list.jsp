@@ -82,7 +82,7 @@
 						        		</div>
 						        		<div class="event-title" data-num="${dto.event_num}">${dto.title}</div>
 						        		<div class="event-dates"> ${dto.startDate} ~ ${dto.endDate}
-						        		<c:if test="${dto.labelDDay != 'more'}">
+						        		<c:if test="${dto.labelDDay != 'more' && category != 'upcoming'}">
 											<span class="dDay-badge">${dto.labelDDay}</span>
 										</c:if>
 										</div>
