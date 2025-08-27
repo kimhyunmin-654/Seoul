@@ -6,7 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seoul</title>
+<title>서울한바퀴</title>
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 </head>
 <body>

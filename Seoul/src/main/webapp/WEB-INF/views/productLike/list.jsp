@@ -7,7 +7,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>찜한 상품 목록</title>
+    <title>서울한바퀴</title>
+    <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     
