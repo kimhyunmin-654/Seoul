@@ -88,8 +88,8 @@
 	<sql id="where-list">
         
 		<!-- 1. 지역 필터 -->
-        <if test="region_id != null and region_id != ''">
-            AND p.region_id = #{region_id}
+        <if test="region != null and region != ''">
+            AND p.region_id = #{region}
         </if>
         
         <!-- 2. 카테고리 필터 -->

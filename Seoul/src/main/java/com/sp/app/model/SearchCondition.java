@@ -10,7 +10,7 @@ import lombok.Setter;
 public class SearchCondition {
 	private String kwd;
 	private String category_id;
-	private String region_id;
+	private String region;
 	private String sort;
 	private int page = 1;
 	private String type;

@@ -28,6 +28,7 @@ import com.sp.app.model.SessionInfo;
 import com.sp.app.service.AuctionService;
 import com.sp.app.service.ProductService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,7 +138,7 @@ public class AuctionController {
 			model.addAttribute("page", map.get("page"));
 			model.addAttribute("cond", cond);
 			model.addAttribute("currentMenu", "auction/list");
-			model.addAttribute("categoryList", map.get("categoryList"));
+//			model.addAttribute("categoryList", map.get("categoryList"));
 			
 			
 		} catch (Exception e) {
@@ -150,7 +151,8 @@ public class AuctionController {
 	@GetMapping("detail/{auction_id}")
 	public String auctionDetail(
 			@PathVariable("auction_id") long auction_id,
-			Model model) {
+			Model model,
+			HttpServletRequest req) {
 
 		Map<String, Object> map = new HashMap<>();
 		
@@ -164,10 +166,16 @@ public class AuctionController {
 			List<Bid> bidList = (List<Bid>)map.get("bidList");
 			ObjectMapper objectMapper = new ObjectMapper();
 			String bidHistoryJson = objectMapper.writeValueAsString(bidList);
+			
+			String serverName = req.getServerName();
+			int serverPort = req.getServerPort();
+			
 						
 			model.addAttribute("dto", map.get("dto"));
 			model.addAttribute("imageList", map.get("imageList"));
 			model.addAttribute("bidHistoryJson", bidHistoryJson);
+			model.addAttribute("serverName", serverName);
+			model.addAttribute("serverPort", serverPort);
 			
 		} catch (Exception e) {
 			log.info("auctionDetail : ", e);
@@ -195,13 +203,15 @@ public class AuctionController {
 			dto.setBid_amount(bidAmount);
 			
 			map = auctionService.insertBid(dto);
+			map.put("status", "success");
 			
-		} catch (Exception e) {
-			log.info("bidSubmit : ", e);
+		} catch (RuntimeException e) {
+			log.error("bidSubmit : ", e);
 			map.put("status", "error");
-			map.put("message", "입찰에 실패했습니다.");
+			map.put("message", e.getMessage());
+		} catch (Exception e) {
+			log.error("bidSubmit : ", e);
 		}
-		
 		return map;
 	}
 	

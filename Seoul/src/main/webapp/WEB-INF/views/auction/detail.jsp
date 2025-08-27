@@ -629,6 +629,12 @@
             function updateCountdown() {
                 const nowMs = new Date().getTime();
                 let timeLeft = Math.round((endTimeMs - nowMs) / 1000);
+                
+                if (timeLeft < 3600) {
+                    countdownEl.classList.add('text-red-400');
+                } else {
+                    countdownEl.classList.remove('text-red-400');
+                }
 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
@@ -813,7 +819,9 @@
             // -- 입찰하기 버튼 이벤트 ---
             bidButton.addEventListener('click', () => {
             	const isLogin = ${not empty sessionScope.member};
-            	
+            	const isAlreadyTopBidder = (document.querySelector('#top-bidder .crown-sparkle') !== null); 
+				let confirmMsg = '';
+				
             	if(!isLogin) {
             		alert('로그인 후 이용 가능합니다.');
             		location.href = '<c:url value="/member/login"/>';
@@ -823,6 +831,13 @@
             	const amount = parseInt(bidAmountInput.value);
             	if(isNaN(amount) || amount <=0) {
             		alert('올바른 금액을 입력해주세요.');
+            		bidAmountInput.value = '';
+            		return;
+            	}
+            	
+            	if(currentNickname === '${dto.seller_nickname}') {
+            		alert('자신이 등록한 경매에는 입찰할 수 없습니다.');
+            		bidAmountInput.value = '';
             		return;
             	}
             	
@@ -833,8 +848,14 @@
             		bidAmountInput.value = '';
                     return;
                 }
+            	
+            	if(isAlreadyTopBidder) {
+            		confirmMsg = `현재 최고 입찰자입니다. 입찰액을 \${amount.toLocaleString('ko-KR')}원으로 올리시겠습니까?`;
+            	} else {
+            		confirmMsg = `\${amount.toLocaleString('ko-KR')}원으로 입찰하시겠습니까?\n\n입찰 후에는 취소가 불가능합니다.`
+            	}
              	
-            	if(!confirm(`\${amount.toLocaleString('ko-KR')}원으로 입찰하시겠습니까?\n\n입찰 후에는 취소가 불가능합니다.`)) {
+            	if(!confirm(confirmMsg)) {
             		return;
             	}
             	
@@ -853,11 +874,13 @@
          	let websocket = null;
          	
          	function connectWebSocket() {
-         		const wsUrl = `ws://\${window.location.host}/ws/auction`;
+         		const serverName = "${serverName}";
+         		const serverPort = "${serverPort}";	
+         		const wsUrl = `ws://\${serverName}:\${serverPort}/ws/auction`;
          		websocket = new WebSocket(wsUrl);
          		
          		websocket.onopen = function(e) {
-         			
+         			console.log('WEBSOCKET 연결 성공!');
          			const joinMessage = {
          				type: 'JOIN',
          				auction_id: ${dto.auction_id}

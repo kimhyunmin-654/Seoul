@@ -9,16 +9,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 목록</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
     <style>
         .aspect-square { aspect-ratio: 1 / 1; }
+        @layer base {
+        	a:link,
+        	a:visited,
+        	a:hover,
+        	a:active {
+        		text-decoration:none !important;
+        	}
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
         <header>	
 		    <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+		    
         </header>
         
         
@@ -39,6 +46,8 @@
 	    	        <p class="text-gray-600 mt-1">이웃들의 새로운 상품을 만나보세요.</p>    	        	
             	</header>
             
+            
+            
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6" id="product-grid">
             <c:forEach var="dto" items="${list}">
@@ -53,7 +62,7 @@
                                 <fmt:formatNumber value="${dto.price}" pattern="#,##0"/>원
                             </p>
                             <p class="text-sm text-gray-500 truncate" style="margin-bottom: 12px;">${dto.region_name}</p>
-                             <div class="flex items-center text-sm text-gray-500 border-t pt-3 mt-3 like-button" data-product-id="${dto.product_id}">
+                            <div class="flex items-center text-sm text-gray-500 border-t pt-3 mt-3 like-button" data-product-id="${dto.product_id}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                                 </svg>
@@ -65,9 +74,14 @@
             </c:forEach>
 
             <c:if test="${empty list}">
-                <div class="col-span-full text-center py-12">
-                    <p class="text-gray-500">아직 등록된 상품이 없습니다.</p>
-                </div>
+                <div class="col-span-full"> 
+        	            <div class="flex flex-col items-center justify-center text-center py-24 text-gray-500">
+        	                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        	                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        	                </svg>
+        	                <h3 class="mt-4 text-xl font-semibold text-gray-800">검색 결과가 없습니다.</h3>
+        	            </div>
+        	    </div>
             </c:if>
         </div>
 		
@@ -81,7 +95,6 @@
        </main>  
      </div>
    </div>
- 	<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"></jsp:include>
  	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
 <script>
     (function() {
@@ -104,7 +117,7 @@
         let currentPage = parseInt("${page}");
         let currentKwd = "${cond.kwd}";
         let currentCategoryId = "${cond.category_id}";
-       	let currentRegionId = "${cond.region_id}";
+       	let currentRegionId = "${cond.region}";
         let currentType = "${cond.type}";
         
         let url = '/product/list/ajax';
@@ -123,7 +136,7 @@
                 page: currentPage,
                 kwd: currentKwd,
                 category_id: currentCategoryId,
-                region_id: currentRegionId,
+                region: currentRegionId,
                 type: currentType
             };
             
@@ -176,8 +189,8 @@
        			page: currentPage,
                 kwd: currentKwd,
                 category_id: currentCategoryId,
-                region_id: currentRegionId,
-                type: currentType
+                region: currentRegionId,
+                type: 'NORMAL'
         	};
         	
         	const callback = function(data) {
@@ -211,6 +224,18 @@
                     });
                     
                     productGrid.append(cardHtml);
+        		} else {
+        			const noResultHtml = `
+        				<div class="col-span-full"> 
+        	            <div class="flex flex-col items-center justify-center text-center py-24 text-gray-500">
+        	                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        	                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        	                </svg>
+        	                <h3 class="mt-4 text-xl font-semibold text-gray-800">검색 결과가 없습니다.</h3>
+        	            </div>
+        	        </div>
+        	        `;
+        	        productGrid.html(noResultHtml);
         		}
         		
         		if (currentPage >= data.totalPage) {
@@ -223,18 +248,95 @@
         	ajaxRequest(url, 'GET', params, 'json', callback);
         };
         
+        function setChip(targetElement, text, filterType) {
+            const labelSpan = $(targetElement);
+            if (!labelSpan.data('default-label')) {
+                labelSpan.data('default-label', labelSpan.text());
+            }
+            const chipHtml = `
+                <span class="filter-chip" data-filter-type="\${filterType}">
+                    \${text} <button class="clear-chip-btn">&times;</button>
+                </span>`;
+            labelSpan.html(chipHtml);
+        }
+        
+        
+        
+        
+        function updateCategory(selectedCategoryId) {
+        	
+            const CategoryEl = $('.vertical-nav .category-link');
+
+            CategoryEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
+
+            let target;
+            
+            if (!selectedCategoryId) { 
+            	target = $('.vertical-nav .category-link[data-category-id=""]');
+            } else {
+            	target = $('.vertical-nav .category-link[data-category-id="' + selectedCategoryId + '"]');
+            }
+
+            
+            if (target.length > 0) {
+            	target.removeClass('text-gray-700').addClass('font-bold text-orange-600');
+            }
+        }
 		
         loadMoreBtn.on('click', loadMore);
         
-        $(document).on('click', '.sub-region-link', function(e) {  
+        $('.nav-menu').on('click', '.sub-region-link', function(e) {  
         	e.preventDefault();
         	
-        	// 넘겨줄 키워드 빈 문자열 처리 및 검색창 비우기
         	currentKwd = '';
         	searchEl.val('');
         	
         	currentRegionId = $(this).data('region-id');
+        	
+        	const regionLabel = $('.region-select').find('.region-label');
+            setChip(regionLabel, $(this).text().trim(), 'region');
+            
+            applyFilter();
+        	      	
+        });
+        
+        $('.nav-menu').on('click', '.category-link[data-category-id]', function(e) {  
+        	e.preventDefault();
+        	
+        	const selectedCategoryId = $(this).data('category-id');
+
+        	currentKwd = '';
+        	currentCategoryId = '';
+        	searchEl.val('');
+        	
+        	updateCategory(selectedCategoryId);
+        	
+        	currentCategoryId = selectedCategoryId;
+        	const categoryLabel = $('.category-link').not('[data-category-id]').find('.category-label');
+            setChip(categoryLabel, $(this).text().trim(), 'category');
+        	
         	applyFilter();        	
+        });
+        
+        $('.nav-menu').on('click', '.clear-chip-btn', function(e) {
+        	e.stopPropagation();
+        	
+            const chip = $(this).closest('.filter-chip');
+            const filterType = chip.data('filter-type');
+            const labelSpan = chip.parent();
+            
+            const defaultLabel = labelSpan.data('default-label');
+            labelSpan.html(defaultLabel); 
+
+           
+            if (filterType === 'region') {
+                currentRegionId = ''; 
+            } else if (filterType === 'category') {
+                currentCategoryId = '';
+                updateCategory('');
+            }
+            
+            applyFilter(); 
         });
         
         $('.searchbar').on('submit', function(e) {
@@ -245,8 +347,8 @@
         	applyFilter();
         	
         });
-        
-        // 좋아요 버튼 클릭 이벤트 리스너 추가 (수정된 부분)
+		
+		// 좋아요 버튼 클릭 이벤트 리스너 추가 (수정된 부분)
         $(document).on('click', '.like-button', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -272,7 +374,6 @@
                 }
             });
         });
-
                 
     });
 

@@ -206,6 +206,7 @@ public class ProductController {
 			model.addAttribute("totalPage", map.get("totalPage"));
 			model.addAttribute("dataCount", map.get("dataCount"));
 			model.addAttribute("cond", cond);
+			model.addAttribute("currentMenu", "product/list");
 			
 						
 		} catch (Exception e) {

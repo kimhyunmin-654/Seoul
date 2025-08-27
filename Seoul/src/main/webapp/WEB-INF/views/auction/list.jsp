@@ -82,12 +82,22 @@
         #auction-wrapper .grid-container {
         	min-height: 750px; 
     	}
+    	@layer base {
+        	a:link,
+        	a:visited,
+        	a:hover,
+        	a:active {
+        		text-decoration:none !important;
+        	}
+        }
     </style>
 </head>
 <body class="text-gray-200">
 	
 	<header>
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>		
+		<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>		
+				
 	</header>
 	
   <div id="auction-wrapper" class="container mx-auto max-w-7xl my-8">
@@ -221,7 +231,6 @@
 		</div>
     </div>
   </div>
-  <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"></jsp:include>
   <jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
   <script type="text/javascript">
 	  (function() {
@@ -344,7 +353,7 @@
         let currentPage = parseInt("${page}");
         let currentKwd = "${cond.kwd}";
         let currentCategoryId = "${cond.category_id}";
-       	let currentRegionId = "${cond.region_id}";
+       	let currentRegionId = "${cond.region}";
        	let currentSort = "${cond.sort}";
         
         let url = '/auction/list/ajax';
@@ -369,7 +378,7 @@
                 page: currentPage,
                 kwd: currentKwd,
                 category_id: currentCategoryId,
-                region_id: currentRegionId,
+                region: currentRegionId,
                 sort: currentSort,
                 type: 'AUCTION'
             };
@@ -405,7 +414,7 @@
        			page: currentPage,
                 kwd: currentKwd,
                 category_id: currentCategoryId,
-                region_id: currentRegionId,
+                region: currentRegionId,
                 sort: currentSort,
                 type: 'AUCTION'
         	};
@@ -498,6 +507,75 @@
         $('.sort-box').on('change', function() {
             currentSort = $(this).val();
             applyFilter();
+        });
+        
+        function setChip(targetElement, text, filterType) {
+            const labelSpan = $(targetElement);
+            if (!labelSpan.data('default-label')) {
+                labelSpan.data('default-label', labelSpan.text());
+            }
+            const chipHtml = `
+                <span class="filter-chip" data-filter-type="\${filterType}">
+                    \${text} <button class="clear-chip-btn">&times;</button>
+                </span>`;
+            labelSpan.html(chipHtml);
+        }
+        
+        
+        loadMoreBtn.on('click', loadMore);
+        
+        $('.nav-menu').on('click', '.sub-region-link', function(e) {  
+        	e.preventDefault();
+        	
+        	currentKwd = '';
+        	searchEl.val('');
+        	
+        	currentRegionId = $(this).data('region-id');
+        	
+        	const regionLabel = $('.region-select').find('.region-label');
+            setChip(regionLabel, $(this).text().trim(), 'region');
+            
+            applyFilter();
+        	      	
+        });
+        
+        $('.nav-menu').on('click', '.category-link[data-category-id]', function(e) {  
+        	e.preventDefault();
+        	
+        	const selectedCategoryId = $(this).data('category-id');
+
+        	currentKwd = '';
+        	currentCategoryId = '';
+        	searchEl.val('');
+        	
+        	updateCategoryButtons(selectedCategoryId);
+        	
+        	currentCategoryId = selectedCategoryId;
+        	const categoryLabel = $('.category-link').not('[data-category-id]').find('.category-label');
+            setChip(categoryLabel, $(this).text().trim(), 'category');
+        	
+        	applyFilter();        	
+        });
+        
+        $('.nav-menu').on('click', '.clear-chip-btn', function(e) {
+        	e.stopPropagation();
+        	
+            const chip = $(this).closest('.filter-chip');
+            const filterType = chip.data('filter-type');
+            const labelSpan = chip.parent();
+            
+            const defaultLabel = labelSpan.data('default-label');
+            labelSpan.html(defaultLabel); 
+
+           
+            if (filterType === 'region') {
+                currentRegionId = ''; 
+            } else if (filterType === 'category') {
+                currentCategoryId = '';
+                updateCategoryButtons('');
+            }
+            
+            applyFilter(); 
         });
         
         

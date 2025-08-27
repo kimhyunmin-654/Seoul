@@ -38,6 +38,10 @@ public class AuctionServiceImpl implements AuctionService{
 		try {
 			Auction auction = auctionMapper.findAuctionById(dto.getAuction_id());
 			
+			if(auction.getSeller_id() == dto.getBidder_id()) {
+				throw new RuntimeException("자신이 등록한 경매에는 입찰할 수 없습니다.");
+			}
+			
 			String endTimeStr = auction.getEnd_time();
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime endTime = LocalDateTime.parse(endTimeStr, dtf);
@@ -84,12 +88,13 @@ public class AuctionServiceImpl implements AuctionService{
 			
 			map.put("newBid", newBid);
 			map.put("updatedAuction", auction);
-			map.put("status", "success");
+			
 
+		} catch (RuntimeException e) {
+			log.info("insertBid : ", e);
+			throw e;			
 		} catch (Exception e) {
 			log.info("insertBid : ", e);
-			map.put("status", "error");
-			throw e;
 		}
 		
 		return map;
