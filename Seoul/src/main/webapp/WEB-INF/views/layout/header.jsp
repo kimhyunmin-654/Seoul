@@ -122,7 +122,7 @@
 		    <ul class="dropdown-menu dropdown-menu-end">
 		      <c:choose>
 		       
-		        <c:when test="${sessionScope.member.userLevel == 9}">
+		        <c:when test="${sessionScope.member.userLevel > 4}">
 		          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/admin/memberManage/main">관리자 마이페이지</a></li>
 		        </c:when>
 		       

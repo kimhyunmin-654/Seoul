@@ -326,7 +326,6 @@ public class TransactionServiceImpl implements TransactionService {
 	            try {
 	                storageService.deleteFile(uploadPath, dto.getThumbnail());
 	            } catch (Exception e) {
-	                log.error("deleteProduct - 썸네일 삭제 실패: product_id={}, file={}", product_id, dto.getThumbnail(), e);
 	            }
 	        }
 
