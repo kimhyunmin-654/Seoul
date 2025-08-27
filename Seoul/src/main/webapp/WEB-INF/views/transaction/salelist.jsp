@@ -91,10 +91,11 @@
                           </td>
 
                           <td class="subject align-middle">
-                            <div class="text-wrap">
-                                <c:out value="${p.product_name}"/>
-
-                            </div>
+                            <a href="${pageContext.request.contextPath}/product/detail?product_id=${p.product_id}">
+	                            <div class="text-wrap">
+	                                <c:out value="${p.product_name}"/>
+	                            </div>
+                            </a>								
                           </td>
 
 						<td class="align-middle status-cell" data-product-id="${p.product_id}" data-member-id="${p.member_id}">
