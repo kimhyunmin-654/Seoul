@@ -73,17 +73,6 @@
 	justify-content: flex-end;
 }
 
-.region-label {
-	min-width: 120px;
-	padding: 6px 12px;
-	border-radius: 8px;
-	background: #efefef;
-	font-weight: 800;
-	color: #333;
-	border: 1px solid #ddd;
-	text-align: center;
-}
-
 .segment {
 	display: flex;
 	border-radius: 10px;

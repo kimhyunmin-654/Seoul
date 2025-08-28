@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${dto.product_name} - 경매</title>
-    
+    <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,7 +162,7 @@
 
     </style>
 </head>
-<body class="text-gray-200">
+<body>
 	<header>
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 		<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
@@ -171,9 +171,9 @@
 	    <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
 	    	<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <aside class="col-span-4 lg:col-span-1">
-                    <div class="sticky top-8">
-                        <jsp:include page="/WEB-INF/views/layout/left.jsp"/>
-                        <jsp:include page="/WEB-INF/views/layout/leftResources.jsp"/>
+                    <div class="sticky top-8 text-gray-800">
+                        <jsp:include page="/WEB-INF/views/layout/leftProduct.jsp"/>
+                        
                     </div>
                 </aside>
                 <main class="col-span-4 lg:col-span-3">
@@ -723,7 +723,7 @@
         	// --- Bid(입찰 ajax) ---
             function handleNewBid(newBidAmount) {
             	
-            	const url = '/auction/detail/${dto.auction_id}';
+            	const url = '/auction/bid/${dto.auction_id}';
             	
     			const params = {bidAmount : newBidAmount};
     			
@@ -961,5 +961,6 @@
             
         });
     </script>
+<script src="${pageContext.request.contextPath}/dist/js/leftProduct.js"></script>
 </body>
 </html>

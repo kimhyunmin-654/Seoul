@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${dto.product_name}-서울한바퀴</title>
+<link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,8 +50,7 @@ body {
 
 			<aside class="col-span-1">
 				<div class="sticky top-8">
-					
-					<jsp:include page="/WEB-INF/views/layout/left.jsp" />
+					<jsp:include page="/WEB-INF/views/layout/leftProduct.jsp" />
 				</div>
 			</aside>
 
@@ -219,7 +219,6 @@ body {
 			id="product-price" value="${dto.price}"> <input type="hidden"
 			id="product-thumbnail" value="${dto.thumbnail}">
 	</div>
-	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
 	
 	<script>
 		(function() {
@@ -346,7 +345,7 @@ body {
     const ctx = '${pageContext.request.contextPath}';
 </script>     
 <script src="${pageContext.request.contextPath}/dist/js/detailchat.js"></script> 
-
+<script src="${pageContext.request.contextPath}/dist/js/leftProduct.js"></script>
 
 </body>
 </html>

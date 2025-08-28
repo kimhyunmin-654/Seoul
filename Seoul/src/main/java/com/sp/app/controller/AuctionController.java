@@ -138,7 +138,6 @@ public class AuctionController {
 			model.addAttribute("page", map.get("page"));
 			model.addAttribute("cond", cond);
 			model.addAttribute("currentMenu", "auction/list");
-//			model.addAttribute("categoryList", map.get("categoryList"));
 			
 			
 		} catch (Exception e) {
@@ -176,6 +175,7 @@ public class AuctionController {
 			model.addAttribute("bidHistoryJson", bidHistoryJson);
 			model.addAttribute("serverName", serverName);
 			model.addAttribute("serverPort", serverPort);
+			model.addAttribute("currentMenu", "auction/list");
 			
 		} catch (Exception e) {
 			log.info("auctionDetail : ", e);
@@ -186,7 +186,7 @@ public class AuctionController {
 	}
 	
 	@ResponseBody
-	@PostMapping("detail/{auction_id}")
+	@PostMapping("bid/{auction_id}")
 	public Map<String, Object> bidSubmit(
 			@PathVariable("auction_id") long auction_id,
 			@RequestParam("bidAmount") int bidAmount,

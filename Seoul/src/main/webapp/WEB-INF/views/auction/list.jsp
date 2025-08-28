@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>경매 - 서울한바퀴</title>
+    <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,17 +69,7 @@
         #auction-wrapper .card-glow {
              box-shadow: 0 0 15px rgba(55, 65, 81, 0.5);
         }
-        #auction-wrapper .vertical-nav {
-            background-color: transparent; 
-        }
-        #auction-wrapper .vertical-nav .region-label,
-        #auction-wrapper .vertical-nav .sub-region-link {
-            color: #d1d5db; 
-        }
-        #auction-wrapper .vertical-nav .sub-region-link:hover {
-            color: #fb923c; 
-            background-color: rgba(251, 146, 60, 0.1);
-        }
+        
         #auction-wrapper .grid-container {
         	min-height: 750px; 
     	}
@@ -90,59 +81,121 @@
         		text-decoration:none !important;
         	}
         }
+        
+        #auction-wrapper .active-filters-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: rgba(31, 41, 55, 0.5); 
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(55, 65, 81, 0.3);
+        border-radius: 0.75rem; 
+        flex-wrap: wrap;
+    }
+    
+    
+    #auction-wrapper .active-filters-label {
+        white-space: nowrap;
+        font-size: 0.875rem;
+        color: #9ca3af; 
+    }
+    
+    #auction-wrapper .active-filters-chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    
+    #auction-wrapper .main-filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #f97316; 
+        color: white;             
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;          
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
+    }
+    
+    
+    #auction-wrapper .main-clear-chip-btn {
+        background: none;
+        border: none;
+        color: white;
+        opacity: 0.7;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: opacity 0.2s;
+    }
+    #auction-wrapper .main-clear-chip-btn:hover {
+        opacity: 1;
+    }
+    
+    
+    #auction-wrapper .clear-all-filters {
+        white-space: nowrap;
+        color: #fb923c; 
+        transition: color 0.2s;
+    }
+    #auction-wrapper .clear-all-filters:hover {
+        color: #fdba74; 
+        text-decoration: none;
+    }
+
     </style>
 </head>
-<body class="text-gray-200">
+<body>
 	
 	<header>
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>		
-		<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>		
+				
 				
 	</header>
 	
-  <div id="auction-wrapper" class="container mx-auto max-w-7xl my-8">
-  
-    <div class="p-4 sm:p-6 lg:p-8">
-		<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+  <div class="container mx-auto max-w-7xl my-8">
+ 	 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 		
 			<aside class="col-span-4 lg:col-span-1">
 				<div class="sticky top-8">
-					<jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+					<jsp:include page="/WEB-INF/views/layout/leftProduct.jsp"/>
 				</div>			
 			</aside>
 			
-			<main class="col-span-4 lg:col-span-3">
-		        <c:if test="${not empty featuredAuction}">
-		            <div class="hero-section relative hero-glow rounded-3xl overflow-hidden mb-12" style="background-image: url(<c:url value='/uploads/product/${featuredAuction.thumbnail}'/>); background-size: cover; background-position: center;">
-		                <div class="absolute inset-0 w-full h-full bg-black/70"></div>
-		                <div class="relative p-8 md:p-16 flex flex-col justify-center items-start h-full">
-		                    <h1 class="text-4xl md:text-6xl font-black text-white leading-tight max-w-2xl">${featuredAuction.product_name}</h1>
-		                    <div class="price-time-group mt-6 flex items-center space-x-6">
-		                        <div>
-		                            <p class="text-sm font-medium text-gray-400">현재 최고가</p>
-		                            <p class="text-4xl font-bold text-orange-400">
-		                                <fmt:formatNumber value="${featuredAuction.current_price}" pattern="#,##0"/>원
-		                            </p>
-		                        </div>
-		                        <div>
-		                            <p class="text-sm font-medium text-gray-400">남은 시간</p>
-		                            <p class="countdown-timer text-4xl font-bold ${featuredAuction.urgent ? 'text-red-400' : 'text-white'}" data-endtime="${featuredAuction.end_time}" data-timer-type="featured">${featuredAuction.remainingTime}</p>
-		                        </div>
-		                    </div>
-		                    <a href="<c:url value='/auction/detail/${featuredAuction.auction_id}'/>" class="mt-8 bg-orange-500 hover:bg-orange-400 text-white font-bold text-lg py-3 px-8 rounded-lg transition-colors shadow-lg">
-		                        지금 입찰하기
-		                    </a>
-		                </div>
-		            </div>
-		        </c:if>
-		
+			<main id="auction-wrapper" class="col-span-4 lg:col-span-3">
+			    <div class="p-4 sm:p-6 lg:p-8">
+			        <c:if test="${not empty featuredAuction}">
+			            <div class="hero-section relative hero-glow rounded-3xl overflow-hidden mb-12" style="background-image: url(<c:url value='/uploads/product/${featuredAuction.thumbnail}'/>); background-size: cover; background-position: center;">
+			                <div class="absolute inset-0 w-full h-full bg-black/70"></div>
+			                <div class="relative p-8 md:p-16 flex flex-col justify-center items-start h-full">
+			                    <h1 class="text-4xl md:text-6xl font-black text-white leading-tight max-w-2xl">${featuredAuction.product_name}</h1>
+			                    <div class="price-time-group mt-6 flex items-center space-x-6">
+			                        <div>
+			                            <p class="text-sm font-medium text-gray-400">현재 최고가</p>
+			                            <p class="text-4xl font-bold text-orange-400">
+			                                <fmt:formatNumber value="${featuredAuction.current_price}" pattern="#,##0"/>원
+			                            </p>
+			                        </div>
+			                        <div>
+			                            <p class="text-sm font-medium text-gray-400">남은 시간</p>
+			                            <p class="countdown-timer text-4xl font-bold ${featuredAuction.urgent ? 'text-red-400' : 'text-white'}" data-endtime="${featuredAuction.end_time}" data-timer-type="featured">${featuredAuction.remainingTime}</p>
+			                        </div>
+			                    </div>
+			                    <a href="<c:url value='/auction/detail/${featuredAuction.auction_id}'/>" class="mt-8 bg-orange-500 hover:bg-orange-400 text-white font-bold text-lg py-3 px-8 rounded-lg transition-colors shadow-lg">
+			                        지금 입찰하기
+			                    </a>
+			                </div>
+			            </div>
+			        </c:if>
 		        <div class="filter-pane glass-pane p-2 rounded-xl mb-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-		            <div class="flex space-x-2">
-		                <button class="category-link category-all bg-gray-700/50 hover:bg-gray-700 text-white font-semibold py-0 px-3 h-8 rounded-md transition-colors text-sm" data-category-id="">전체</button>
-		                <c:forEach var="category" items="${categoryList}">
-		                    <button class="category-link hover:bg-gray-700/50 text-gray-400 font-semibold py-0 px-3 h-8 rounded-md transition-colors text-sm" data-category-id="${category.category_id}">${category.category_name}</button>
-		                </c:forEach>
-		            </div>
 		            <div>
 		                <select class="sort-box bg-gray-700/50 border border-gray-600 text-white text-sm rounded-md focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5">
 		                    <option value="ending_asc" selected>마감 임박순</option>
@@ -153,7 +206,15 @@
 		                </select>
 		            </div>
 		        </div>
-		
+				<div id="active-filters" class="active-filters-container mb-6" style="display: none;">
+				    <div class="active-filters-label">
+				        <span class="text-sm text-gray-300 font-medium">적용된 필터:</span>
+				    </div>
+				    <div class="active-filters-chips"></div>
+				    <button class="clear-all-filters text-sm text-orange-400 hover:text-orange-500 font-medium">
+				        모든 필터 지우기
+				    </button>
+				</div>
 				<div id="auction-grid" class="grid grid-cols-2 md:grid-cols-3 gap-6 grid-container">
 					<c:choose>
 						<c:when test="${not empty list}">
@@ -226,12 +287,12 @@
 			                더 많은 경매 보기
 			            </button>
 			        </c:if>
-		        </div>
-			</main>
-		</div>
+		   		</div>
+		   </div>
+		</main>
     </div>
   </div>
-  <jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
+
   <script type="text/javascript">
 	  (function() {
 	      const message = "${message}";
@@ -246,7 +307,8 @@
 	      }
 	  })();
   </script>
-  <script type="text/javascript">
+  <script src="${pageContext.request.contextPath }/dist/js/util-jquery.js"></script>
+  <script>
   
   function startTimer() {
 	  const countdownElements = document.querySelectorAll('.countdown-timer:not([data-timer-initialized])');
@@ -348,12 +410,19 @@
 		      '</div></div></div></a>';
   }
   
+  
+  	if (typeof window.currentCategoryId === 'undefined') {
+	    window.currentCategoryId = "${cond.category_id}";
+	}
+	if (typeof window.currentRegionId === 'undefined') {
+	    window.currentRegionId = "${cond.region}";
+	}
+	
+	
     $(function() {
 		
         let currentPage = parseInt("${page}");
         let currentKwd = "${cond.kwd}";
-        let currentCategoryId = "${cond.category_id}";
-       	let currentRegionId = "${cond.region}";
        	let currentSort = "${cond.sort}";
         
         let url = '/auction/list/ajax';
@@ -377,8 +446,8 @@
         	const params = {
                 page: currentPage,
                 kwd: currentKwd,
-                category_id: currentCategoryId,
-                region: currentRegionId,
+                category_id: window.currentCategoryId,
+                region: window.currentRegionId,
                 sort: currentSort,
                 type: 'AUCTION'
             };
@@ -407,7 +476,7 @@
     };
         
         // 데이터 필터링 요청
-        function applyFilter() {
+        window.applyFilter = function() {
         	currentPage = 1;
         	
         	const params = {
@@ -458,130 +527,27 @@
         	ajaxRequest(url, 'GET', params, 'json', callback);
         };
         
-        function updateCategoryButtons(selectedCategoryId) {
-            $('.category-link').removeClass('bg-gray-700/50 text-white').addClass('text-gray-400');
-            if (selectedCategoryId === '' || selectedCategoryId === null || selectedCategoryId === undefined) {
-                $('.category-all').removeClass('text-gray-400').addClass('bg-gray-700/50 text-white');
-            } else {
-                $('.category-link[data-category-id="' + selectedCategoryId + '"]')
-                    .removeClass('text-gray-400').addClass('bg-gray-700/50 text-white');
-            }
-        }
-		
         loadMoreBtn.on('click', loadMore);
-        
-        $(document).on('click', '.sub-region-link', function(e) {  
-        	e.preventDefault();
-        	
-        	currentKwd = '';
-        	currentCategoryId = '';
-        	searchEl.val('');
-        	
-        	updateCategoryButtons('');
-        	
-        	currentRegionId = $(this).data('region-id');
-        	applyFilter();        	
-        });
-        
-        $(document).on('click', '.category-link', function(e) {  
-        	e.preventDefault();
-        	
-        	const selectedCategoryId = $(this).data('category-id');
-            updateCategoryButtons(selectedCategoryId);
-        	
-        	currentKwd = '';
-        	searchEl.val('');
-        	
-        	currentCategoryId = selectedCategoryId;
-        	applyFilter();        	
-        });
-        
+		
+     
         $('.searchbar').on('submit', function(e) {
         	e.preventDefault();
         	
         	currentKwd = searchEl.val();
-        	applyFilter();
-        	
+        	window.applyFilter();
         });
         
         $('.sort-box').on('change', function() {
             currentSort = $(this).val();
             applyFilter();
         });
-        
-        function setChip(targetElement, text, filterType) {
-            const labelSpan = $(targetElement);
-            if (!labelSpan.data('default-label')) {
-                labelSpan.data('default-label', labelSpan.text());
-            }
-            const chipHtml = `
-                <span class="filter-chip" data-filter-type="\${filterType}">
-                    \${text} <button class="clear-chip-btn">&times;</button>
-                </span>`;
-            labelSpan.html(chipHtml);
-        }
-        
-        
+             
         loadMoreBtn.on('click', loadMore);
         
-        $('.nav-menu').on('click', '.sub-region-link', function(e) {  
-        	e.preventDefault();
-        	
-        	currentKwd = '';
-        	searchEl.val('');
-        	
-        	currentRegionId = $(this).data('region-id');
-        	
-        	const regionLabel = $('.region-select').find('.region-label');
-            setChip(regionLabel, $(this).text().trim(), 'region');
-            
-            applyFilter();
-        	      	
-        });
-        
-        $('.nav-menu').on('click', '.category-link[data-category-id]', function(e) {  
-        	e.preventDefault();
-        	
-        	const selectedCategoryId = $(this).data('category-id');
 
-        	currentKwd = '';
-        	currentCategoryId = '';
-        	searchEl.val('');
-        	
-        	updateCategoryButtons(selectedCategoryId);
-        	
-        	currentCategoryId = selectedCategoryId;
-        	const categoryLabel = $('.category-link').not('[data-category-id]').find('.category-label');
-            setChip(categoryLabel, $(this).text().trim(), 'category');
-        	
-        	applyFilter();        	
-        });
-        
-        $('.nav-menu').on('click', '.clear-chip-btn', function(e) {
-        	e.stopPropagation();
-        	
-            const chip = $(this).closest('.filter-chip');
-            const filterType = chip.data('filter-type');
-            const labelSpan = chip.parent();
-            
-            const defaultLabel = labelSpan.data('default-label');
-            labelSpan.html(defaultLabel); 
-
-           
-            if (filterType === 'region') {
-                currentRegionId = ''; 
-            } else if (filterType === 'category') {
-                currentCategoryId = '';
-                updateCategoryButtons('');
-            }
-            
-            applyFilter(); 
-        });
-        
-        
     });
 
 </script>
-  
+<script src="${pageContext.request.contextPath}/dist/js/leftProduct.js"></script>  
 </body>
 </html>

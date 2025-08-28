@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 목록</title>
+    <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .aspect-square { aspect-ratio: 1 / 1; }
@@ -19,6 +20,95 @@
         		text-decoration:none !important;
         	}
         }
+        .active-filters-container {
+	    display: flex;
+	    align-items: center;
+	    gap: 12px;
+	    padding: 12px 16px;
+	    background-color: #f8fafc;
+	    border: 1px solid #e2e8f0;
+	    border-radius: 8px;
+	    flex-wrap: wrap;
+		}
+		
+		.active-filters-label {
+		    white-space: nowrap;
+		}
+		
+		.active-filters-chips {
+		    display: flex;
+		    gap: 8px;
+		    flex-wrap: wrap;
+		    flex: 1;
+		    min-width: 0;
+		}
+		
+		.main-filter-chip {
+		    display: inline-flex;
+		    align-items: center;
+		    gap: 6px;
+		    background-color: #f97316;
+		    color: white;
+		    padding: 6px 12px;
+		    border-radius: 20px;
+		    font-size: 0.875rem;
+		    font-weight: 500;
+		    white-space: nowrap;
+		}
+		
+		.main-filter-chip .filter-type {
+		    opacity: 0.8;
+		    font-size: 0.8rem;
+		}
+		
+		.main-clear-chip-btn {
+		    background: none;
+		    border: none;
+		    color: white;
+		    cursor: pointer;
+		    padding: 0;
+		    margin-left: 2px;
+		    font-size: 1.1rem;
+		    line-height: 1;
+		    width: 18px;
+		    height: 18px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    border-radius: 50%;
+		    transition: background-color 0.2s;
+		}
+		
+		.main-clear-chip-btn:hover {
+		    background-color: rgba(255, 255, 255, 0.2);
+		}
+		
+		.clear-all-filters {
+		    white-space: nowrap;
+		    text-decoration: underline;
+		    transition: color 0.2s;
+		}
+		
+		.clear-all-filters:hover {
+		    text-decoration: none;
+		}
+		
+		
+		@media (max-width: 768px) {
+		    .active-filters-container {
+		        padding: 8px 12px;
+		        gap: 8px;
+		    }
+		    
+		    .active-filters-label {
+		        font-size: 0.8rem;
+		    }
+		    
+		    .main-filter-chip {
+		        font-size: 0.8rem;
+		        padding: 4px 8px;
+		    }
+		}
     </style>
 </head>
 <body class="bg-gray-100">
@@ -34,17 +124,25 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             	
             	<aside class="col-span-1 sidebar">
-			        <div class="sidebar-sticky">
-			          <jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+			        <div class="sidebar-container">
+			          <jsp:include page="/WEB-INF/views/layout/leftProduct.jsp"/>
 			        </div>
 			    </aside>
             
           
             <main class="col-span-1 lg:col-span-3">
             	<header class="mb-8">
-		            <h1 class="text-3xl font-bold text-gray-900">우리 동네 상품</h1>
-	    	        <p class="text-gray-600 mt-1">이웃들의 새로운 상품을 만나보세요.</p>    	        	
-            	</header>
+			        
+			        <div id="active-filters" class="active-filters-container mb-4" style="display: none;">
+			            <div class="active-filters-label">
+			                <span class="text-sm text-gray-600 font-medium">적용된 필터:</span>
+			            </div>
+			            <div class="active-filters-chips"></div>
+			            <button class="clear-all-filters text-sm text-orange-600 hover:text-orange-700 font-medium">
+			                모든 필터 지우기
+			            </button>
+			        </div>
+			    </header>
             
             
             
@@ -95,7 +193,7 @@
        </main>  
      </div>
    </div>
- 	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"></jsp:include>
+ 	
 <script>
     (function() {
         const message = "${message}";
@@ -112,12 +210,17 @@
 </script>
 <script src="${pageContext.request.contextPath }/dist/js/util-jquery.js"></script>
 <script>
-    $(function() {
+		if (typeof window.currentCategoryId === 'undefined') {
+		    window.currentCategoryId = "${cond.category_id}";
+		}
+		if (typeof window.currentRegionId === 'undefined') {
+		    window.currentRegionId = "${cond.region}";
+		}
+
+       	$(function() {
 		
         let currentPage = parseInt("${page}");
         let currentKwd = "${cond.kwd}";
-        let currentCategoryId = "${cond.category_id}";
-       	let currentRegionId = "${cond.region}";
         let currentType = "${cond.type}";
         
         let url = '/product/list/ajax';
@@ -126,7 +229,7 @@
         const productGrid = $('#product-grid');
         const loadMoreBtn = $('#load-more-btn');
         
-        // '더보기' 요청
+        // 더보기 요청
         function loadMore() {
         	
         	
@@ -135,8 +238,8 @@
             const params = {
                 page: currentPage,
                 kwd: currentKwd,
-                category_id: currentCategoryId,
-                region: currentRegionId,
+                category_id: window.currentCategoryId,
+                region: window.currentRegionId,
                 type: currentType
             };
             
@@ -181,15 +284,15 @@
         ajaxRequest(url, 'GET', params, 'json', callback);
     };
         
-        // '검색 필터링' 요청
-        function applyFilter() {
+        // 데이터 필터링 요청
+        window.applyFilter = function() {
         	currentPage = 1;
         	
         	const params = {
        			page: currentPage,
                 kwd: currentKwd,
-                category_id: currentCategoryId,
-                region: currentRegionId,
+                category_id: window.currentCategoryId,
+                region: window.currentRegionId,
                 type: 'NORMAL'
         	};
         	
@@ -248,130 +351,75 @@
         	ajaxRequest(url, 'GET', params, 'json', callback);
         };
         
-        function setChip(targetElement, text, filterType) {
-            const labelSpan = $(targetElement);
-            if (!labelSpan.data('default-label')) {
-                labelSpan.data('default-label', labelSpan.text());
-            }
-            const chipHtml = `
-                <span class="filter-chip" data-filter-type="\${filterType}">
-                    \${text} <button class="clear-chip-btn">&times;</button>
-                </span>`;
-            labelSpan.html(chipHtml);
-        }
         
-		function updateRegion(selectedRegionId) {
-        	
-            const regionEl = $('.vertical-nav .sub-region-link');
-
-            regionEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
-
-            let target;
-            
-            if (!selectedRegionId) { 
-            	target = $('.vertical-nav .sub-region-link[data-region-id=""]');
-            } else {
-            	target = $('.vertical-nav .sub-region-link[data-region-id="' + selectedRegionId + '"]');
-            }
-
-            
-            if (target.length > 0) {
-            	target.removeClass('text-gray-700').addClass('font-bold text-orange-600');
-            }
-        }
-        
-        
-        function updateCategory(selectedCategoryId) {
-        	
-            const categoryEl = $('.vertical-nav .category-link');
-
-            categoryEl.removeClass('font-bold text-orange-600').addClass('text-gray-700');
-
-            let target;
-            
-            if (!selectedCategoryId) { 
-            	target = $('.vertical-nav .category-link[data-category-id=""]');
-            } else {
-            	target = $('.vertical-nav .category-link[data-category-id="' + selectedCategoryId + '"]');
-            }
-
-            
-            if (target.length > 0) {
-            	target.removeClass('text-gray-700').addClass('font-bold text-orange-600');
-            }
-        }
 		
         loadMoreBtn.on('click', loadMore);
         
-        $('.nav-menu').on('click', '.sub-region-link[data-region-id]', function(e) {  
-        	e.preventDefault();
-        	
-        	const selectedRegionId = $(this).data('region-id');
-        	
-        	currentKwd = '';
-        	searchEl.val('');
-        	
-        	updateRegion(selectedRegionId);
-        	
-        	currentRegionId = selectedRegionId;
-        	
-        	const regionLabel = $('.region-select').find('.region-label');
-            setChip(regionLabel, $(this).text().trim(), 'region');
-            
-            applyFilter();
-        	      	
-        });
         
-        $('.nav-menu').on('click', '.category-link[data-category-id]', function(e) {  
-        	e.preventDefault();
-        	
-        	const selectedCategoryId = $(this).data('category-id');
-
-        	currentKwd = '';
-        	searchEl.val('');
-        	currentCategoryId = '';
-        	
-        	updateCategory(selectedCategoryId);
-        	
-        	currentCategoryId = selectedCategoryId;
-        	const categoryLabel = $('.category-link').not('[data-category-id]').find('.category-label');
-            setChip(categoryLabel, $(this).text().trim(), 'category');
-        	
-        	applyFilter();        	
-        });
-        
-        $('.nav-menu').on('click', '.clear-chip-btn', function(e) {
-        	e.stopPropagation();
-        	
-            const chip = $(this).closest('.filter-chip');
-            const filterType = chip.data('filter-type');
-            const labelSpan = chip.parent();
-            
-            const defaultLabel = labelSpan.data('default-label');
-            labelSpan.html(defaultLabel); 
-
-           
-            if (filterType === 'region') {
-                currentRegionId = '';
-                updateRegion('')
-            } else if (filterType === 'category') {
-                currentCategoryId = '';
-                updateCategory('');
-            }
-            
-            applyFilter(); 
-        });
         
         $('.searchbar').on('submit', function(e) {
         	e.preventDefault();
         	
         	currentKwd = searchEl.val();
         	
-        	applyFilter();
+        	window.applyFilter();
         	
         });
-		
-		// 좋아요 버튼 클릭 이벤트 리스너 추가 (수정된 부분)
+        
+        // 필터링 화면 동적 변화
+ 
+    function updateMainFilterChips() {
+        const activeFiltersContainer = document.getElementById('active-filters');
+        const chipsContainer = activeFiltersContainer.querySelector('.active-filters-chips');
+        
+        if (!activeFiltersContainer || !chipsContainer) {
+            return;
+        }
+        
+       
+        chipsContainer.innerHTML = '';
+        
+        let hasActiveFilters = false;
+        
+        
+        if (window.currentRegionId) {
+            const regionElement = document.querySelector(`.sub-region-link[data-region-id="${window.currentRegionId}"]`);
+            if (regionElement) {
+                const regionText = regionElement.textContent.trim();
+                const chipHtml = `
+                    <span class="main-filter-chip" data-filter-type="region" data-filter-id="${window.currentRegionId}">
+                        <span class="filter-type">지역:</span> ${regionText}
+                        <button class="main-clear-chip-btn" data-filter-type="region">&times;</button>
+                    </span>
+                `;
+                chipsContainer.innerHTML += chipHtml;
+                hasActiveFilters = true;
+            }
+        }
+        
+        
+        if (window.currentCategoryId) {
+            const categoryElement = document.querySelector(`.category-link[data-category-id="${window.currentCategoryId}"]`);
+            if (categoryElement) {
+                const categoryText = categoryElement.textContent.trim();
+                const chipHtml = `
+                    <span class="main-filter-chip" data-filter-type="category" data-filter-id="${window.currentCategoryId}">
+                        <span class="filter-type">카테고리:</span> ${categoryText}
+                        <button class="main-clear-chip-btn" data-filter-type="category">&times;</button>
+                    </span>
+                `;
+                chipsContainer.innerHTML += chipHtml;
+                hasActiveFilters = true;
+            }
+        }
+        
+        
+        activeFiltersContainer.style.display = hasActiveFilters ? 'flex' : 'none';
+        
+        
+      }
+        
+   		// 좋아요 버튼 클릭
         $(document).on('click', '.like-button', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -387,20 +435,23 @@
                 },
                 success: function(response) {
                     if (response.result) {
-                        // 좋아요가 성공적으로 처리되었을 때, 좋아요 수 업데이트
+                        
                         likeCountSpan.text(response.likeCount);
                     }
                 },
                 error: function(error) {
-                    console.log("좋아요 처리 실패: ", error);
+                    
                     alert("좋아요 처리 중 오류가 발생했습니다.");
                 }
             });
         });
+		
+        
                 
     });
 
    
 </script>
+<script src="${pageContext.request.contextPath}/dist/js/leftProduct.js"></script>
 </body>
 </html>
