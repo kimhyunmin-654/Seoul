@@ -33,15 +33,13 @@
           </div>
 
 
-		<form class="searchbar" action="${pageContext.request.contextPath}/search" method="get">
-		  <span class="search-label">중고거래</span>
-		  <select name="condition" class="form-select search-select">
-		    <option value="title">제목</option>
-		    <option value="content">내용</option>
-		    <option value="seller">판매자</option>
-		  </select>
-		  <input type="text" name="kwd" placeholder="검색" aria-label="검색" class="search-input">
-		  <button type="submit" class="btn search-btn" title="검색"><i class="bi bi-search"></i></button>
+		<form id="searchForm" name="searchForm" class="searchbar" method="get">
+			<select id="searchType" name="searchType" class="form-select-search-select">
+				<option value="product" selected>중고거래</option>
+				<option value="auction">경매</option>
+			</select>
+			<input id="searchInput" type="text" name="kwd" placeholder="검색" aria-label="검색" class="search-input">
+			<button id="searchBtn" type="button" class="btn search-btn" title="검색"><i class="bi bi-search"></i></button>
 		</form>
 		
         </div>
@@ -52,7 +50,7 @@
             <i class="bi bi-gavel"></i><span>경매</span>
           </a>
           <a href="${pageContext.request.contextPath}/bbs/list?region=${param.region}">동네한바퀴</a>
-          <a href="${pageContext.request.contextPath}/event/list">이벤트</a>
+          <a href="${pageContext.request.contextPath}/event/progress/list">이벤트</a>
           <a href="${pageContext.request.contextPath}/admin/sales">관리자 판매</a> 
           
 		  <div class="dropdown">
@@ -206,6 +204,35 @@ function updateHeaderRegion(name){
       window.CURRENT_MEMBER_ID = null;
     </c:otherwise>
   </c:choose>
+</script>
+<script>
+$(document).ready(function() {
+	const searchForm = $('#searchForm');
+	const searchTypeSelect = $('#searchType');
+	const searchBtn = $('#searchBtn');
+	const searchInput = $('#searchInput');
+	
+	function submitSearch() {
+		const selectedType = searchTypeSelect.val();
+		
+		let targetUrl;
+		if(selectedType === 'auction') {
+			targetUrl = '<c:url value="/auction/list"/>';
+		} else {
+			targetUrl = '<c:url value="/product/list"/>';
+		}
+		
+		searchForm[0].action = targetUrl;
+		searchForm[0].submit();
+	}
+	
+	searchBtn.on('click', submitSearch);
+	searchInput.on('keypress', function(e) {
+		if(e.which === 13) {
+			submitSearch();
+		}
+	});
+});
 </script>
 
 <script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>
