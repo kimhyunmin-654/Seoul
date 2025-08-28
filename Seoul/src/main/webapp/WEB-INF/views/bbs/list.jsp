@@ -10,6 +10,9 @@
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/bbslist.css" type="text/css">
+
 </head>
 <body class="bg-light">
 
@@ -48,35 +51,35 @@
 								</div>
 							</div>
 							
-							<table class="table table-hover board-list">
-								<thead>
-									<tr>
-										<th class="num">번호</th>
-										<th class="subject">제목</th>
-										<th class="name">글쓴이</th>
-										<th class="date">작성일</th>
-										<th class="hit">조회수</th>
-										<th class="like">공감수</th>
-									</tr>
-								</thead>
-								<tbody>
+							<div class="board-list-container">
+								<c:if test="${dataCount == 0}">
+									<p class="text-center text-muted py-5">등록된 게시글이 없습니다</p>
+								</c:if>
+								<c:if test="${dataCount > 0}">
 									<c:forEach var="dto" items="${list}" varStatus="status">
-										<tr>
-											<td>${dataCount - (page-1) * size - status.index}</td>
-											<td class="left">
-												<div class="text-wrap">
-													<a href="${articleUrl}&num=${dto.num}" class="text-reset">${dto.subject}</a>
-												</div>
-												<c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
-											</td>
-											<td>${dto.nickname}</td>
-											<td>${dto.reg_date}</td>
-											<td>${dto.hit_count}</td>
-											<td>${dto.communityLikeCount}</td>
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
+										<a href="${articleUrl}&num=${dto.num}" class="card board-item mb-3 text-decoration-none text-dark">
+											<div class="card-body">
+												<h5 class="card-title font-weight-bold">
+													${dto.subject}
+												</h5>
+												<p class="card-subtitle text-muted small">
+													<span>${dto.nickname}</span>
+													<span class="mx-1">·</span>
+													<span>${dto.reg_date}</span>
+												</p>
+												<p class="card-text text-muted small">
+													<i class="bi bi-heart-fill mr-1"></i>
+													<span>${dto.communityLikeCount}</span>
+													<i class="bi bi-chat-dots-fill mr-1"></i>
+													<span>${dto.replyCount}</span>
+													<i class="bi bi-eye mr-1"></i>
+													<span>${dto.hit_count}</span>
+												</p>
+								            </div>
+								        </a>
+								    </c:forEach>
+								</c:if>
+							</div>
 							
 							<!-- Paging -->
 							<div class="page-navigation">
@@ -129,6 +132,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function searchList() {
 	const f = document.searchForm;
+	console.log(f.schType);
+	console.log(f.kwd.value);
 	if(! f.kwd.value.trim()) {
 		return;
 	}
