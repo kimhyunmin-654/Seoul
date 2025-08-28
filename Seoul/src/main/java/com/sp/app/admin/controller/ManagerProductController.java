@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/admin/product/")
+@RequestMapping("/admin/product/*")
 @RequiredArgsConstructor
 @Slf4j
 public class ManagerProductController {
@@ -116,6 +116,81 @@ public class ManagerProductController {
         }
 
         return "admin/product/list";
+    }
+    
+    @GetMapping("list2")
+    public String list2(
+            @RequestParam(value = "page", defaultValue = "1") int current_page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "schType", required = false) String schType,
+            @RequestParam(value = "kwd", required = false) String kwd,
+            @RequestParam(value = "parentNum", required = false) Long parentNum,
+            @RequestParam(value = "categoryNum", required = false) Long categoryNum,
+            @RequestParam(value = "productShow", required = false) Integer productShow,
+            HttpServletRequest req,
+            Model model) {
+
+        try {
+            if ("GET".equalsIgnoreCase(req.getMethod())) {
+                kwd = kwd != null ? kwd.trim() : kwd;
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("schType", schType);
+            map.put("kwd", kwd);
+            map.put("parentNum", parentNum);
+            map.put("categoryNum", categoryNum);
+            map.put("productShow", productShow);
+
+            int dataCount = service.dataCount(map);
+            int total_page = paginateUtil.pageCount(dataCount, size);
+            if (current_page > total_page) current_page = total_page == 0 ? 1 : total_page;
+
+            int offset = (current_page - 1) * size;
+            if (offset < 0) offset = 0;
+            map.put("offset", offset);
+            map.put("size", size);
+
+            List<ManagerProduct> list = service.listProduct(map);
+
+            String cp = req.getContextPath();
+            String listUrl = cp + "/admin/product/list";
+
+            String query = "";
+            if (StringUtils.hasText(kwd)) query += "&kwd=" + kwd;
+            if (StringUtils.hasText(schType)) query += "&schType=" + schType;
+            if (parentNum != null) query += "&parentNum=" + parentNum;
+            if (categoryNum != null) query += "&categoryNum=" + categoryNum;
+            if (productShow != null) query += "&productShow=" + productShow;
+
+            String paging = paginateUtil.paging(current_page, total_page, listUrl + "?" + (query.startsWith("&") ? query.substring(1) : query));
+
+            model.addAttribute("list", list);
+            model.addAttribute("page", current_page);
+            model.addAttribute("size", size);
+            model.addAttribute("dataCount", dataCount);
+            model.addAttribute("total_page", total_page);
+            model.addAttribute("paging", paging);
+
+            model.addAttribute("parentNum", parentNum);
+            model.addAttribute("categoryNum", categoryNum);
+            model.addAttribute("productShow", productShow);
+
+            model.addAttribute("schType", schType);
+            model.addAttribute("kwd", kwd);
+
+            // 수정된 부분:
+            model.addAttribute("categoryList", service.listCategory());
+            // 부모 카테고리가 선택되었을 때만 하위 카테고리 목록을 가져옵니다.
+            if(parentNum != null) {
+                model.addAttribute("listSubCategory", service.listSubCategory(parentNum));
+            }
+
+        } catch (Exception e) {
+            log.info("list : ", e);
+        }
+
+        return "admin/product/list2";
     }
     
     

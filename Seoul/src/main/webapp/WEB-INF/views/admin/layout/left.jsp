@@ -10,7 +10,7 @@
 	<ul class="nav-menu">
 		
 		<li>
-			<a class="menu-link" href="<c:url value='/admin/celler/main' />" title="관리자 판매">
+			<a class="menu-link" href="<c:url value='/admin/product/main' />" title="관리자 판매">
 				<i class="menu-icon bi bi-person-square"></i>
 				<span class="menu-label">관리자 판매</span>
 			</a>

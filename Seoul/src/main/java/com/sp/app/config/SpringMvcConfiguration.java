@@ -35,8 +35,10 @@ public class SpringMvcConfiguration implements WebMvcConfigurer {
 		excludePaths.add("/faq/list");
 		excludePaths.add("/favicon.ico");
 		excludePaths.add("/product/list");
+		excludePaths.add("/product/list/ajax");
 		excludePaths.add("/uploads/product/**");
 		excludePaths.add("/member/idFind");
+		excludePaths.add("/admin/product/list2");
 		
 		registry.addInterceptor(new LoginCheckInterceptor()).excludePathPatterns(excludePaths);
 	}

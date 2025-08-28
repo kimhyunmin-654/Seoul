@@ -118,7 +118,7 @@
 								<td>${dto.price}</td>
 								<td>${dto.totalStock}</td>
 								<td>${dto.productShow == 1 ? "표시" : "숨김"}</td>
-								<td>${dto.productState}</td>
+								<td>S</td>
 								<td>${dto.updateDate}</td>
 								<td>
 									<c:url var="updateUrl" value="/admin/product/update/${dto.productNum}">
