@@ -21,11 +21,11 @@
 	<jsp:include page="/WEB-INF/views/admin/layout/left.jsp"/>
 	
 	<div class="right-panel">
-		<div class="page-title">
-			<h2>신고 관리</h2>
+		<div class="page-title pb-0 ms-3 mb-0" data-aos="fade-up" data-aos-delay="200">
+			<h2 class="fs-2">신고 관리</h2>
 		</div>
 		
-		<div class="section p-5">
+		<div class="section p-4" data-aos="fade-up" data-aos-delay="200">
 			<div class="section-body p-5">
 				<div class="row gy-4 m-0">
 					<div class="col-lg-12 board-section p-5 m-2">
@@ -154,7 +154,11 @@ function listPage(page) {
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<footer>
+	<jsp:include page="/WEB-INF/views/admin/layout/footer.jsp"/>
+</footer>
+
+<jsp:include page="/WEB-INF/views/admin/layout/footerResources.jsp"/>
 
 </body>
 </html>
