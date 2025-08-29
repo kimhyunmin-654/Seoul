@@ -17,6 +17,6 @@ public class LeftMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(leftInterceptor)
-                .addPathPatterns("/product/list", "/auction/list", "/product/detail/**", "/auction/detail/**");
+                .addPathPatterns("/product/list", "/auction/list", "/product/detail/**", "/auction/detail/**", "/member/prolist");
     }
 }

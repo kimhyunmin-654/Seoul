@@ -242,7 +242,7 @@
 							                        </form>
 							                    </c:if>
 							                    <c:if test="${dto.seller_id != sessionScope.member.member_id }">
-							                    	<a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">신고하기</a>
+							                    	<a href="#" class="report-btn block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">신고하기</a>
 							                    </c:if>
 							                </div>
 							            </div>
@@ -251,7 +251,9 @@
 			                	
 			                    <h1 class="text-4xl font-black text-white leading-tight pr-12">${dto.product_name}</h1>
 			                    <div class="flex items-center mt-4 space-x-3">
-			                        <img src="<c:url value='${dto.sellerAvatar}'/>" alt="판매자 아바타" class="w-8 h-8 rounded-full border-2 border-gray-600">
+			                    	<a href="<c:url value='/member/prolist?member_id=${dto.seller_id}'/>">
+			                        	<img src="<c:url value='${dto.sellerAvatar}'/>" alt="판매자 아바타" class="w-8 h-8 rounded-full border-2 border-gray-600">
+			                        </a>
 			                        <span class="text-sm font-medium text-gray-400">판매자: <span class="text-white font-semibold">${dto.seller_nickname}</span></span>
 			                    </div>
 			                </div>
@@ -329,6 +331,53 @@
 			                
 			            </div>
 			        </div>
+			        <!-- 판매자 신고 Modal -->
+					<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								
+								<div class="modal-header">
+									<h5 class="modal-title" id="reportModalLabel">신고하기</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+								</div>
+								
+								<form id="reportForm">
+									<div class="modal-body">
+										
+										<input type="hidden" name="target_num" id="target_num">
+										<input type="hidden" name="target_type" id="target_type">
+										<input type="hidden" name="target_table" id="target_table">
+										<input type="hidden" name="target_title" id="target_title">
+										 
+										<div class="mb-3">
+											<label for="reason_code" class="form-label">신고 사유</label>
+											<select name="reason_code" id="reason_code" class="form-select" required>
+												<option value="">선택하세요</option>
+												<option value="스팸/광고">스팸/광고</option>
+												<option value="음란물">음란물</option>
+												<option value="욕설/비방/차별적 표현">욕설/비방/차별적 표현</option>
+												<option value="개인정보 노출">개인정보 노출</option>
+												<option value="불법거래">불법거래</option>
+												<option value="기타">기타</option>
+											</select>
+										</div>
+										
+										<div class="mb-3">
+											<label for="reason_detail" class="form-label">상세설명 (선택)</label>
+											<textarea name="reason_detail" id="reason_detail" class="form-control" rows="3" placeholder="상세 내용을 입력하세요."></textarea>
+										</div>
+									  
+									</div>
+									
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-danger">신고</button>
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+									</div>
+								</form>
+					
+							</div>
+						</div>
+					</div>
 		        </main>
 		    </div>
 	    </div>
@@ -957,6 +1006,45 @@
             
          	connectWebSocket();
             
+         	  // 신고
+         	
+         	  const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+         	  const reportForm = document.getElementById('reportForm');
+         	  const reportBtn = document.querySelector('.report-btn');
+
+	         	reportBtn.addEventListener('click', function () {
+	         	  document.getElementById('target_num').value = "${dto.auction_id}";
+	         	  document.getElementById('target_title').value = "경매 판매";
+	         	  document.getElementById('target_table').value = "product";
+	         	  document.getElementById('target_type').value = "transaction";
+	
+	         	  document.getElementById('reason_code').value = "";
+	         	  document.getElementById('reason_detail').value = "";
+	
+	         	  reportModal.show();
+	         });
+         	  
+         	  
+         	  reportForm.addEventListener("submit", function (e) {
+         	    e.preventDefault();
+
+         	    const url = '${pageContext.request.contextPath}/bbs/insertCommunityReports';
+         	    const params = new URLSearchParams(new FormData(reportForm)).toString();
+
+         	    const fn = function (data) {
+         	      const state = data.state;
+         	      if (state === "true") {
+         	        alert("신고가 접수되었습니다.");
+         	      } else if (state === "reported") {
+         	        alert("신고는 한번만 가능합니다.");
+         	      } else {
+         	        alert("신고접수 처리 중 오류가 발생했습니다.");
+         	      }
+         	      reportModal.hide();
+         	    };
+
+         	    ajaxRequest(url, "post", params, "json", fn);
+         	  });
             
             
         });

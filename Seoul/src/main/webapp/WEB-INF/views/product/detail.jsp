@@ -10,12 +10,14 @@
 <title>${dto.product_name}-서울한바퀴</title>
 <link href="${pageContext.request.contextPath}/dist/images/favicon.png" rel="icon">
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
+<jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
 	rel="stylesheet">
+
 <style>
 body {
 	font-family: 'Noto Sans KR', sans-serif;
@@ -170,7 +172,7 @@ body {
 												
 												<c:otherwise>
 													<a href="#"
-														class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">신고하기</a>
+														class="report-btn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">신고하기</a>
 												</c:otherwise>
 											</c:choose>
 										</div>
@@ -203,6 +205,53 @@ body {
 							  </button>
 							</c:if>
 							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 판매자 신고 Modal -->
+				<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							
+							<div class="modal-header">
+								<h5 class="modal-title" id="reportModalLabel">신고하기</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+							</div>
+							
+							<form id="reportForm">
+								<div class="modal-body">
+									
+									<input type="hidden" name="target_num" id="target_num">
+									<input type="hidden" name="target_type" id="target_type">
+									<input type="hidden" name="target_table" id="target_table">
+									<input type="hidden" name="target_title" id="target_title">
+									 
+									<div class="mb-3">
+										<label for="reason_code" class="form-label">신고 사유</label>
+										<select name="reason_code" id="reason_code" class="form-select" required>
+											<option value="">선택하세요</option>
+											<option value="스팸/광고">스팸/광고</option>
+											<option value="음란물">음란물</option>
+											<option value="욕설/비방/차별적 표현">욕설/비방/차별적 표현</option>
+											<option value="개인정보 노출">개인정보 노출</option>
+											<option value="불법거래">불법거래</option>
+											<option value="기타">기타</option>
+										</select>
+									</div>
+									
+									<div class="mb-3">
+										<label for="reason_detail" class="form-label">상세설명 (선택)</label>
+										<textarea name="reason_detail" id="reason_detail" class="form-control" rows="3" placeholder="상세 내용을 입력하세요."></textarea>
+									</div>
+								  
+								</div>
+								
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-danger">신고</button>
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+								</div>
+							</form>
+				
 						</div>
 					</div>
 				</div>
@@ -337,6 +386,43 @@ body {
                  });
              });
         	
+             const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+         	
+         	// 신고 하기
+         	$('.report-btn').click(function(){
+         		
+         		$('#target_num').val('${dto.product_id}');
+         		$('#target_title').val('중고거래 판매');
+         		$('#target_table').val('product');
+         		$('#target_type').val('transaction');
+         		
+         		$('#reason_code').val('');
+         		$('#reason_detail').val('');
+         		reportModal.show();
+         	});
+         	
+         	$('#reportForm').submit(function(e) {
+         		e.preventDefault();
+         		
+         		let url = ctx + '/bbs/insertCommunityReports';
+         		let params = $(this).serialize();
+         		
+         		const fn = function(data) {
+         			let state = data.state;
+         			if(state === 'true') {
+         				alert('신고가 접수되었습니다.');
+         			} else if(state === 'reported') {
+        				alert('신고는 한번만 가능합니다.');
+        			} else {
+        				alert('신고접수 처리 중 오류가 발생했습니다.');
+         			}
+         			
+         			reportModal.hide();
+         		};
+         		
+         		ajaxRequest(url, 'post', params, 'json', fn);
+         	});
+         	
         	
         });     
     </script>

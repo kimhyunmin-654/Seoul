@@ -32,14 +32,14 @@
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
     </header>
       
-	<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"/>
+	
     
     <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
         <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6">
             
             <aside class="col-span-1">
                 <div class="sidebar-sticky">
-                    <jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+                    <jsp:include page="/WEB-INF/views/layout/leftProduct.jsp"/>
                 </div>
             </aside>
 
@@ -92,10 +92,26 @@
                     <c:otherwise>
                         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8" id="product-list">
                             <c:forEach var="dto" items="${sellerProducts}">
+                            	<c:choose>
+							        <c:when test="${dto.type == 'AUCTION'}">
+							            <c:set var="url" value="/auction/detail/${dto.auction_id}" />
+							        </c:when>
+							        <c:otherwise>
+							            <c:set var="url" value="/product/detail?product_id=${dto.product_id}" />
+							        </c:otherwise>
+							    </c:choose>
                                 <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:shadow-xl transition-all duration-300">
-                                    <a href="<c:url value='/product/detail?product_id=${dto.product_id}'/>">
+                                    <a href="<c:url value='${url}'/>">
                                         <div class="relative w-full aspect-square overflow-hidden">
                                             <img src="<c:url value='/uploads/product/${dto.thumbnail}'/>" alt="${dto.product_name}" class="w-full h-full object-cover">
+                                            <c:if test="${dto.type eq 'AUCTION'}">
+								                <div class="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center z-10">
+								                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hammer me-1" viewBox="0 0 16 16">
+													  <path d="M9.972 2.508a.5.5 0 0 0-.16-.556l-.178-.129a5 5 0 0 0-2.076-.783C6.215.862 4.504 1.229 2.84 3.133H1.786a.5.5 0 0 0-.354.147L.146 4.567a.5.5 0 0 0 0 .706l2.571 2.579a.5.5 0 0 0 .708 0l1.286-1.29a.5.5 0 0 0 .146-.353V5.57l8.387 8.873A.5.5 0 0 0 14 14.5l1.5-1.5a.5.5 0 0 0 .017-.689l-9.129-8.63c.747-.456 1.772-.839 3.112-.839a.5.5 0 0 0 .472-.334"/>
+													</svg>
+								                    <span>경매</span>
+								                </div>
+								            </c:if>
                                             <c:if test="${dto.status eq '판매완료'}">
                                                 <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
                                                     <span class="text-white text-sm font-bold">거래완료</span>
@@ -124,5 +140,6 @@
             </main>
         </div>
     </div>
+<script src="${pageContext.request.contextPath}/dist/js/leftProduct.js"></script>
 </body>
 </html>

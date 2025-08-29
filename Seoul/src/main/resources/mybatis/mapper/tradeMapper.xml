@@ -175,10 +175,21 @@
         WHERE product_id = #{product_id}
     </update>
     
+    <!-- 판매자 물품 조회 -->
     <select id="findByMemberId" parameterType="long" resultType="com.sp.app.model.Product">
         SELECT 
-            p.product_id, p.member_id, p.product_name, p.price, p.thumbnail, p.status
+            p.product_id, p.member_id, p.product_name, p.thumbnail, p.type, a.auction_id,
+            CASE
+            	WHEN p.type = 'AUCTION' THEN a.current_price
+            	ELSE p.price
+            END AS price,
+            CASE
+            	WHEN p.type = 'AUCTION' AND a.status = 'ENDED_SUCCESS' THEN '판매완료'            	
+            	ELSE p.status
+            END AS status
         FROM product p
+        LEFT JOIN
+        	auction a ON p.product_id = a.product_id
         WHERE p.member_id = #{member_id}
         ORDER BY p.reg_date DESC
     </select>
