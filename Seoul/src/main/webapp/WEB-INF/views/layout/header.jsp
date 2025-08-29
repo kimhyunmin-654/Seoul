@@ -170,6 +170,7 @@
     </div>
   </div>
 </div>
+<script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>
 
 <script>
 function updateHeaderRegion(name){
@@ -231,5 +232,3 @@ $(document).ready(function() {
 	});
 });
 </script>
-
-<script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>
