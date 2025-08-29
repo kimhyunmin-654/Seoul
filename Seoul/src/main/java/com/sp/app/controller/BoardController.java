@@ -68,7 +68,7 @@ public class BoardController {
 		try {
 			region_name = service.getRegionnameById(region);
 			
-			int size = 10;
+			int size = 8;
 			int total_page = 0;
 			int dataCount = 0;
 			
@@ -144,6 +144,7 @@ public class BoardController {
 		model.addAttribute("mode", "write");
 		model.addAttribute("region_code", region);
 		model.addAttribute("region_name", region_name);
+		model.addAttribute("currentMenu", "bbs/list");
 
 		return "bbs/write";
 	}
@@ -202,20 +203,23 @@ public class BoardController {
 			Board nextDto = service.findByNext(map);
 			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			map.put("member_id", info.getMember_id());
-			boolean isUserLiked = service.isUserBoardLiked(map);
+			// 로그인 제어
+			if(info != null) {
+				map.put("member_id", info.getMember_id());
+				boolean isUserLiked = service.isUserBoardLiked(map);
+				model.addAttribute("isUserLiked", isUserLiked);
+			}
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("prevDto", prevDto);
 			model.addAttribute("nextDto", nextDto);
-
-			model.addAttribute("isUserLiked", isUserLiked);
 			
 			model.addAttribute("page", page);
 			model.addAttribute("query", query);
 			
 			model.addAttribute("region_code", region);
 			model.addAttribute("region_name", region_name);
+			model.addAttribute("currentMenu", "bbs/list");
 			
 			return "bbs/article";
 			
@@ -254,6 +258,7 @@ public class BoardController {
 			
 			model.addAttribute("region_code", region);
 			model.addAttribute("region_name", region_name);
+			model.addAttribute("currentMenu", "bbs/list");
 			
 			return "bbs/write";
 			
@@ -467,8 +472,10 @@ public class BoardController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("num", num);
 			
-			map.put("userLevel", info.getUserLevel());
-			map.put("member_id", info.getMember_id());
+			if(info != null) {
+				map.put("userLevel", info.getUserLevel());
+				map.put("member_id", info.getMember_id());
+			}
 			
 			dataCount = service.replyCount(map);
 			total_page = paginateUtil.pageCount(dataCount, size);

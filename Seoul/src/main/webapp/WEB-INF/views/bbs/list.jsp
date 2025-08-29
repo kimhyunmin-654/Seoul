@@ -19,7 +19,8 @@
 <header>
 	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
-<div class="container-fluid p-4 p-md-5">
+
+<div class="container px-4 py-4 py-sm-6 py-lg-8 mx-auto">
 	<div class="row">
 		<aside class="col-lg-2">
 			<div class="sticky-top" style="top: 2rem;">
@@ -37,48 +38,76 @@
 				</div>
 			</div>
 			
+			
 			<!-- Page Content -->
 			<div class="section">
 				<div class="container">
 					<div class="row justify-content-center">
-						<div class="col-md-10 board-section my-4 p-5">
+					
+						<div class="card col-md-11 p-4-5 shadow-sm mb-2">
+							<!-- Search -->
+							<h5 class="mb-3">🔍${region_name}에서 검색</h5>
+							<div class="row mt-1 mb-2 justify-content-center search-form-container">
+								<div class="d-flex align-items-center justify-content-start flex-wrap px-4">
+									<form name="bbssearchForm" class="d-flex align-items-center justify-content-center form-search">
+										<div class="input-group-prepend">
+											<span class="me-1 input-group-text" style="background-color: #e9ecef; border-right: none; color: #495057;">
+												동네글 검색
+											</span>
+										</div>
+										<select name="schType" class="me-1">
+											<option value="all" ${schType=="all"?"selected":""}>제목+내용</option>
+											<option value="nickname" ${schType=="nickname"?"selected":""}>글쓴이</option>
+											<option value="reg_date" ${schType=="reg_date"?"selected":""}>작성일</option>
+											<option value="subject" ${schType=="subject"?"selected":""}>제목</option>
+											<option value="content" ${schType=="content"?"selected":""}>내용</option>
+										</select>
+										<input type="text" class="me-1" name="kwd" value="${kwd}">
+										<input type="hidden" name="region" value="${region_code}">
+										<button type="button" class="btn-default btn-outline-secondary d-flex align-items-center me-1 px-5" onclick="searchList();"><i class="bi bi-search"></i>&nbsp;검색</button>
+									</form>
+								
+									<button type="button" class="btn-default px-4" onclick="location.href='${pageContext.request.contextPath}/bbs/list?region=${region_code}';" title="새로고침"><i class="bi bi-arrow-clockwise"></i>&nbsp;새로고침</button>
+								</div>
+							</div>
+						</div>
 						
+						
+						<div class="col-md-11 board-section my-1 p-4-5">
+				
 							<div class="row py-1 mb-2">
 								<div class="col-md-6 align-self-center">
-									<span class="small-title">글목록</span> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+									<h5 class="mb-3">📋 ${region_name}한바퀴 목록</h5> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
+									<button type="button" class="btn-send me-4 mb-3" onclick="location.href='${pageContext.request.contextPath}/bbs/write?region=${region_code}';">동네글등록</button>
 								</div>
 							</div>
 							
+							
 							<div class="board-list-container">
-								<c:if test="${dataCount == 0}">
-									<p class="text-center text-muted py-5">등록된 게시글이 없습니다</p>
-								</c:if>
-								<c:if test="${dataCount > 0}">
-									<c:forEach var="dto" items="${list}" varStatus="status">
-										<a href="${articleUrl}&num=${dto.num}" class="card board-item mb-3 text-decoration-none text-dark">
-											<div class="card-body">
-												<h5 class="card-title font-weight-bold">
-													${dto.subject}
-												</h5>
-												<p class="card-subtitle text-muted small">
-													<span>${dto.nickname}</span>
-													<span class="mx-1">·</span>
-													<span>${dto.reg_date}</span>
-												</p>
-												<p class="card-text text-muted small">
-													<i class="bi bi-heart-fill mr-1"></i>
-													<span>${dto.communityLikeCount}</span>
-													<i class="bi bi-chat-dots-fill mr-1"></i>
-													<span>${dto.replyCount}</span>
-													<i class="bi bi-eye mr-1"></i>
-													<span>${dto.hit_count}</span>
-												</p>
-								            </div>
-								        </a>
-								    </c:forEach>
-								</c:if>
+								<c:forEach var="dto" items="${list}" varStatus="status">
+									<a href="${articleUrl}&num=${dto.num}" class="card board-item mb-3 text-decoration-none text-dark">
+										<div class="card-body">
+											<h5 class="card-title font-weight-bold">
+												${dto.subject}
+											</h5>
+											<p class="card-subtitle text-muted small">
+												<span>${dto.nickname}</span>
+												<span class="mx-1">·</span>
+												<span>${dto.reg_date}</span>
+											</p>
+											<p class="card-text text-muted small">
+												<i class="bi bi-heart-fill mr-1"></i>
+												<span>${dto.communityLikeCount}</span>
+												<i class="bi bi-chat-dots-fill mr-1"></i>
+												<span>${dto.replyCount}</span>
+												<i class="bi bi-eye mr-1"></i>
+												<span>${dto.hit_count}</span>
+											</p>
+							            </div>
+							        </a>
+							    </c:forEach>
 							</div>
 							
 							<!-- Paging -->
@@ -86,29 +115,6 @@
 								${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
 							</div>
 							
-							<!-- Search -->
-							<div class="row mt-3">
-								<div class="col-md-3">
-									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/bbs/list?region=${region_code}';" title="새로고침"><i class="bi bi-arrow-clockwise"></i></button>
-								</div>
-								<div class="col-md-6 text-center">
-									<form name="searchForm" class="form-search">
-										<select name="schType">
-											<option value="all" ${schType=="all"?"selected":""}>제목+내용</option>
-											<option value="nickname" ${schType=="nickname"?"selected":""}>글쓴이</option>
-											<option value="reg_date" ${schType=="reg_date"?"selected":""}>작성일</option>
-											<option value="subject" ${schType=="subject"?"selected":""}>제목</option>
-											<option value="content" ${schType=="content"?"selected":""}>내용</option>
-										</select>
-										<input type="text" name="kwd" value="${kwd}">
-										<input type="hidden" name="region" value="${region_code}">
-										<button type="button" class="btn-default" onclick="searchList();"><i class="bi bi-search"></i></button>
-									</form>
-								</div>
-								<div class="col-md-3 text-end">
-									<button type="button" class="btn-accent btn-md" onclick="location.href='${pageContext.request.contextPath}/bbs/write?region=${region_code}';">동네글등록</button>
-								</div>
-							</div>
 						
 						</div>
 					</div>
@@ -131,9 +137,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function searchList() {
-	const f = document.searchForm;
-	console.log(f.schType);
-	console.log(f.kwd.value);
+	const f = document.bbssearchForm;
 	if(! f.kwd.value.trim()) {
 		return;
 	}

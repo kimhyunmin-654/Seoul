@@ -6,187 +6,200 @@
 <head>
 <meta charset="UTF-8">
 <title>서울 한바퀴</title>
+<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"/>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 </head>
-<body>
+<body class="bg-light">
 
 <header>
 	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 </header>
 
-<main>
-	<!-- Page Title -->
-	<div class="page-title">
-		<div class="container align-items-center">
-			<h1>${region_name} 한바퀴</h1>
-			<div class="page-title-underline-accent"></div>
-		</div>
-	</div>
-	
-	<!-- Page Content -->
-	<div class="section">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-10 board-section my-4 p-5">
-
-					<div class="pb-2">
-						<span class="small-title">상세정보</span>
-					</div>
+<div class="container px-4 py-4 py-sm-6 py-lg-8 mx-auto">
+	<div class="row">
+		<aside class="col-lg-2">
+			<div class="sticky-top" style="top: 2rem;">
+				<jsp:include page="/WEB-INF/views/layout/left.jsp"/>
+			</div>
+		</aside>
+		
+		<main class="col-lg-10">
+		
+			<!-- Page Title -->
+			<div class="page-title">
+				<div class="container align-items-center">
+					<h1>${region_name} 한바퀴</h1>
+					<div class="page-title-underline-accent"></div>
+				</div>
+			</div>
+			
+			<!-- Page Content -->
+			<div class="section">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-md-10 board-section my-4 p-5">
+		
+							<div class="pb-2">
+								<span class="small-title">상세정보</span>
+							</div>
+											
+							<table class="table board-article">
+								<thead>
+									<tr>
+										<td colspan="2" class="text-center">
+											${dto.subject}
+										</td>
+									</tr>
+								</thead>
+		
+								<tbody>
+									<tr>
+										<td width="50%">
+											작성자 : ${dto.nickname}
+										</td>
+										<td width="50%" class="text-end">
+											작성일 : ${dto.reg_date} | 조회 ${dto.hit_count}
+										</td>
+									</tr>
 									
-					<table class="table board-article">
-						<thead>
-							<tr>
-								<td colspan="2" class="text-center">
-									${dto.subject}
-								</td>
-							</tr>
-						</thead>
-
-						<tbody>
-							<tr>
-								<td width="50%">
-									작성자 : ${dto.nickname}
-								</td>
-								<td width="50%" class="text-end">
-									작성일 : ${dto.reg_date} | 조회 ${dto.hit_count}
-								</td>
-							</tr>
-							
-							<tr>
-								<td colspan="2" valign="top" height="200" class="article-content" style="border-bottom: none;">
-									${dto.content}
-								</td>
-							</tr>
-
-							<tr>
-								<td colspan="2" class="text-center p-3" style="border-bottom: none;">
-									<button type="button" class="btn-default btnSendBoardLike" title="좋아요"><i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.communityLikeCount}</span></button>
-								</td>
-							</tr>
-
-							<tr>
-								<td colspan="2">
-									<c:if test="${not empty dto.saveFilename}">
-										<p class="border text-secondary my-1 p-2">
-											<i class="bi bi-folder2-open"></i>
-											<a href="${pageContext.request.contextPath}/bbs/download?region=${region_code}&num=${dto.num}">${dto.originalFilename}</a>
-										</p>
-									</c:if>
-								</td>
-							</tr>
-
-							<tr>
-								<td colspan="2">
-									다음글 : 
-									<c:if test="${not empty nextDto}">
-										<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${nextDto.num}">${nextDto.subject}</a>
-									</c:if>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									이전글 : 
-									<c:if test="${not empty prevDto}">
-										<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${prevDto.num}">${prevDto.subject}</a>
-									</c:if>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div class="row mb-3">
-						<div class="col-md-6 align-self-center">
-							<c:choose>
-								<c:when test="${not empty sessionScope.member and sessionScope.member.member_id == dto.member_id}">
-									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/bbs/update?region=${region_code}&num=${dto.num}&page=${page}';">수정</button>
-									<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
-								</c:when>
-								<c:when test="${sessionScope.member.userLevel==9}">
-									<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
-								</c:when>
-								<c:otherwise>
-									<button type="button" class="notifyCommunity btn-default" data-targetNum="${dto.num}" data-targetTitle="동네한바퀴 게시글" data-targetTable="community" data-targetType="posts">신고</button>
-								</c:otherwise>
-							</c:choose>
-						</div>
-						<div class="col-md-6 align-self-center text-end">
-							<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/bbs/list?${query}';">리스트</button>
-						</div>
-					</div>
-					
-					<div class="reply-session">
-						<div class="reply-form">
-							<div class="form-header">
-								<span class="small-title">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+									<tr>
+										<td colspan="2" valign="top" height="200" class="article-content" style="border-bottom: none;">
+											${dto.content}
+										</td>
+									</tr>
+		
+									<tr>
+										<td colspan="2" class="text-center p-3" style="border-bottom: none;">
+											<button type="button" class="btn-default btnSendBoardLike" title="좋아요"><i class="bi ${isUserLiked ? 'bi-heart-fill text-danger' : 'bi-heart'}"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.communityLikeCount}</span></button>
+										</td>
+									</tr>
+		
+									<tr>
+										<td colspan="2">
+											<c:if test="${not empty dto.saveFilename}">
+												<p class="border text-secondary my-1 p-2">
+													<i class="bi bi-folder2-open"></i>
+													<a href="${pageContext.request.contextPath}/bbs/download?region=${region_code}&num=${dto.num}">${dto.originalFilename}</a>
+												</p>
+											</c:if>
+										</td>
+									</tr>
+		
+									<tr>
+										<td colspan="2">
+											다음글 : 
+											<c:if test="${not empty nextDto}">
+												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${nextDto.num}">${nextDto.subject}</a>
+											</c:if>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											이전글 : 
+											<c:if test="${not empty prevDto}">
+												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${prevDto.num}">${prevDto.subject}</a>
+											</c:if>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+		
+							<div class="row mb-3">
+								<div class="col-md-6 align-self-center">
+									<c:choose>
+										<c:when test="${not empty sessionScope.member and sessionScope.member.member_id == dto.member_id}">
+											<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/bbs/update?region=${region_code}&num=${dto.num}&page=${page}';">수정</button>
+											<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+										</c:when>
+										<c:when test="${not empty sessionScope.member and sessionScope.member.userLevel==9}">
+											<button type="button" class="btn-default" onclick="deleteOk();">삭제</button>
+										</c:when>
+										<c:otherwise>
+											<button type="button" class="notifyCommunity btn-default" data-targetNum="${dto.num}" data-targetTitle="동네한바퀴 게시글" data-targetTable="community" data-targetType="posts">신고</button>
+										</c:otherwise>
+									</c:choose>
+								</div>
+								<div class="col-md-6 align-self-center text-end">
+									<button type="button" class="btn-default" onclick="location.href='${pageContext.request.contextPath}/bbs/list?${query}';">리스트</button>
+								</div>
 							</div>
 							
-							<div class="mb-2">
-								<textarea class="form-control" name="content"></textarea>
+							<div class="reply-session">
+								<div class="reply-form">
+									<div class="form-header">
+										<span class="small-title">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+									</div>
+									
+									<div class="mb-2">
+										<textarea class="form-control" name="content"></textarea>
+									</div>
+									<div class="text-end">
+										<button type="button" class="btn-default btn-md btnSendReply">댓글 등록</button>
+									</div>
+								</div>
+								<div id="listReply"></div>
 							</div>
-							<div class="text-end">
-								<button type="button" class="btn-default btn-md btnSendReply">댓글 등록</button>
-							</div>
+		
 						</div>
-						<div id="listReply"></div>
 					</div>
-
 				</div>
 			</div>
-		</div>
-	</div>
-	
-				
-	<!-- Reports Modal -->
-	<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				
-				<div class="modal-header">
-					<h5 class="modal-title" id="reportModalLabel">신고하기</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+			
+						
+			<!-- Reports Modal -->
+			<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						
+						<div class="modal-header">
+							<h5 class="modal-title" id="reportModalLabel">신고하기</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+						</div>
+						
+						<form id="reportForm">
+							<div class="modal-body">
+								
+								<input type="hidden" name="target_num" id="target_num">
+								<input type="hidden" name="target_table" id="target_table">
+								<input type="hidden" name="target_title" id="target_title">
+								<input type="hidden" name="target_type" id="target_type">
+								 
+								<div class="mb-3">
+									<label for="reason_code" class="form-label">신고 사유</label>
+									<select name="reason_code" id="reason_code" class="form-select" required>
+										<option value="">선택하세요</option>
+										<option value="스팸/광고">스팸/광고</option>
+										<option value="욕설/비방/차별적 표현">욕설/비방/차별적 표현</option>
+										<option value="음란물">음란물</option>
+										<option value="개인정보 노출">개인정보 노출</option>
+										<option value="불법거래">불법거래</option>
+										<option value="기타">기타</option>
+									</select>
+								</div>
+								
+								<div class="mb-3">
+									<label for="reason_detail" class="form-label">상세설명 (선택)</label>
+									<textarea name="reason_detail" id="reason_detail" class="form-control" rows="3" placeholder="상세 내용을 입력하세요."></textarea>
+								</div>
+							  
+							</div>
+							
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-danger">신고</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+							</div>
+						</form>
+			
+					</div>
 				</div>
-				
-				<form id="reportForm">
-					<div class="modal-body">
-						
-						<input type="hidden" name="target_num" id="target_num">
-						<input type="hidden" name="target_table" id="target_table">
-						<input type="hidden" name="target_title" id="target_title">
-						<input type="hidden" name="target_type" id="target_type">
-						 
-						<div class="mb-3">
-							<label for="reason_code" class="form-label">신고 사유</label>
-							<select name="reason_code" id="reason_code" class="form-select" required>
-								<option value="">선택하세요</option>
-								<option value="스팸/광고">스팸/광고</option>
-								<option value="욕설/비방/차별적 표현">욕설/비방/차별적 표현</option>
-								<option value="음란물">음란물</option>
-								<option value="개인정보 노출">개인정보 노출</option>
-								<option value="불법거래">불법거래</option>
-								<option value="기타">기타</option>
-							</select>
-						</div>
-						
-						<div class="mb-3">
-							<label for="reason_detail" class="form-label">상세설명 (선택)</label>
-							<textarea name="reason_detail" id="reason_detail" class="form-control" rows="3" placeholder="상세 내용을 입력하세요."></textarea>
-						</div>
-					  
-					</div>
-					
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-danger">신고</button>
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-					</div>
-				</form>
-	
 			</div>
-		</div>
-	</div>
+		
+		</main>
 
-</main>
+	</div>
+</div>
 
 <c:if test="${sessionScope.member.member_id==dto.member_id||sessionScope.member.userLevel==9}">
 	<script type="text/javascript">
@@ -201,9 +214,17 @@
 </c:if>
 
 <script type="text/javascript">
+const isLogged = ${sessionScope.member != null}; // 로그인 했으면 true
+
 // 게시글 공감
 $(function() {
 	$('button.btnSendBoardLike').click(function() {
+		// 로그인 제어
+		if(! isLogged) {
+			alert('로그인 후 이용 가능합니다.');
+			return false;
+		}
+		
 		const $i = $(this).find('i');
 		let userLiked = $i.hasClass('bi-heart-fill');
 		
@@ -775,8 +796,6 @@ $(function(){
 	
 });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

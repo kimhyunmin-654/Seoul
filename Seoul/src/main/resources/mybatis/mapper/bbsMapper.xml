@@ -184,7 +184,7 @@
 		SELECT NVL(COUNT(*), 0)
 		FROM community_reply
 		WHERE num = #{num} AND parent_num = 0
-		<if test="userLevel neq 9">
+		<if test="userLevel != 9">
 			AND ( show_reply = 0 OR member_id = #{member_id} )
 		</if>
 	</select>
@@ -201,7 +201,7 @@
 			SELECT parent_num, COUNT(*) answerCount
 			FROM community_reply
 			WHERE num = #{num} AND parent_num != 0
-			<if test="userLevel neq 9">
+			<if test="userLevel != 9">
 				AND ( show_reply = 0 OR member_id = #{member_id} )
 			</if>
 			GROUP BY parent_num
@@ -213,7 +213,7 @@
 			GROUP BY reply_num
 		) lc ON r.reply_num = lc.reply_num
 		WHERE num = #{num} AND r.parent_num = 0
-		<if test="userLevel neq 9">
+		<if test="userLevel != 9">
 			AND ( show_reply = 0 OR r.member_id = #{member_id} )
 		</if>
 		ORDER BY r.reply_num DESC
@@ -234,7 +234,7 @@
 		FROM community_reply r
 		JOIN member m ON r.member_id = m.member_id
 		WHERE parent_num = #{parent_num}
-		<if test="userLevel neq 9">
+		<if test="userLevel != 9">
 			AND ( show_reply = 0 OR r.member_id = #{member_id} )
 		</if>
 		ORDER BY reply_num ASC
@@ -244,7 +244,7 @@
 		SELECT NVL(COUNT(*), 0)
 		FROM community_reply
 		WHERE parent_num = #{parent_num}
-		<if test="userLevel neq 9">
+		<if test="userLevel != 9">
 			AND ( show_reply = 0 OR member_id = #{member_id} )
 		</if>
 	</select>

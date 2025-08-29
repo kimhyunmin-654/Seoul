@@ -1,14 +1,25 @@
 @charset "UTF-8";
 
-@charset "UTF-8";
 
 :root {
+	--dark-blue: #110d42;
+	--contrast-blue: #f5f0e2;
     --primary-blue: #5a67d8;
     --text-dark: #2d3748;
     --text-muted: #6b7280;
     --border-gray: #d1d5db;
     --bg-light: #f5f6f8;
     --white: #ffffff;
+    --primary-yellow: #ffcc00;
+}
+
+.p-4-5 {
+  padding: 1.8rem !important;
+}
+
+
+.search-form-container {
+	margin-bottom: 2rem;
 }
 
 /* 게시판 카드 스타일 */
@@ -62,4 +73,29 @@
 
 .board-item .card-text span {
     margin-right: 0.75rem;
+}
+
+
+
+
+
+/* 동네글등록, 등록완료 */
+.btn-send {
+  background-color: var(--dark-blue);
+  color: var(--white);
+  border: 3px solid var(--dark-blue);
+  padding: 0.3rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-send:hover, .btn-send:focus {
+  outline: none;
+  background-color: var(--highlight-color);
+  color: var(--dark-blue);
+  border: 3px solid var(--dark-blue);
+  font-weight: 600;
 }

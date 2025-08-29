@@ -45,5 +45,11 @@ public class ReportsManage {
 	private String region_id;
 	private int block;
 	
+	// 중고거래
+	private String thumbnail;
+	private String type;
+	private int price;
+	private String status;
+	
 	private String mode;
 }

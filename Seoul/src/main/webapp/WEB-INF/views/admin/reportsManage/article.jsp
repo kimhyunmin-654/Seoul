@@ -230,6 +230,20 @@ table.reports-content th {
 										<td style="width: 85%;" colspan="3">${target.subject}</td>
 									</tr>
 								</c:if>
+								<c:if test="${report.target_table == 'product'}">
+									<tr>
+										<th>썸네일</th>
+										<td style="width: 85%;" colspan="3">
+											<img alt="${target.subject}" src="${pageContext.request.contextPath}/uploads/product/${target.thumbnail}">
+										</td>
+									</tr>
+									<tr>
+										<th style="width: 15%;">가격</th>
+										<td style="width: 35%;">${not empty target.price ? target.price : '0'}원</td>
+										<th style="width: 15%;">타입</th>
+										<td style="width: 35%;">${target.type == 'NORMAL' ? '중고상품' : '경매'} (${target.status})</td>
+									</tr>
+								</c:if>
 								<tr>
 									<th style="width: 15%;">내용</th>
 									<td style="width: 85%;" colspan="3">${target.content}</td>

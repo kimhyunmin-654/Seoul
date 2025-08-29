@@ -170,6 +170,10 @@
 				'${target_table}' AS target_table, reply_num AS target_num, p.member_id AS writer_id,
 				content, m.nickname AS writer, block
 			</when>
+			<otherwise>
+				'${target_table}' AS target_table, p.product_id AS target_num, region_id, p.member_id AS writer_id,
+				product_name AS subject, content, price, type, status, thumbnail, m.nickname AS writer, block
+			</otherwise>
 		</choose>
 	</sql>
 	
