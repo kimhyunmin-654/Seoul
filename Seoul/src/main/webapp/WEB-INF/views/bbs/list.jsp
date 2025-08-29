@@ -75,12 +75,18 @@
 						
 						<div class="col-md-11 board-section my-1 p-4-5">
 				
-							<div class="row py-1 mb-2">
+							<div class="row py-1">
 								<div class="col-md-6 align-self-center">
-									<h5 class="mb-3">📋 ${region_name}한바퀴 목록</h5> <span class="dataCount">${dataCount}개(${page}/${total_page} 페이지)</span>
+									<h5>📋 ${region_name}한바퀴 목록</h5>
 								</div>	
 								<div class="col-md-6 align-self-center text-end">
-									<button type="button" class="btn-send me-4 mb-3" onclick="location.href='${pageContext.request.contextPath}/bbs/write?region=${region_code}';">동네글등록</button>
+									<button type="button" class="btn-send me-3 mt-4" onclick="location.href='${pageContext.request.contextPath}/bbs/write?region=${region_code}';">동네글등록</button>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6">
+									<div class="mb-1 ms-1">${dataCount}개(${page}/${total_page} 페이지)</div>
 								</div>
 							</div>
 							
