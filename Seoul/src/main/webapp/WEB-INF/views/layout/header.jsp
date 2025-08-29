@@ -28,13 +28,10 @@
 
       <div class="center-box">
         <div class="top-controls">
-          <div class="region-label" id="regionName">
-            <c:out value="${sessionScope.regionName}" default="지역이름"/>
-          </div>
 
 
 		<form id="searchForm" name="searchForm" class="searchbar" method="get">
-			<select id="searchType" name="searchType" class="form-select-search-select">
+			<select id="searchType" name="searchType" class="search-select form-select-search-select">
 				<option value="product" selected>중고거래</option>
 				<option value="auction">경매</option>
 			</select>

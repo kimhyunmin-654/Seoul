@@ -362,3 +362,34 @@
   outline: 2px solid rgba(51,102,255,0.2);
   outline-offset: 2px;
 }
+
+.header-wrap .center-box{
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  flex: 1 1 auto;                 
+  display: flex;
+  flex-direction: column;
+  align-items: center !important; 
+  min-width: 0;
+}
+
+.header-wrap .top-controls{
+  width: 100%;
+  display: flex;
+  justify-content: center !important; 
+}
+
+.header-wrap .searchbar{
+  margin: 0 auto;             
+  max-width: 500px;              
+  width: 100%;
+}
+
+.header-wrap .right-box{
+  margin-left: auto;
+}
+
+@media (max-width: 992px){
+  .header-wrap .center-box{ width: 100%; }
+  .header-wrap .top-controls{ justify-content: center; }
+}
