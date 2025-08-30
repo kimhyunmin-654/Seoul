@@ -210,11 +210,14 @@ public class BoardController {
 			Board nextDto = service.findByNext(map);
 			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			map.put("member_id", info.getMember_id());
+			boolean isUserLiked = service.isUserBoardLiked(map);
 
 			List<Region> regionList = service.listRegion();
 			model.addAttribute("regionList", regionList);
 			
 			model.addAttribute("dto", dto);
+			model.addAttribute("isUserLiked", isUserLiked);
 			model.addAttribute("prevDto", prevDto);
 			model.addAttribute("nextDto", nextDto);
 			
