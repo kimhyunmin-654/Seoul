@@ -39,7 +39,7 @@
 			<button id="searchBtn" type="button" class="btn search-btn" title="검색"><i class="bi bi-search"></i></button>
 		</form>
 		
-        </div>
+        </div>  
 
         <div class="subnav">
           <a class="accent" href="${pageContext.request.contextPath}/product/list">중고거래</a>
@@ -170,7 +170,6 @@
     </div>
   </div>
 </div>
-<script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>
 
 <script>
 function updateHeaderRegion(name){
@@ -188,8 +187,8 @@ function updateHeaderRegion(name){
     }
   }catch(e){}
 })();
-</script>
-
+</script> 
+ 
 
 <script>
   window.CTX = '${pageContext.request.contextPath}';
@@ -203,6 +202,10 @@ function updateHeaderRegion(name){
     </c:otherwise>
   </c:choose>
 </script>
+
+<script src="${pageContext.request.contextPath}/dist/js/chat.js"></script>
+
+
 <script>
 $(document).ready(function() {
 	const searchForm = $('#searchForm');
