@@ -9,12 +9,14 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.sp.app.model.Board;
+import com.sp.app.model.Region;
 import com.sp.app.model.Reply;
 import com.sp.app.model.Reports;
 
 @Mapper
 public interface BoardMapper {
 	public String getRegionnameById(@Param("region_id") String region_id);
+	public List<Region> listRegion();
 	
 	public void insertBoard(Board dto) throws SQLException;
 	public void updateBoard(Board dto) throws SQLException;

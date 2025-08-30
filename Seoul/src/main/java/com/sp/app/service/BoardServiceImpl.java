@@ -11,6 +11,7 @@ import com.sp.app.common.MyUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.mapper.BoardMapper;
 import com.sp.app.model.Board;
+import com.sp.app.model.Region;
 import com.sp.app.model.Reply;
 import com.sp.app.model.Reports;
 
@@ -36,6 +37,11 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		return region_name;
+	}
+	
+	@Override
+	public List<Region> listRegion() {
+		return mapper.listRegion();
 	}
 	
 	@Override

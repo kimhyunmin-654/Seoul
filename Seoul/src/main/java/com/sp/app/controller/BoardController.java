@@ -27,6 +27,7 @@ import com.sp.app.common.PaginateUtil;
 import com.sp.app.common.StorageService;
 import com.sp.app.exception.StorageException;
 import com.sp.app.model.Board;
+import com.sp.app.model.Region;
 import com.sp.app.model.Reply;
 import com.sp.app.model.Reports;
 import com.sp.app.model.SessionInfo;
@@ -108,6 +109,9 @@ public class BoardController {
 			}
 			String paging = paginateUtil.paging(current_page, total_page, listUrl);	
 			
+			List<Region> regionList = service.listRegion();
+			model.addAttribute("regionList", regionList);
+			
 			model.addAttribute("list", list);
 			model.addAttribute("dataCount", dataCount);
 			model.addAttribute("size", size);
@@ -137,6 +141,9 @@ public class BoardController {
 		
 		try {
 			region_name = service.getRegionnameById(region);
+			
+			List<Region> regionList = service.listRegion();
+			model.addAttribute("regionList", regionList);
 		} catch (Exception e) {
 			log.info("writeForm : ", e);
 		}
@@ -203,12 +210,9 @@ public class BoardController {
 			Board nextDto = service.findByNext(map);
 			
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			// 로그인 제어
-			if(info != null) {
-				map.put("member_id", info.getMember_id());
-				boolean isUserLiked = service.isUserBoardLiked(map);
-				model.addAttribute("isUserLiked", isUserLiked);
-			}
+
+			List<Region> regionList = service.listRegion();
+			model.addAttribute("regionList", regionList);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("prevDto", prevDto);
@@ -251,6 +255,9 @@ public class BoardController {
 			if(dto.getMember_id() != info.getMember_id()) {
 				return "redirect:/bbs/list?region=" + region + "&page=" + page;
 			}
+
+			List<Region> regionList = service.listRegion();
+			model.addAttribute("regionList", regionList);
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("mode", "update");

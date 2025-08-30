@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.sp.app.model.Board;
+import com.sp.app.model.Region;
 import com.sp.app.model.Reply;
 import com.sp.app.model.Reports;
 
 public interface BoardService {
 	public String getRegionnameById(String region_id);
+	public List<Region> listRegion();
 	
 	// 게시판 리스트
 	public void insertBoard(Board dto, String uploadPath) throws Exception;

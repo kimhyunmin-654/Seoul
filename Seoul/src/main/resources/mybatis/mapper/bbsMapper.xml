@@ -2,9 +2,16 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sp.app.mapper.BoardMapper">
-	<!-- 지역 코드에 따른 지역명 가져오기 -->
+	<!-- 지역 코드에 따른 지역명 -->
 	<select id="getRegionnameById" parameterType="String" resultType="String">
 		SELECT region_name FROM region WHERE region_id = #{region_id}
+	</select>
+	
+	<!-- 지역 목록 -->	
+	<select id="listRegion" resultType="com.sp.app.model.Region">
+		SELECT region_id, region_name 	
+		FROM region
+		ORDER BY region_name
 	</select>
 	
 	<!-- 게시글 -->

@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>서울 한바퀴</title>
-<jsp:include page="/WEB-INF/views/layout/leftResources.jsp"/>
 <jsp:include page="/WEB-INF/views/layout/headerResources.jsp"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/board.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/dist/css/paginate.css" type="text/css">
