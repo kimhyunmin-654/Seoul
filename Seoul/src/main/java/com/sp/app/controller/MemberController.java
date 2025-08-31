@@ -174,7 +174,7 @@ public class MemberController {
 			reAttr.addFlashAttribute("message", sb.toString());
 			reAttr.addFlashAttribute("title", "회원 가입");
 			
-			return "redirect:/member/complete";
+			return "redirect:/member/complete3";
 			
 		} catch (DuplicateKeyException e) {
 			model.addAttribute("mode2", "account3");
@@ -229,6 +229,14 @@ public class MemberController {
 		}
 		return "member/complete";
 	}
+	
+	@GetMapping("complete3")
+	public String complete3(@ModelAttribute("message") String message) throws Exception {
+		if(message == null || message.isBlank()) {
+			return "redirect:/admin/memberManage/main";
+		}
+		return "member/complete3";
+	}	
 	
 	@ResponseBody
 	@PostMapping("userIdCheck")

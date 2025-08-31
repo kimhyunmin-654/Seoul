@@ -114,7 +114,7 @@
               <button type="button" name="sendButton" class="btn btn-acc" onclick="memberOk()">
                 ${mode=="update"?"정보수정":"회원가입"}
               </button>
-              <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/';">
+              <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/admin/memberManage/main';">
                 ${mode=="update"?"수정취소":"가입취소"}
               </button>
             </div>

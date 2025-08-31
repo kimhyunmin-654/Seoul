@@ -29,7 +29,7 @@
 			<div class="col-xl-8 col-lg-9 col-md-10"> <!-- 중앙 정렬 및 폭 제한 -->
 				<div class="bg-white shadow-sm rounded p-5">
 					<div class="d-flex justify-content-between align-items-center mb-4">
-						<h5 class="fw-bold mb-0">FAQ 등록</h5>
+						<h5 class="fw-bold mb-0">${mode == 'update' ? 'FAQ 수정' : 'FAQ 등록'}</h5>
 					</div>
 	
 					<form name="postForm" method="post" enctype="multipart/form-data">
