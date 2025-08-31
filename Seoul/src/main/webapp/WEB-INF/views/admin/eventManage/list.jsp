@@ -41,10 +41,10 @@
 								<button class="nav-link" id="tab-progress" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="progress" aria-selected="true" data-tab="progress">진행 중인 이벤트</button>
 							</li>
 							<li class="nav-item" role="presentation">
-								<button class="nav-link" id="tab-ended" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="ended" aria-selected="true" data-tab="ended">종료 이벤트</button>
+								<button class="nav-link" id="tab-upcoming" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="upcoming" aria-selected="true" data-tab="upcoming">진행 예정 이벤트</button>
 							</li>
 							<li class="nav-item" role="presentation">
-								<button class="nav-link" id="tab-upcoming" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="upcoming" aria-selected="true" data-tab="upcoming">진행 예정 이벤트</button>
+								<button class="nav-link" id="tab-ended" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="ended" aria-selected="true" data-tab="ended">종료 이벤트</button>
 							</li>
 							<li class="nav-item" role="presentation">
 								<button class="nav-link" id="tab-winner" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="winner" aria-selected="true" data-tab="winner">당첨자 추첨하기</button>
@@ -75,8 +75,8 @@
 									<tr>
 										<th width="60">번호</th>
 										<th>제목</th>
-										<th width="150">이벤트 시작일</th>
-										<th width="150">이벤트 종료일</th>
+										<th width="200">이벤트 시작일</th>
+										<th width="200">이벤트 종료일</th>
 										<th width="100">${category=="winner" ? "발표" : "이벤트 타입"}</th> <!-- winner:발표, 그 외: 이벤트 성격(일반, 추첨) -->
 									</tr>
 								</thead>

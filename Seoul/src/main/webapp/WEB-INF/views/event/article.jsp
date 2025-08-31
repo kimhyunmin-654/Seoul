@@ -155,7 +155,7 @@
 									<td colspan="2">
 										다음글 : 
 										<c:if test="${not empty nextDto}">
-											<a href="${pageContext.request.contextPath}/event/${category}/article?${query}&num=${nextDto.event_num}">${nextDto.title}</a>
+											<a href="${pageContext.request.contextPath}/event/${category}/article?${query}&num=${nextDto.event_num}" style="text-decoration: none;">${nextDto.title}</a>
 										</c:if>
 									</td>
 								</tr>
@@ -163,7 +163,7 @@
 									<td colspan="2">
 										이전글 : 
 										<c:if test="${not empty prevDto}">
-											<a href="${pageContext.request.contextPath}/event/${category}/article?${query}&num=${prevDto.event_num}">${prevDto.title}</a>
+											<a href="${pageContext.request.contextPath}/event/${category}/article?${query}&num=${prevDto.event_num}" style="text-decoration: none;">${prevDto.title}</a>
 										</c:if>
 									</td>
 								</tr>

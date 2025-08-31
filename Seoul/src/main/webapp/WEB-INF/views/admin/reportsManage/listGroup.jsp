@@ -8,7 +8,7 @@
 			<th width="80">번호</th>
 			<th>콘텐츠</th>
 			<th width="90">글번호</th>
-			<th width="120">분류</th>
+			<th width="130">분류</th>
 			<th width="200">테이블명</th>
 			<th width="90">신고건수</th>
 		</tr>

@@ -10,9 +10,9 @@
 			<th>콘텐츠</th>
 			<th width="80">글번호</th>
 			<th width="90">신고자</th>
-			<th width="180">신고사유</th>
-			<th width="110">신고접수일</th>
-			<th width="80">처리상태</th>
+			<th width="150">신고사유</th>
+			<th width="120">신고접수일</th>
+			<th width="100">처리상태</th>
 		</tr>
 	</thead>
 	<tbody>

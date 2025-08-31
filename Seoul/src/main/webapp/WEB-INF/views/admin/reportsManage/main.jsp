@@ -97,6 +97,8 @@ $(function() {
 		f.status.value = '0';
 		f.schType.value = 'all';
 		f.kwd.value = "";
+
+		$('#selectStatus').val('0');
 		
 		if(tab === 'all') {
 			$('.reports-search').show();
