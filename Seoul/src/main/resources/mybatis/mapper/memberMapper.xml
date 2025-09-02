@@ -43,12 +43,13 @@
          #{sns_provider, jdbcType=VARCHAR}, #{sns_id, jdbcType=VARCHAR}, 5, SYSDATE, SYSDATE, #{profile_photo, jdbcType=VARCHAR}, 1, 0)
    </insert>
 	
-	<insert id="insertSnsMember" parameterType="com.sp.app.model.Member">
-		INSERT INTO member(member_id, email, password, name, nickname, sns_provider, sns_id,
-					userLevel, created_at, update_at, profile_photo, enabled)
-		VALUES(#{member_id}, #{email}, #{password, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR}, #{nickname}, 
-			#{sns_provider}, #{sns_id}, 1, SYSDATE, SYSDATE, #{profile_photo}, 1)
-	</insert>	
+<insert id="insertSnsMember" parameterType="com.sp.app.model.Member">
+  INSERT INTO member(member_id, email, password, name, nickname, sns_provider, sns_id, 
+  				userLevel, created_at, update_at, profile_photo, enabled)
+  VALUES( #{member_id, jdbcType=NUMERIC}, #{email, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR},
+    #{name, jdbcType=VARCHAR}, #{nickname, jdbcType=VARCHAR}, #{sns_provider, jdbcType=VARCHAR},
+    #{sns_id, jdbcType=VARCHAR}, 1, SYSDATE, SYSDATE, #{profile_photo, jdbcType=VARCHAR}, 1)
+</insert>	
 	
 	<select id="findById" parameterType="Long" resultType="com.sp.app.model.Member">
 		SELECT member_id, login_id, email, password, name, nickname, sns_provider, sns_id, 

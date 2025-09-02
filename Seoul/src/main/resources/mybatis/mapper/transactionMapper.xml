@@ -17,7 +17,7 @@
 <select id="dataCount" parameterType="map" resultType="Integer">
 	SELECT NVL(COUNT(*),0)
 	FROM product
-	WHERE member_id = #{member_id}
+	WHERE member_id = #{member_id} AND type != 'AUCTION'
 </select>
 
 <!-- 상품 상태 업데이트 (판매중/예약중/판매완료) -->
@@ -67,7 +67,7 @@
 <select id="dataCount2" parameterType="map" resultType="Integer">
 	SELECT NVL(COUNT(*),0)
 	FROM product_transaction
-	WHERE buyer_id = #{buyer_id}
+	WHERE buyer_id = #{buyer_id} AND type != 'AUCTION'
 </select>
 
 
