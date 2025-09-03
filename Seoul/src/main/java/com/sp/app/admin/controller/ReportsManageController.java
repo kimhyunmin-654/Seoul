@@ -172,8 +172,6 @@ public class ReportsManageController {
 			ReportsManage target = service.findContentByTypeId(map);
 			if(target != null) {
 				target.setContent(target.getContent().replaceAll("\n", "<br>"));
-				
-				// 파일
 			}
 			
 			String region_name = service.getRegionnameById(target.getRegion_id());
