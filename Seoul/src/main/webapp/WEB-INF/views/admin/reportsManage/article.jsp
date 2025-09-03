@@ -234,7 +234,7 @@ table.reports-content th {
 									<tr>
 										<th>썸네일</th>
 										<td style="width: 85%;" colspan="3">
-											<img alt="${target.subject}" src="${pageContext.request.contextPath}/uploads/product/${target.thumbnail}">
+											<img alt="${target.subject}" src="${pageContext.request.contextPath}/uploads/product/${target.thumbnail}" style="width: 250px; height: 180px; object-fit: fill;">
 										</td>
 									</tr>
 									<tr>

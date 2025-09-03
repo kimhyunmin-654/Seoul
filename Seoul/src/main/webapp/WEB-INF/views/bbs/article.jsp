@@ -90,7 +90,7 @@
 										<td colspan="2">
 											다음글 : 
 											<c:if test="${not empty nextDto}">
-												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${nextDto.num}">${nextDto.subject}</a>
+												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${nextDto.num}" style="text-decoration: none;">${nextDto.subject}</a>
 											</c:if>
 										</td>
 									</tr>
@@ -98,7 +98,7 @@
 										<td colspan="2">
 											이전글 : 
 											<c:if test="${not empty prevDto}">
-												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${prevDto.num}">${prevDto.subject}</a>
+												<a href="${pageContext.request.contextPath}/bbs/article?${query}&num=${prevDto.num}" style="text-decoration: none;">${prevDto.subject}</a>
 											</c:if>
 										</td>
 									</tr>
