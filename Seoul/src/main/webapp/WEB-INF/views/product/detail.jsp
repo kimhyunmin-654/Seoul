@@ -32,6 +32,16 @@ body {
 	box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3);
 }
 
+.carousel-container {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            max-height: 485px;
+            aspect-ratio: 1 / 1;
+        }
+
 #prev-btn, #next-btn {
 	background-color: rgba(0, 0, 0, 0.3); 
 	border-radius: 9999px; 
@@ -60,8 +70,7 @@ body {
 				<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
 					<div class="lg:col-span-2 flex flex-col gap-8">
-						<div
-							class="relative aspect-square bg-gray-200 rounded-2xl shadow-lg overflow-hidden group">
+						<div class="relative aspect-square bg-gray-200 rounded-2xl shadow-lg overflow-hidden carousel-container group">
 							<div id="image-carousel"
 								class="flex transition-transform duration-500 ease-in-out h-full">
 								
@@ -137,6 +146,7 @@ body {
 									</p>
 								</div>
 								
+							<c:if test="${not empty sessionScope.member}">
 								<div class="absolute top-0 right-0">
 									<button id="more-menu-btn"
 										class="p-2 rounded-full hover:bg-gray-100">
@@ -148,62 +158,71 @@ body {
                 						</svg>
 									</button>
 
-									
-									<div id="more-menu-dropdown"
-										class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20">
-										<div class="py-1">
-											<c:choose>
-												
-												<c:when
-													test="${sessionScope.member.member_id == dto.member_id}">
-													<a href="<c:url value='/product/update?product_id=${dto.product_id}'/>"
-														class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">수정하기</a>
-
-													<form action="<c:url value='/product/delete'/>"
-														method="post"
-														onsubmit="return confirm('정말 상품을 삭제하시겠습니까?');">
-														<input type="hidden" name="product_id"
-															value="${dto.product_id}">
-														<button type="submit"
-															class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">삭제하기</button>
-													</form>
-												</c:when>
-
-												
-												<c:otherwise>
-													<a href="#"
-														class="report-btn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">신고하기</a>
-												</c:otherwise>
-											</c:choose>
+										<div id="more-menu-dropdown"
+											class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-20">
+											<div class="py-1">
+												<c:choose>
+													
+													<c:when
+														test="${sessionScope.member.member_id == dto.member_id}">
+														<a href="<c:url value='/product/update?product_id=${dto.product_id}'/>"
+															class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">수정하기</a>
+	
+														<form action="<c:url value='/product/delete'/>"
+															method="post"
+															onsubmit="return confirm('정말 상품을 삭제하시겠습니까?');">
+															<input type="hidden" name="product_id"
+																value="${dto.product_id}">
+															<button type="submit"
+																class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">삭제하기</button>
+														</form>
+													</c:when>
+	
+													
+													<c:otherwise>
+														<a href="#"
+															class="report-btn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">신고하기</a>
+													</c:otherwise>
+												</c:choose>
+											</div>
 										</div>
 									</div>
-								</div>
+								</c:if>
 							</div>
 							
 							<div class="mt-auto space-y-3">
-								<c:choose>
-								    <c:when test="${isLiked}">
-								        <button type="button" id="like-btn" 
-								                class="w-full bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-colors">
-								            ❤️ 찜취소
-								        </button>
-								    </c:when>
-								    <c:otherwise>
-								        <button type="button" id="like-btn" 
-								                class="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold text-lg py-4 rounded-lg border-2 border-orange-500 transition-colors">
-								            🤍 찜하기
-								        </button>
-								    </c:otherwise>
-								</c:choose>
-							<c:if test="${empty sessionScope.member or sessionScope.member.member_id != dto.member_id}">
-							  <button type="button"
-							          class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-all duration-300 transform hover:scale-105 glow-button btn-open-chat"
-							          data-product-id="${dto.product_id}"
-							          data-seller-id="${dto.member_id}"
-							          data-seller-nick="${dto.nickName}">
-							    채팅하기
-							  </button>
-							</c:if>
+							<c:choose>
+								<c:when test="${dto.status == '판매중'}">
+									<c:choose>
+									    <c:when test="${isLiked}">
+									        <button type="button" id="like-btn" 
+									                class="w-full bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-colors">
+									            ❤️ 찜취소
+									        </button>
+									    </c:when>
+									    <c:otherwise>
+									        <button type="button" id="like-btn" 
+									                class="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold text-lg py-4 rounded-lg border-2 border-orange-500 transition-colors">
+									            🤍 찜하기
+									        </button>
+									    </c:otherwise>
+									</c:choose>
+									<c:if test="${empty sessionScope.member or sessionScope.member.member_id != dto.member_id}">
+									  <button type="button"
+									          class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-lg transition-all duration-300 transform hover:scale-105 glow-button btn-open-chat"
+									          data-product-id="${dto.product_id}"
+									          data-seller-id="${dto.member_id}"
+									          data-seller-nick="${dto.nickName}">
+									    채팅하기
+									  </button>
+									</c:if>
+							    </c:when>
+							     <c:otherwise>
+							        <div class="w-full p-3 text-center bg-gray-200 text-gray-700 font-bold rounded-lg">
+							            ${dto.status}
+							        </div>
+							    </c:otherwise>
+							</c:choose>
 							</div>
 						</div>
 					</div>

@@ -151,8 +151,15 @@
             <c:forEach var="dto" items="${list}">
                 <div class="card-container">
                     <a href="<c:url value='/product/detail?product_id=${dto.product_id}'/>" class="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                        <div class="aspect-square w-full overflow-hidden">
+                        <div class="relative aspect-square w-full overflow-hidden">
                             <img src="<c:url value='/uploads/product/${dto.thumbnail}'/>" alt="${dto.product_name}" class="w-full h-full object-cover">
+                            <c:if test="${dto.status != '판매중'}">
+					            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+					                <span class="text-white text-lg font-bold border-2 border-white px-4 py-2 rounded-lg">
+					                    ${dto.status} 
+					                </span>
+					            </div>
+					        </c:if>
                         </div>
                         <div class="p-4">
                             <h2 class="text-lg font-semibold text-gray-800 truncate" style="margin-bottom: 8px;">${dto.product_name}</h2>
@@ -248,12 +255,21 @@
                     let cardHtml = '';
                     
                     $.each(data.list, function(index, product) {
+                    	
+                    	const statusOverlay = product.status !== '판매중' ? 
+                                `<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                    <span class="text-white text-lg font-bold border-2 border-white px-4 py-2 rounded-lg">
+                                        \${product.status}
+                                    </span>
+                                </div>` : '';
+                    	
                         cardHtml += `
                             <div class="card-container">
                                 <a href="/product/detail?product_id=\${product.product_id}" class="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                                    <div class="aspect-square w-full overflow-hidden">
-                                        <img src="/uploads/product/\${product.thumbnail}" alt="\${product.product_name}" class="w-full h-full object-cover">
-                                    </div>
+	                                <div class="relative aspect-square w-full overflow-hidden">
+		                                <img src="<c:url value='/uploads/product/\${product.thumbnail}'/>" alt="\${product.product_name}" class="w-full h-full object-cover">
+		                                \${statusOverlay}
+		                            </div>
                                     <div class="p-4">
                                         <h2 class="text-lg font-semibold text-gray-800 truncate" style="margin-bottom: 8px;">\${product.product_name}</h2>
                                         <p class="text-xl font-bold text-gray-900" style="margin-bottom: 8px;">
@@ -302,12 +318,21 @@
 					let cardHtml = '';
                     
                     $.each(data.list, function(index, product) {
+                    	
+                    	const statusOverlay = product.status !== '판매중' ? 
+                                `<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                    <span class="text-white text-lg font-bold border-2 border-white px-4 py-2 rounded-lg">
+                                        \${product.status}
+                                    </span>
+                                </div>` : '';
+                    	
                         cardHtml += `
                             <div class="card-container">
                                 <a href="/product/detail?product_id=\${product.product_id}" class="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-                                    <div class="aspect-square w-full overflow-hidden">
-                                        <img src="/uploads/product/\${product.thumbnail}" alt="\${product.product_name}" class="w-full h-full object-cover">
-                                    </div>
+	                                <div class="relative aspect-square w-full overflow-hidden">
+		                                <img src="<c:url value='/uploads/product/\${product.thumbnail}'/>" alt="\${product.product_name}" class="w-full h-full object-cover">
+		                                \${statusOverlay}
+		                            </div>
                                     <div class="p-4">
                                         <h2 class="text-lg font-semibold text-gray-800 truncate" style="margin-bottom: 8px;">\${product.product_name}</h2>
                                         <p class="text-xl font-bold text-gray-900" style="margin-bottom: 8px;">
