@@ -1013,7 +1013,7 @@
          	  const reportBtn = document.querySelector('.report-btn');
 
 	         	reportBtn.addEventListener('click', function () {
-	         	  document.getElementById('target_num').value = "${dto.auction_id}";
+	         	  document.getElementById('target_num').value = "${dto.product_id}";
 	         	  document.getElementById('target_title').value = "경매 판매";
 	         	  document.getElementById('target_table').value = "product";
 	         	  document.getElementById('target_type').value = "transaction";
