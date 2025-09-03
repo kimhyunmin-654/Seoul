@@ -132,7 +132,6 @@
 											<div class="article-content-flex">
 												<div>${dto.content}</div>
 												<div class="article-content-buttons">
-													<!-- dto.event_type == 'ENTRY' 일때만 보이게 설정하기(test에 조건 추가) -->
 													<c:if test="${dto.event_type == 'ENTRY' && listEventWinner.size() == 0 && (category == 'winner' || category == 'ended') && listEventTakers.size() != 0}">
 														<button type="button" class="btn-default btnEventWinnerInsert">응모이벤트 당첨자 추첨</button>		
 													</c:if>

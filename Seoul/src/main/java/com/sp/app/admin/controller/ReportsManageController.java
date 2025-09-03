@@ -283,7 +283,7 @@ public class ReportsManageController {
 			switch(dto.getTarget_table()) {
 				case "community": field_name = "num"; break;
 				case "community_reply": field_name = "reply_num"; break;
-				case "product": field_name = "product_id"; break;
+				case "transaction": field_name = "product_id"; break;
 			}
 			
 			Map<String, Object> map = new HashMap<>();
